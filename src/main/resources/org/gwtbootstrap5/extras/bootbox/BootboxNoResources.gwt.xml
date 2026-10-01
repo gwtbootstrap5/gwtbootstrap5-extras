@@ -20,5 +20,7 @@
   -->
 
 <module rename-to='bootbox'>
+    <inherits name="org.gwtbootstrap5.extras.shared.Shared"/>
+
     <source path='client'/>
 </module>

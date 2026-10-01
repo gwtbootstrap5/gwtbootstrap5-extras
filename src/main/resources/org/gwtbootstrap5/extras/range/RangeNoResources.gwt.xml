@@ -22,5 +22,7 @@
 <module rename-to='slider'>
     <inherits name="org.gwtbootstrap5.GwtBootstrap5Base"/>
 
+    <inherits name="org.gwtbootstrap5.extras.shared.Shared"/>
+
     <source path='client'/>
 </module>

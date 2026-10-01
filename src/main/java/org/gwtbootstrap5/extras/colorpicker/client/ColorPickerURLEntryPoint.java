@@ -20,6 +20,8 @@ package org.gwtbootstrap5.extras.colorpicker.client;
  * ==========================LICENSE_END=================================
  */
 
+import org.gwtbootstrap5.extras.shared.js.JQueryLoader;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.ScriptInjector;
 import org.gwtbootstrap5.client.ui.util.StyleInjector;
@@ -31,8 +33,9 @@ public class ColorPickerURLEntryPoint implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
-        ScriptInjector.fromUrl("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/3.4.0/js/bootstrap-colorpicker.min.js")
-                .setWindow(ScriptInjector.TOP_WINDOW).inject();
+        JQueryLoader.ensureLoadedFromUrl(() -> ScriptInjector
+                .fromUrl("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/3.4.0/js/bootstrap-colorpicker.min.js")
+                .setWindow(ScriptInjector.TOP_WINDOW).inject());
 
         StyleInjector.injectCSS("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/3.4.0/css/bootstrap-colorpicker.min.css");
     }

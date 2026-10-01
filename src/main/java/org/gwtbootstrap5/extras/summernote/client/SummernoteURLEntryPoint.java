@@ -20,6 +20,8 @@ package org.gwtbootstrap5.extras.summernote.client;
  * ==========================LICENSE_END=================================
  */
 
+import org.gwtbootstrap5.extras.shared.js.JQueryLoader;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.ScriptInjector;
 import org.gwtbootstrap5.client.ui.util.StyleInjector;
@@ -30,10 +32,12 @@ import org.gwtbootstrap5.client.ui.util.StyleInjector;
 public class SummernoteURLEntryPoint implements EntryPoint {
     @Override
     public void onModuleLoad() {
-        ScriptInjector.fromUrl("https://cdnjs.cloudflare.com/ajax/libs/summernote/0.9.1/summernote.min.js").setWindow(ScriptInjector.TOP_WINDOW)
-                .inject();
-        ScriptInjector.fromUrl("https://cdnjs.cloudflare.com/ajax/libs/summernote/0.9.1/summernote-bs5.min.js").setWindow(ScriptInjector.TOP_WINDOW)
-                .inject();
+        JQueryLoader.ensureLoadedFromUrl(() -> {
+            ScriptInjector.fromUrl("https://cdnjs.cloudflare.com/ajax/libs/summernote/0.9.1/summernote.min.js").setWindow(ScriptInjector.TOP_WINDOW)
+                    .inject();
+            ScriptInjector.fromUrl("https://cdnjs.cloudflare.com/ajax/libs/summernote/0.9.1/summernote-bs5.min.js").setWindow(ScriptInjector.TOP_WINDOW)
+                    .inject();
+        });
 
         StyleInjector.injectCSS("https://cdnjs.cloudflare.com/ajax/libs/summernote/0.9.1/summernote-bs5.min.css");
     }

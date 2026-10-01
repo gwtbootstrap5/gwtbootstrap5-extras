@@ -20,6 +20,8 @@ package org.gwtbootstrap5.extras.bootbox.client;
  * ==========================LICENSE_END=================================
  */
 
+import org.gwtbootstrap5.extras.shared.js.JQueryLoader;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.ScriptInjector;
 
@@ -30,8 +32,10 @@ public class BootboxURLEntryPoint implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
-        ScriptInjector.fromUrl("https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/6.0.4/bootbox.all.min.js").setWindow(ScriptInjector.TOP_WINDOW)
-                .inject();
+        JQueryLoader.ensureLoadedFromUrl(() -> ScriptInjector
+                .fromUrl("https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/6.0.4/bootbox.all.min.js")
+                .setWindow(ScriptInjector.TOP_WINDOW)
+                .inject());
     }
 
 }

@@ -24,5 +24,8 @@
     <inherits name="org.gwtbootstrap5.GwtBootstrap5" />
     <inherits name='org.gwtbootstrap5.extras.animate.client.AnimateResources'/>
 
+    <inherits name="jsinterop.base.Base"/>
+    <inherits name="elemental2.dom.Dom"/>
+
     <source path='client'/>
 </module>

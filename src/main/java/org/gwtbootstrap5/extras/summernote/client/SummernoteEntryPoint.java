@@ -20,6 +20,8 @@ package org.gwtbootstrap5.extras.summernote.client;
  * ==========================LICENSE_END=================================
  */
 
+import org.gwtbootstrap5.extras.shared.js.JQueryLoader;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.ScriptInjector;
 
@@ -29,6 +31,7 @@ import com.google.gwt.core.client.ScriptInjector;
 public class SummernoteEntryPoint implements EntryPoint {
     @Override
     public void onModuleLoad() {
+        JQueryLoader.ensureLoaded();
         ScriptInjector.fromString(SummernoteClientBundle.INSTANCE.summernote().getText()).setWindow(ScriptInjector.TOP_WINDOW).inject();
         ScriptInjector.fromString(SummernoteClientBundle.INSTANCE.summernote_BS5().getText()).setWindow(ScriptInjector.TOP_WINDOW).inject();
     }

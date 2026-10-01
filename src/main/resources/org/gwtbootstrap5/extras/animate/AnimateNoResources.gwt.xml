@@ -20,5 +20,8 @@
   -->
 
 <module rename-to='animate'>
+    <inherits name="jsinterop.base.Base"/>
+    <inherits name="elemental2.dom.Dom"/>
+
     <source path='client'/>
 </module>

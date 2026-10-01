@@ -22,6 +22,8 @@
 <module rename-to='bootbox'>
     <inherits name="com.google.gwt.resources.Resources"/>
 
+    <inherits name="org.gwtbootstrap5.extras.shared.Shared"/>
+
     <source path='client'/>
 
     <entry-point class="org.gwtbootstrap5.extras.bootbox.client.BootboxURLEntryPoint"/>

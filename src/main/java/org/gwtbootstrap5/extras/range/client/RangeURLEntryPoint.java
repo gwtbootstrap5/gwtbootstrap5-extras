@@ -23,6 +23,9 @@ package org.gwtbootstrap5.extras.range.client;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.ScriptInjector;
 import org.gwtbootstrap5.client.ui.util.StyleInjector;
+import org.gwtbootstrap5.extras.shared.js.JQueryLoader;
+
+import jsinterop.base.Js;
 
 /**
  * @author Xiaodong SUN
@@ -32,8 +35,11 @@ public class RangeURLEntryPoint implements EntryPoint {
     @Override
     public void onModuleLoad() {
         if (!isSliderLoaded()) {
-            ScriptInjector.fromUrl("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js")
-                    .setWindow(ScriptInjector.TOP_WINDOW).inject();
+            // RangeBase still uses the jQuery plugin until it moves to the vanilla Slider API (phase 4);
+            // bootstrap-slider only registers it when jQuery is already loaded.
+            JQueryLoader.ensureLoadedFromUrl(() -> ScriptInjector
+                    .fromUrl("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js")
+                    .setWindow(ScriptInjector.TOP_WINDOW).inject());
 
             StyleInjector.injectCSS("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.min.css");
         }
@@ -44,7 +50,7 @@ public class RangeURLEntryPoint implements EntryPoint {
      *
      * @return <code>true</code> if slider is loaded, <code>false</code> otherwise
      */
-    private native boolean isSliderLoaded() /*-{
-        return (typeof $wnd['Slider'] !== 'undefined');
-    }-*/;
+    private boolean isSliderLoaded() {
+        return !"undefined".equals(Js.typeof(Js.global().get("Slider")));
+    }
 }

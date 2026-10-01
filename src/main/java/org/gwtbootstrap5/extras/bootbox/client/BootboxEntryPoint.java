@@ -20,6 +20,8 @@ package org.gwtbootstrap5.extras.bootbox.client;
  * ==========================LICENSE_END=================================
  */
 
+import org.gwtbootstrap5.extras.shared.js.JQueryLoader;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.ScriptInjector;
 
@@ -30,6 +32,7 @@ public class BootboxEntryPoint implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
+        JQueryLoader.ensureLoaded();
         ScriptInjector.fromString(BootboxClientBundle.INSTANCE.bootbox().getText()).setWindow(ScriptInjector.TOP_WINDOW).inject();
     }
 }

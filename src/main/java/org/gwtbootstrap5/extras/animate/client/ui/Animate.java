@@ -26,6 +26,9 @@ import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.user.client.ui.UIObject;
 import org.gwtbootstrap5.extras.animate.client.ui.constants.Animation;
 
+import elemental2.dom.EventListener;
+import jsinterop.base.Js;
+
 import java.util.ArrayList;
 
 /**
@@ -36,6 +39,8 @@ import java.util.ArrayList;
 public class Animate {
 
     // store used styles, so they are not injected to the DOM everytime.
+    private static final String ANIMATION_END = "animationend";
+
     private static final ArrayList<String> usedStyles = new ArrayList<>();
 
     /**
@@ -292,12 +297,15 @@ public class Animate {
      * @param element Element to remove style from.
      * @param animation Animation CSS class to remove.
      */
-    private static native void removeAnimationOnEnd(Element element, String animation) /*-{
-        var elem = $wnd.jQuery(element);
-        elem.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', { elem: elem }, function(event) {
-            event.data.elem.removeClass(animation);
-        });
-    }-*/;
+    private static void removeAnimationOnEnd(final Element element, final String animation) {
+        final elemental2.dom.Element target = Js.uncheckedCast(element);
+        final EventListener[] listener = new EventListener[1];
+        listener[0] = event -> {
+            target.removeEventListener(ANIMATION_END, listener[0]);
+            stopAnimation(element, animation);
+        };
+        target.addEventListener(ANIMATION_END, listener[0]);
+    }
 
     /**
      * Removes custom animation class and stops animation.
@@ -317,9 +325,13 @@ public class Animate {
      * @param element Element to remove style from.
      * @param animation Animation CSS class to remove.
      */
-    private static native void stopAnimation(Element element, String animation) /*-{
-        $wnd.jQuery(element).removeClass(animation);
-    }-*/;
+    private static void stopAnimation(final Element element, final String animation) {
+        for (final String cssClass : animation.trim().split("\\s+")) {
+            if (!cssClass.isEmpty()) {
+                element.removeClassName(cssClass);
+            }
+        }
+    }
 
     /**
      * Helper method, which returns unique class name for combination of animation and it's settings.

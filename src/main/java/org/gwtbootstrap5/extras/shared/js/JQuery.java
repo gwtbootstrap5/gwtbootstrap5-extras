@@ -85,14 +85,15 @@ public class JQuery {
     public native JQuery summernote(Object options);
 
     /**
-     * Runs a Summernote command, e.g. {@code summernote("code")} or {@code summernote("destroy")}.
+     * Runs a Summernote command, e.g. {@code summernoteCommand("code")} or {@code summernoteCommand("destroy")}.
      *
      * @param command the command name
      * @param args the command arguments
      * @param <T> the command's return type
      * @return the command's result
      */
-    public native <T> T summernote(String command, Object... args);
+    @JsMethod(name = "summernote")
+    public native <T> T summernoteCommand(String command, Object... args);
 
     /**
      * Initializes bootstrap-colorpicker with the given options object.
@@ -103,13 +104,14 @@ public class JQuery {
     public native JQuery colorpicker(Object options);
 
     /**
-     * Runs a bootstrap-colorpicker command, e.g. {@code colorpicker("setValue", "#fff")}.
+     * Runs a bootstrap-colorpicker command, e.g. {@code colorpickerCommand("setValue", "#fff")}.
      *
      * @param command the command name
      * @param args the command arguments
      * @param <T> the command's return type
      * @return the command's result
      */
-    public native <T> T colorpicker(String command, Object... args);
+    @JsMethod(name = "colorpicker")
+    public native <T> T colorpickerCommand(String command, Object... args);
 
 }

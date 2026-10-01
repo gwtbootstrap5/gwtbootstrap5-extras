@@ -20,6 +20,8 @@ package org.gwtbootstrap5.extras.jqueryui.client;
  * ==========================LICENSE_END=================================
  */
 
+import org.gwtbootstrap5.extras.shared.js.JQueryLoader;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.ScriptInjector;
 import org.gwtbootstrap5.client.ui.util.StyleInjector;
@@ -31,7 +33,8 @@ public class JQueryUIURLEntryPoint implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
-        ScriptInjector.fromUrl("https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.1/jquery-ui.min.js").setWindow(ScriptInjector.TOP_WINDOW).inject();
+        JQueryLoader.ensureLoadedFromUrl(() -> ScriptInjector
+                .fromUrl("https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.1/jquery-ui.min.js").setWindow(ScriptInjector.TOP_WINDOW).inject());
         StyleInjector.injectCSS("https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.1/themes/base/jquery-ui.min.css");
     }
 }

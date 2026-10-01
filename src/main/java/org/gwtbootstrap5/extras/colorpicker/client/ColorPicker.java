@@ -20,7 +20,6 @@ package org.gwtbootstrap5.extras.colorpicker.client;
  * ==========================LICENSE_END=================================
  */
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -31,6 +30,12 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 import org.gwtbootstrap5.client.ui.html.Div;
+import org.gwtbootstrap5.extras.shared.js.JQuery;
+
+import jsinterop.annotations.JsPackage;
+import jsinterop.annotations.JsType;
+import jsinterop.base.Js;
+import jsinterop.base.JsPropertyMap;
 
 public class ColorPicker extends Widget implements HasValue<String>, HasChangeHandlers {
 
@@ -83,41 +88,38 @@ public class ColorPicker extends Widget implements HasValue<String>, HasChangeHa
         ValueChangeEvent.fire(ColorPicker.this, value);
     }
 
-    private native JavaScriptObject initColorPicker(Element e) /*-{
-                                                                var that = this;
+    private void initColorPicker(Element e) {
+        final JsPropertyMap<Object> options = JsPropertyMap.of();
+        options.set("customClass", "colorpicker-responsive");
+        options.set("format", "hex");
+        options.set("container", true);
+        options.set("inline", true);
+        options.set("sliders", JsPropertyMap.of(
+                "saturation", JsPropertyMap.of("maxLeft", 300, "maxTop", 300),
+                "hue", JsPropertyMap.of("maxTop", 300),
+                "alpha", JsPropertyMap.of("maxTop", 300)));
 
-                                                                var colorPicker = $wnd.$(e).colorpicker({
-                                                                customClass: 'colorpicker-responsive',
-                                                                format: 'hex',
-                                                                container: true,
-                                                                inline: true,
-                                                                sliders: {
-                                                                saturation: {
-                                                                maxLeft: 300,
-                                                                maxTop: 300
-                                                                },
-                                                                hue: {
-                                                                maxTop: 300
-                                                                },
-                                                                alpha: {
-                                                                maxTop: 300
-                                                                }
-                                                                }
-                                                                });
+        JQuery.jQuery(e).colorpicker(options).on("colorpickerChange", (event, args) -> {
+            // bootstrap-colorpicker adds the selected color to the jQuery event
+            final ColorpickerColor color = Js.uncheckedCast(Js.asPropertyMap(event).get("color"));
+            fireChangeEvent(color.toHexString());
+        });
+    }
 
-                                                                colorPicker.on('colorpickerChange', function (event) {
-                                                                that.@org.gwtbootstrap5.extras.colorpicker.client.ColorPicker::fireChangeEvent(*)(event.color.toHexString());
-                                                                });
+    private void setValueColorPicker(Element e, String value) {
+        JQuery.jQuery(e).colorpickerCommand("setValue", value);
+    }
 
-                                                                return colorPicker;
-                                                                }-*/;
+    private String getValueColorPicker(Element e) {
+        return JQuery.jQuery(e).colorpickerCommand("getValue");
+    }
 
-    private native void setValueColorPicker(Element e, String value)/*-{
-                                                                    $wnd.$(e).colorpicker('setValue', value);
-                                                                    }-*/;
-
-    private native String getValueColorPicker(Element e)/*-{
-                                                        return $wnd.$(e).colorpicker('getValue');
-                                                        }-*/;
+    /**
+     * The color object bootstrap-colorpicker passes with its events.
+     */
+    @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
+    private static class ColorpickerColor {
+        native String toHexString();
+    }
 
 }
