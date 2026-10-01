@@ -226,7 +226,7 @@ public class TempusDominusEngine implements IDateTimePickerEngine {
         return new TempusDominusDateTime(javaDate.getTime());
     }
 
-    private native void loadLocale(JavaScriptObject locale); /*-{
+    private native void loadLocale(JavaScriptObject locale) /*-{
         $wnd.tempusDominus.loadLocale(locale);
         $wnd.tempusDominus.locale(locale.name);
     }-*/;

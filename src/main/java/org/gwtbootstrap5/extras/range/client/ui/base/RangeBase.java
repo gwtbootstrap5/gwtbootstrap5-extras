@@ -93,7 +93,7 @@ public abstract class RangeBase<T> extends Widget implements
         if (formatterCallback != null) {
             setFormatterOption(options);
         }
-        sliderNamespaceAvailable = isSliderNamespaceAvailable();
+        sliderNamespaceAvailable = isSliderNamespaceBound();
         initSlider(getElement(), options);
         bindSliderEvents(getElement());
     }
@@ -770,8 +770,13 @@ public abstract class RangeBase<T> extends Widget implements
         return sliderNamespaceAvailable;
     }
 
+    /**
+     * bootstrap-slider always registers the {@code bootstrapSlider} jQuery namespace and only
+     * registers {@code slider} when no other plugin (e.g. jQuery UI) owns it. Use {@code slider}
+     * only for old bootstrap-slider versions that lack the alternate namespace.
+     */
     private native boolean isSliderNamespaceBound() /*-{
-        return ($wnd.jQuery.fn.slider === 'undefined');
+        return (typeof $wnd.jQuery.fn.bootstrapSlider === 'undefined');
     }-*/;
 
     private native void initSlider(Element e, JavaScriptObject options) /*-{
