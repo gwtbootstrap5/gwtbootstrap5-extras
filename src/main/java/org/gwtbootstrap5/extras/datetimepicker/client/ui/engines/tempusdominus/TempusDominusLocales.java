@@ -20,10 +20,11 @@ package org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.tempusdominus;
  * ==========================LICENSE_END=================================
  */
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.resources.client.TextResource;
 import org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.airdatepicker.AirDatepickerClientBundle;
+
+import jsinterop.base.Js;
 
 /**
  * @author Joshua Godi
@@ -83,10 +84,16 @@ public enum TempusDominusLocales {
         return null;
     }
 
-    public static JavaScriptObject getLocaleAndLoadItIfNotLoaded(String lang) {
+    /**
+     * Returns the Tempus Dominus locale object for the language, injecting its script first if needed.
+     *
+     * @param lang the locale code, e.g. {@code "de"} or {@code "zh-CN"}
+     * @return the locale object, or {@code null} for unknown codes and the built-in English locale
+     */
+    public static Object getLocaleAndLoadItIfNotLoaded(String lang) {
         TempusDominusLocales locale = fromCode(lang);
-        if (locale != null) {
-            JavaScriptObject localeObj = getLocale(lang);
+        if (locale != null && locale.getJs() != null) {
+            Object localeObj = getLocale(lang);
             if (localeObj == null) {
                 ScriptInjector.fromString(locale.getJs().getText()).setWindow(ScriptInjector.TOP_WINDOW).inject();
             }
@@ -97,60 +104,23 @@ public enum TempusDominusLocales {
         return null;
     }
 
-    public static native JavaScriptObject getLocale(String lang) /*-{
-        if (lang === "ar") {
-            return $wnd.tempusDominus.locales.ar;
-        } else if (lang === "ar-SA") {
-            return $wnd.tempusDominus.locales.ar_SA;
-        } else if (lang === "ca") {
-            return $wnd.tempusDominus.locales.ca;
-        } else if (lang === "cs") {
-            return $wnd.tempusDominus.locales.cs;
-        } else if (lang === "de") {
-            return $wnd.tempusDominus.locales.de;
-        } else if (lang === "es") {
-            return $wnd.tempusDominus.locales.es;
-        } else if (lang === "fi") {
-            return $wnd.tempusDominus.locales.fi;
-        } else if (lang === "fr") {
-            return $wnd.tempusDominus.locales.fr;
-        } else if (lang === "hr") {
-            return $wnd.tempusDominus.locales.hr;
-        } else if (lang === "hy") {
-            return $wnd.tempusDominus.locales.hy;
-        } else if (lang === "it") {
-            return $wnd.tempusDominus.locales.it;
-        } else if (lang === "nl") {
-            return $wnd.tempusDominus.locales.nl;
-        } else if (lang === "pl") {
-            return $wnd.tempusDominus.locales.pl;
-        } else if (lang === "pt-PT") {
-            return $wnd.tempusDominus.locales.pt_PT;
-        } else if (lang === "ro") {
-            return $wnd.tempusDominus.locales.ro;
-        } else if (lang === "ru") {
-            return $wnd.tempusDominus.locales.ru;
-        } else if (lang === "sk") {
-            return $wnd.tempusDominus.locales.sk;
-        } else if (lang === "sl") {
-            return $wnd.tempusDominus.locales.sl;
-        } else if (lang === "sr") {
-            return $wnd.tempusDominus.locales.sr;
-        } else if (lang === "sr-latin") {
-            return $wnd.tempusDominus.locales.sr_Latn;
-        } else if (lang === "tr") {
-            return $wnd.tempusDominus.locales.tr;
-        } else if (lang === "uk") {
-            return $wnd.tempusDominus.locales.uk;
-        } else if (lang === "zh-CN") {
-            return $wnd.tempusDominus.locales.zh_CN;
-        } else if (lang === "zh-HK") {
-            return $wnd.tempusDominus.locales.zh_HK;
-        } else if (lang === "zh-MO") {
-            return $wnd.tempusDominus.locales.zh_MO;
-        } else if (lang === "zh-TW") {
-            return $wnd.tempusDominus.locales.zh_TW;
-        }
-    }-*/;
+    /**
+     * Returns the already loaded Tempus Dominus locale object for the language.
+     *
+     * @param lang the locale code, e.g. {@code "de"} or {@code "zh-CN"}
+     * @return the locale object, or {@code null} if it is not loaded
+     */
+    public static Object getLocale(String lang) {
+        final Object tempusDominus = Js.global().get("tempusDominus");
+        final Object locales = tempusDominus == null ? null : Js.asPropertyMap(tempusDominus).get("locales");
+        return locales == null ? null : Js.asPropertyMap(locales).get(toGlobalName(lang));
+    }
+
+    /**
+     * Maps a locale code to the property name under {@code tempusDominus.locales}.
+     */
+    private static String toGlobalName(String lang) {
+        return "sr-latin".equals(lang) ? "sr_Latn" : lang.replace('-', '_');
+    }
 
 }

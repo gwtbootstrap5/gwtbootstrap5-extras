@@ -20,9 +20,10 @@ package org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.airdatepicker;
  * ==========================LICENSE_END=================================
  */
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.resources.client.TextResource;
+
+import jsinterop.base.Js;
 
 /**
  * @author Joshua Godi
@@ -90,10 +91,10 @@ public enum AirDatepickerLocales {
         return null;
     }
 
-    public static JavaScriptObject getLocaleAndLoadItIfNotLoaded(String lang) {
+    public static Object getLocaleAndLoadItIfNotLoaded(String lang) {
         AirDatepickerLocales locale = fromCode(lang);
         if (locale != null) {
-            JavaScriptObject localeObj = getLocale(lang);
+            Object localeObj = getLocale(lang);
             if (localeObj == null) {
                 ScriptInjector.fromString(locale.getJs().getText()).setWindow(ScriptInjector.TOP_WINDOW).inject();
             }
@@ -104,74 +105,8 @@ public enum AirDatepickerLocales {
         return null;
     }
 
-    private static native JavaScriptObject getLocale(String lang) /*-{
-        if (lang === "ar") {
-            return $wnd.globalThis.ad_locale_ar;
-        } else if (lang === "bg") {
-            return $wnd.globalThis.ad_locale_bg;
-        } else if (lang === "br") {
-            return $wnd.globalThis.ad_locale_br;
-        } else if (lang === "ca") {
-            return $wnd.globalThis.ad_locale_ca;
-        } else if (lang === "cs") {
-            return $wnd.globalThis.ad_locale_cs;
-        } else if (lang === "da") {
-            return $wnd.globalThis.ad_locale_da;
-        } else if (lang === "de") {
-            return $wnd.globalThis.ad_locale_de;
-        } else if (lang === "el") {
-            return $wnd.globalThis.ad_locale_el;
-        } else if (lang === "en") {
-            return $wnd.globalThis.ad_locale_en;
-        } else if (lang === "es") {
-            return $wnd.globalThis.ad_locale_es;
-        } else if (lang === "eu") {
-            return $wnd.globalThis.ad_locale_eu;
-        } else if (lang === "fi") {
-            return $wnd.globalThis.ad_locale_fi;
-        } else if (lang === "fr") {
-            return $wnd.globalThis.ad_locale_fr;
-        } else if (lang === "hr") {
-            return $wnd.globalThis.ad_locale_hr;
-        } else if (lang === "hu") {
-            return $wnd.globalThis.ad_locale_hu;
-        } else if (lang === "id") {
-            return $wnd.globalThis.ad_locale_id;
-        } else if (lang === "it") {
-            return $wnd.globalThis.ad_locale_it;
-        } else if (lang === "ja") {
-            return $wnd.globalThis.ad_locale_ja;
-        } else if (lang === "ko") {
-            return $wnd.globalThis.ad_locale_ko;
-        } else if (lang === "nb") {
-            return $wnd.globalThis.ad_locale_nb;
-        } else if (lang === "nl") {
-            return $wnd.globalThis.ad_locale_nl;
-        } else if (lang === "pl") {
-            return $wnd.globalThis.ad_locale_pl;
-        } else if (lang === "pt") {
-            return $wnd.globalThis.ad_locale_pt;
-        } else if (lang === "ro") {
-            return $wnd.globalThis.ad_locale_ro;
-        } else if (lang === "ru") {
-            return $wnd.globalThis.ad_locale_ru;
-        } else if (lang === "si") {
-            return $wnd.globalThis.ad_locale_si;
-        } else if (lang === "sk") {
-            return $wnd.globalThis.ad_locale_sk;
-        } else if (lang === "sl") {
-            return $wnd.globalThis.ad_locale_sl;
-        } else if (lang === "sv") {
-            return $wnd.globalThis.ad_locale_sv;
-        } else if (lang === "th") {
-            return $wnd.globalThis.ad_locale_th;
-        } else if (lang === "tr") {
-            return $wnd.globalThis.ad_locale_tr;
-        } else if (lang === "uk") {
-            return $wnd.globalThis.ad_locale_uk;
-        } else if (lang === "zh") {
-            return $wnd.globalThis.ad_locale_zh;
-        }
-    }-*/;
+    private static Object getLocale(String lang) {
+        return Js.global().get("ad_locale_" + lang);
+    }
 
 }

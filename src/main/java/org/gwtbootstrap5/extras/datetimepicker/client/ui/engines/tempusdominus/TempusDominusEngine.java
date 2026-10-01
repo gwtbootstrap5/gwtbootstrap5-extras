@@ -20,7 +20,6 @@ package org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.tempusdominus;
  * ==========================LICENSE_END=================================
  */
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import elemental2.dom.Element;
 import jsinterop.base.Js;
@@ -226,9 +225,12 @@ public class TempusDominusEngine implements IDateTimePickerEngine {
         return new TempusDominusDateTime(javaDate.getTime());
     }
 
-    private native void loadLocale(JavaScriptObject locale) /*-{
-        $wnd.tempusDominus.loadLocale(locale);
-        $wnd.tempusDominus.locale(locale.name);
-    }-*/;
+    private void loadLocale(Object locale) {
+        if (locale == null) {
+            return;
+        }
+        TempusDominusGlobal.loadLocale(locale);
+        TempusDominusGlobal.locale((String) Js.asPropertyMap(locale).get("name"));
+    }
 
 }
