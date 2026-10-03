@@ -20,9 +20,10 @@ package org.gwtbootstrap5.extras.summernote.client.event;
  * ==========================LICENSE_END=================================
  */
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.shared.GwtEvent;
+
+import elemental2.core.JsArray;
+import elemental2.dom.File;
 
 /**
  * The {@link SummernoteImageUploadEvent} is fired when inserting images into the
@@ -32,39 +33,9 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class SummernoteImageUploadEvent extends GwtEvent<SummernoteImageUploadHandler> {
 
-    /**
-     * JavaScript overlay type of image file.
-     */
-    public static class ImageFile extends JavaScriptObject {
-
-        protected ImageFile() {
-        }
-
-        public final native String getName() /*-{
-            return this.name;
-        }-*/;
-
-        public final native double getSize() /*-{
-            return this.size;
-        }-*/;
-
-        public final native String getType() /*-{
-            return this.type;
-        }-*/;
-
-        public final String getMetadata() {
-            return "ImageFile [" +
-                    "name = " + getName() + ", " +
-                    "size = " + getSize() + ", " +
-                    "type = " + getType() +
-                    "]";
-        }
-
-    }
-
     private static Type<SummernoteImageUploadHandler> TYPE;
 
-    private final JsArray<ImageFile> images;
+    private final JsArray<File> images;
 
     /**
      * Fires a summernote image upload event on all registered handlers in the
@@ -72,7 +43,7 @@ public class SummernoteImageUploadEvent extends GwtEvent<SummernoteImageUploadHa
      *
      * @param source the source of the handlers
      */
-    public static void fire(final HasSummernoteImageUploadHandlers source, JsArray<ImageFile> images) {
+    public static void fire(final HasSummernoteImageUploadHandlers source, JsArray<File> images) {
         if (TYPE != null) {
             SummernoteImageUploadEvent event = new SummernoteImageUploadEvent(images);
             source.fireEvent(event);
@@ -104,23 +75,23 @@ public class SummernoteImageUploadEvent extends GwtEvent<SummernoteImageUploadHa
     /**
      * Creates a summernote image upload event.
      */
-    protected SummernoteImageUploadEvent(JsArray<ImageFile> images) {
+    protected SummernoteImageUploadEvent(JsArray<File> images) {
         this.images = images;
     }
 
     @Override
     public String toDebugString() {
-        return super.toDebugString() + " with " + images.length() + " images";
+        return super.toDebugString() + " with " + images.length + " images";
     }
 
     /**
-     * Returns the JavaScript array of the {@link ImageFile}s to be
+     * Returns the JavaScript array of the {@link File}s to be
      * inserted.
      *
-     * @return the JavaScript array of the {@link ImageFile}s to be
+     * @return the JavaScript array of the {@link File}s to be
      *         inserted.
      */
-    public JsArray<ImageFile> getImages() {
+    public JsArray<File> getImages() {
         return images;
     }
 }

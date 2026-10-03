@@ -31,7 +31,6 @@ import org.gwtbootstrap5.extras.summernote.client.event.SummernoteEnterHandler;
 import org.gwtbootstrap5.extras.summernote.client.event.SummernoteFocusEvent;
 import org.gwtbootstrap5.extras.summernote.client.event.SummernoteFocusHandler;
 import org.gwtbootstrap5.extras.summernote.client.event.SummernoteImageUploadEvent;
-import org.gwtbootstrap5.extras.summernote.client.event.SummernoteImageUploadEvent.ImageFile;
 import org.gwtbootstrap5.extras.summernote.client.event.SummernoteImageUploadHandler;
 import org.gwtbootstrap5.extras.summernote.client.event.SummernoteInitEvent;
 import org.gwtbootstrap5.extras.summernote.client.event.SummernoteInitHandler;
@@ -41,15 +40,20 @@ import org.gwtbootstrap5.extras.summernote.client.event.SummernoteKeyUpEvent;
 import org.gwtbootstrap5.extras.summernote.client.event.SummernoteKeyUpHandler;
 import org.gwtbootstrap5.extras.summernote.client.event.SummernotePasteEvent;
 import org.gwtbootstrap5.extras.summernote.client.event.SummernotePasteHandler;
+import org.gwtbootstrap5.extras.shared.js.JQuery;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArray;
-import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.ScriptInjector;
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.UIObject;
+
+import elemental2.core.JsArray;
+import elemental2.core.JsRegExp;
+import elemental2.dom.File;
+import jsinterop.base.Js;
+import jsinterop.base.JsArrayLike;
+import jsinterop.base.JsPropertyMap;
 
 /**
  * Wrapper for the Summernote WYSIWYG Editor
@@ -68,7 +72,7 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
     /**
      * Initialize options
      */
-    private final SummernoteOptions options = SummernoteOptions.newOptions();
+    private final SummernoteOptions options = new SummernoteOptions();
 
     /**
      * Enabled/Disabled state
@@ -99,7 +103,7 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
      * @param height e
      */
     public void setDefaultHeight(final int height) {
-        options.setHeight(height);
+        options.height = height;
     }
 
     /**
@@ -108,7 +112,7 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
      * @param maxHeight e
      */
     public void setMaxHeight(final int maxHeight) {
-        options.setMaxHeight(maxHeight);
+        options.maxHeight = maxHeight;
     }
 
     /**
@@ -117,7 +121,7 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
      * @param minHeight e
      */
     public void setMinHeight(final int minHeight) {
-        options.setMinHeight(minHeight);
+        options.minHeight = minHeight;
     }
 
     /**
@@ -128,7 +132,11 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
      * @param showToolbar e
      */
     public void setShowToolbar(final boolean showToolbar) {
-        options.setShowToolbar(showToolbar);
+        if (!showToolbar) {
+            options.toolbar = false;
+        } else if (Js.isTruthy(options.toolbar)) {
+            Js.asPropertyMap(options).delete("toolbar");
+        }
     }
 
     /**
@@ -144,7 +152,7 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
      * @param toolbar e
      */
     public void setToolbar(final Toolbar toolbar) {
-        options.setToolbar(toolbar);
+        options.toolbar = toolbar.build();
     }
 
     /**
@@ -153,7 +161,7 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
      * @param focus if <code>true</code>, focus on the editor
      */
     public void setHasFocus(final boolean focus) {
-        options.setFocus(focus);
+        options.focus = focus;
     }
 
     /**
@@ -162,7 +170,7 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
      * @param placeholder placeholder of the editor
      */
     public void setPlaceholder(final String placeholder) {
-        options.setPlaceholder(placeholder);
+        options.placeholder = placeholder;
     }
 
     /**
@@ -172,11 +180,11 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
      * @see SummernoteFontName
      */
     public void setFontNames(final SummernoteFontName... fontNames) {
-        JsArrayString array = JavaScriptObject.createArray().cast();
+        JsArray<String> array = new JsArray<>();
         for (SummernoteFontName fontName : fontNames) {
             array.push(fontName.getName());
         }
-        options.setFontNames(array);
+        options.fontNames = array;
     }
 
     /**
@@ -189,11 +197,11 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
      * @param fontNames e
      */
     public void setFontNamesIgnoreCheck(final SummernoteFontName... fontNames) {
-        JsArrayString array = JavaScriptObject.createArray().cast();
+        JsArray<String> array = new JsArray<>();
         for (SummernoteFontName fontName : fontNames) {
             array.push(fontName.getName());
         }
-        options.setFontNamesIgnoreCheck(array);
+        options.fontNamesIgnoreCheck = array;
     }
 
     /**
@@ -206,7 +214,7 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
      * @param airMode if <code>true</code>, the air mode is turn on
     */
     public void setAirMode(final boolean airMode) {
-        options.setAirMode(airMode);
+        options.airMode = airMode;
     }
 
     /**
@@ -217,7 +225,7 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
      * @param shortcuts if <code>false</code>, disable custom shortcuts
      */
     public void setShortcuts(final boolean shortcuts) {
-        options.setShortcuts(shortcuts);
+        options.shortcuts = shortcuts;
     }
 
     /**
@@ -229,7 +237,7 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
      * @param dialogsInBody if <code>true</code>, place dialogs in &lt;body&gt;
      */
     public void setDialogsInBody(final boolean dialogsInBody) {
-        options.setDialogsInBody(dialogsInBody);
+        options.dialogsInBody = dialogsInBody;
     }
 
     /**
@@ -241,7 +249,7 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
      * @param dialogsFade if <code>true</code>, turn on dialogs fading effect
      */
     public void setDialogsFade(final boolean dialogsFade) {
-        options.setDialogsFade(dialogsFade);
+        options.dialogsFade = dialogsFade;
     }
 
     /**
@@ -252,7 +260,7 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
      * @param disableDragAndDrop if <code>true</code>, disable drag and drop
      */
     public void setDisableDragAndDrop(final boolean disableDragAndDrop) {
-        options.setDisableDragAndDrop(disableDragAndDrop);
+        options.disableDragAndDrop = disableDragAndDrop;
     }
 
     /**
@@ -263,7 +271,18 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
      * @param hintHandler e
      */
     public void setHint(String matchRegexp, HintHandler hintHandler) {
-        options.setHint(matchRegexp, hintHandler);
+        JsPropertyMap<Object> hint = JsPropertyMap.of();
+        hint.set("match", new JsRegExp(matchRegexp));
+        hint.set("search", (SummernoteOptions.HintSearch) (keyword, callback) -> {
+            JsArray<String> result = new JsArray<>();
+            for (String item : hintHandler.onSearch(keyword)) {
+                result.push(item);
+            }
+            callback.accept(result);
+        });
+        hint.set("template", (SummernoteOptions.HintRenderer) hintHandler::getTemplate);
+        hint.set("content", (SummernoteOptions.HintRenderer) hintHandler::getContent);
+        options.hint = hint;
     }
 
     /**
@@ -272,7 +291,7 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
      * @param language supported editor language
      */
     public void setLanguage(final SummernoteLanguage language) {
-        options.setLanguage(language);
+        options.lang = language.getCode();
         this.language = language;
     }
 
@@ -346,7 +365,7 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
      */
     public String getCode() {
         if (isAttached()) {
-            return getCode(getElement());
+            return jQuery().summernoteCommand("code");
         }
         return getElement().getInnerHTML();
     }
@@ -358,7 +377,7 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
      */
     public void setCode(final String code) {
         if (isAttached()) {
-            setCode(getElement(), code);
+            jQuery().summernoteCommand("code", code);
         } else {
             getElement().setInnerHTML(code);
         }
@@ -375,7 +394,7 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
      */
     public boolean isEmpty() {
         if (isAttached()) {
-            return isEmpty(getElement());
+            return Js.isTruthy(jQuery().summernoteCommand("isEmpty"));
         }
         return getElement().getInnerHTML().isEmpty();
     }
@@ -387,7 +406,7 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
     @Override
     public void clear() {
         if (isAttached()) {
-            command(getElement(), "empty");
+            jQuery().summernoteCommand("empty");
         } else {
             super.clear();
             getElement().removeAllChildren();
@@ -398,7 +417,7 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
         if (isAttached()) {
-            command(getElement(), enabled ? "enable" : "disable");
+            jQuery().summernoteCommand(enabled ? "enable" : "disable");
         }
     }
 
@@ -412,7 +431,7 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
      */
     public void reset() {
         if (isAttached()) {
-            command(getElement(), "reset");
+            jQuery().summernoteCommand("reset");
         } else {
             clear();
         }
@@ -422,7 +441,7 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
      * Call this when updating options to ensure everything is up to date
      */
     public void reconfigure() {
-        destroy(getElement());
+        destroy();
         initialize();
     }
 
@@ -433,7 +452,7 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
                 .setWindow(ScriptInjector.TOP_WINDOW).inject();
         }
         // Initialize
-        initialize(getElement(), options);
+        initialize(options);
         // Enable/Disable editor
         setEnabled(enabled);
     }
@@ -451,102 +470,67 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
         super.onUnload();
 
         // Destroy
-        destroy(getElement());
+        destroy();
     }
 
     /**
-     * Inserts the given images to the editor.<br>
+     * Inserts the given images to the editor as data URLs.<br>
      * <br>
      * This method should be used only when you customize
      * the image upload handler.
      *
      * @param images e
      */
-    public void insertImages(JsArray<ImageFile> images) {
-        insertImages(getElement(), images);
+    public void insertImages(JsArray<File> images) {
+        jQuery().summernoteCommand("insertImagesAsDataURL", images);
     }
 
-    private native void initialize(Element e, SummernoteOptions options) /*-{
-        var target = this;
-        options.callbacks = {};
-        if (this.@org.gwtbootstrap5.extras.summernote.client.ui.base.SummernoteBase::hasInitHandler) {
-            options.callbacks.onInit = function() {
-                @org.gwtbootstrap5.extras.summernote.client.event.SummernoteInitEvent::fire(Lorg/gwtbootstrap5/extras/summernote/client/event/HasSummernoteInitHandlers;)(target);
-            };
-        }
-        if (this.@org.gwtbootstrap5.extras.summernote.client.ui.base.SummernoteBase::hasEnterHandler) {
-            options.callbacks.onEnter = function () {
-                @org.gwtbootstrap5.extras.summernote.client.event.SummernoteEnterEvent::fire(Lorg/gwtbootstrap5/extras/summernote/client/event/HasSummernoteEnterHandlers;)(target);
-            };
-        }
-        if (this.@org.gwtbootstrap5.extras.summernote.client.ui.base.SummernoteBase::hasFocusHandler) {
-            options.callbacks.onFocus = function() {
-                @org.gwtbootstrap5.extras.summernote.client.event.SummernoteFocusEvent::fire(Lorg/gwtbootstrap5/extras/summernote/client/event/HasSummernoteFocusHandlers;)(target);
-            };
-        }
-        if (this.@org.gwtbootstrap5.extras.summernote.client.ui.base.SummernoteBase::hasBlurHandler) {
-            options.callbacks.onBlur = function() {
-                @org.gwtbootstrap5.extras.summernote.client.event.SummernoteBlurEvent::fire(Lorg/gwtbootstrap5/extras/summernote/client/event/HasSummernoteBlurHandlers;)(target);
-            };
-        }
-        if (this.@org.gwtbootstrap5.extras.summernote.client.ui.base.SummernoteBase::hasKeyUpHandler) {
-            options.callbacks.onKeyup = function(e) {
-                @org.gwtbootstrap5.extras.summernote.client.event.SummernoteKeyUpEvent::fire(Lorg/gwtbootstrap5/extras/summernote/client/event/HasSummernoteKeyUpHandlers;Lcom/google/gwt/dom/client/NativeEvent;)(target, e.originalEvent);
-            };
-        }
-        if (this.@org.gwtbootstrap5.extras.summernote.client.ui.base.SummernoteBase::hasKeyDownHandler) {
-            options.callbacks.onKeydown = function(e) {
-                @org.gwtbootstrap5.extras.summernote.client.event.SummernoteKeyDownEvent::fire(Lorg/gwtbootstrap5/extras/summernote/client/event/HasSummernoteKeyDownHandlers;Lcom/google/gwt/dom/client/NativeEvent;)(target, e.originalEvent);
-            };
-        }
-        if (this.@org.gwtbootstrap5.extras.summernote.client.ui.base.SummernoteBase::hasUploadImageHandler) {
-            options.callbacks.onImageUpload = function(files) {
-                @org.gwtbootstrap5.extras.summernote.client.event.SummernoteImageUploadEvent::fire(Lorg/gwtbootstrap5/extras/summernote/client/event/HasSummernoteImageUploadHandlers;Lcom/google/gwt/core/client/JsArray;)(target, files);
-            };
-        }
-        if (this.@org.gwtbootstrap5.extras.summernote.client.ui.base.SummernoteBase::hasPasteHandler) {
-            options.callbacks.onPaste = function() {
-                @org.gwtbootstrap5.extras.summernote.client.event.SummernotePasteEvent::fire(Lorg/gwtbootstrap5/extras/summernote/client/event/HasSummernotePasteHandlers;)(target);
-            };
-        }
-        if (this.@org.gwtbootstrap5.extras.summernote.client.ui.base.SummernoteBase::hasChangeHandler) {
-            options.callbacks.onChange = function() {
-                @org.gwtbootstrap5.extras.summernote.client.event.SummernoteChangeEvent::fire(Lorg/gwtbootstrap5/extras/summernote/client/event/HasSummernoteChangeHandlers;)(target);
-            };
-        }
-        $wnd.jQuery(e).summernote(options);
-    }-*/;
+    private JQuery jQuery() {
+        return JQuery.jQuery(getElement());
+    }
 
-    private native void destroy(Element e) /*-{
-        $wnd.jQuery(e).summernote('destroy');
-        $wnd.jQuery(e).off(@org.gwtbootstrap5.extras.summernote.client.event.HasAllSummernoteHandlers::SUMMERNOTE_INIT_EVENT);
-        $wnd.jQuery(e).off(@org.gwtbootstrap5.extras.summernote.client.event.HasAllSummernoteHandlers::SUMMERNOTE_ENTER_EVENT);
-        $wnd.jQuery(e).off(@org.gwtbootstrap5.extras.summernote.client.event.HasAllSummernoteHandlers::SUMMERNOTE_FOCUS_EVENT);
-        $wnd.jQuery(e).off(@org.gwtbootstrap5.extras.summernote.client.event.HasAllSummernoteHandlers::SUMMERNOTE_BLUR_EVENT);
-        $wnd.jQuery(e).off(@org.gwtbootstrap5.extras.summernote.client.event.HasAllSummernoteHandlers::SUMMERNOTE_KEYUP_EVENT);
-        $wnd.jQuery(e).off(@org.gwtbootstrap5.extras.summernote.client.event.HasAllSummernoteHandlers::SUMMERNOTE_KEYDOWN_EVENT);
-        $wnd.jQuery(e).off(@org.gwtbootstrap5.extras.summernote.client.event.HasAllSummernoteHandlers::SUMMERNOTE_PASTE_EVENT);
-        $wnd.jQuery(e).off(@org.gwtbootstrap5.extras.summernote.client.event.HasAllSummernoteHandlers::SUMMERNOTE_IMAGE_UPLOAD_EVENT);
-        $wnd.jQuery(e).off(@org.gwtbootstrap5.extras.summernote.client.event.HasAllSummernoteHandlers::SUMMERNOTE_CHANGE_EVENT);
-    }-*/;
+    private void initialize(SummernoteOptions options) {
+        options.callbacks = JsPropertyMap.of();
+        if (hasInitHandler) {
+            options.callbacks.set("onInit", arg -> SummernoteInitEvent.fire(this));
+        }
+        if (hasEnterHandler) {
+            options.callbacks.set("onEnter", arg -> SummernoteEnterEvent.fire(this));
+        }
+        if (hasFocusHandler) {
+            options.callbacks.set("onFocus", arg -> SummernoteFocusEvent.fire(this));
+        }
+        if (hasBlurHandler) {
+            options.callbacks.set("onBlur", arg -> SummernoteBlurEvent.fire(this));
+        }
+        if (hasKeyUpHandler) {
+            options.callbacks.set("onKeyup", event -> SummernoteKeyUpEvent.fire(this, originalEvent(event)));
+        }
+        if (hasKeyDownHandler) {
+            options.callbacks.set("onKeydown", event -> SummernoteKeyDownEvent.fire(this, originalEvent(event)));
+        }
+        if (hasUploadImageHandler) {
+            // Summernote passes a FileList; copy it into a real array
+            options.callbacks.set("onImageUpload", files -> SummernoteImageUploadEvent.fire(this,
+                JsArray.from(Js.<JsArrayLike<File>>uncheckedCast(files))));
+        }
+        if (hasPasteHandler) {
+            options.callbacks.set("onPaste", arg -> SummernotePasteEvent.fire(this));
+        }
+        if (hasChangeHandler) {
+            options.callbacks.set("onChange", arg -> SummernoteChangeEvent.fire(this));
+        }
+        jQuery().summernote(options);
+    }
 
-    private native void setCode(Element e, String code) /*-{
-        $wnd.jQuery(e).summernote('code', code);
-    }-*/;
+    /**
+     * Summernote passes the jQuery event to its key callbacks.
+     */
+    private static NativeEvent originalEvent(Object jQueryEvent) {
+        return Js.uncheckedCast(Js.asPropertyMap(jQueryEvent).get("originalEvent"));
+    }
 
-    private native String getCode(Element e)/*-{
-        return $wnd.jQuery(e).summernote('code');
-    }-*/;
-
-    private native boolean isEmpty(Element e)/*-{
-        return $wnd.jQuery(e).summernote('isEmpty');
-    }-*/;
-
-    private native void command(Element e, String command)/*-{
-        $wnd.jQuery(e).summernote(command);
-    }-*/;
-
-    private native void insertImages(Element e, JsArray<ImageFile> images) /*-{
-        $wnd.jQuery(e).summernote('insertImages', images);
-    }-*/;
+    private void destroy() {
+        jQuery().summernoteCommand("destroy");
+    }
 }

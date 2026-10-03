@@ -23,7 +23,7 @@ package org.gwtbootstrap5.extras.summernote.client.ui.base;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.core.client.JsArrayMixed;
+import elemental2.core.JsArray;
 
 /**
  * Wrapper for the Summernote WYSIWYG Editor
@@ -36,7 +36,7 @@ public class Toolbar {
 
     private static final String GROUP_PREFIX = "group_";
     private int groupIndex = 0;
-    private final List<JsArrayMixed> groups = new ArrayList<>(0);
+    private final List<JsArray<Object>> groups = new ArrayList<>(0);
 
     /**
      * Add a new toolbar group with the specified buttons.
@@ -45,12 +45,20 @@ public class Toolbar {
      * @return {@link Toolbar}
      */
     public Toolbar addGroup(ToolbarButton... buttons) {
-        groups.add(SummernoteOptions.newToolbarGroup(GROUP_PREFIX + groupIndex++, buttons));
+        JsArray<String> ids = new JsArray<>();
+        for (ToolbarButton button : buttons) {
+            ids.push(button.getId());
+        }
+        groups.add(new JsArray<Object>(GROUP_PREFIX + groupIndex++, ids));
         return this;
     }
 
-    JsArrayMixed build() {
-        return SummernoteOptions.buildToolbar(groups.toArray(new JsArrayMixed[0]));
+    JsArray<Object> build() {
+        JsArray<Object> toolbar = new JsArray<>();
+        for (JsArray<Object> group : groups) {
+            toolbar.push(group);
+        }
+        return toolbar;
     }
 }
 

@@ -8,7 +8,4 @@
     the JSNI to JsInterop migration is complete.
 -->
 <suppressions>
-    <suppress id="jsni" files="org[\\/]gwtbootstrap5[\\/]extras[\\/]summernote[\\/]client[\\/]event[\\/]SummernoteImageUploadEvent\.java$"/>
-    <suppress id="jsni" files="org[\\/]gwtbootstrap5[\\/]extras[\\/]summernote[\\/]client[\\/]ui[\\/]base[\\/]SummernoteBase\.java$"/>
-    <suppress id="jsni" files="org[\\/]gwtbootstrap5[\\/]extras[\\/]summernote[\\/]client[\\/]ui[\\/]base[\\/]SummernoteOptions\.java$"/>
 </suppressions>
