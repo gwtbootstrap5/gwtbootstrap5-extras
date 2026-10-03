@@ -99,13 +99,17 @@ public class AirDatepickerEngine implements IDateTimePickerEngine {
 
     @Override
     public void hide() {
-        if (instance != null) {
+        // Air Datepicker throws when hiding a picker that is already hidden (e.g. after autoClose)
+        if (instance != null && instance.visible) {
             instance.hide();
         }
     }
 
     @Override
     public void toggle() {
+        if (instance == null) {
+            return;
+        }
         if (instance.visible) {
             instance.hide();
         } else {
@@ -184,10 +188,16 @@ public class AirDatepickerEngine implements IDateTimePickerEngine {
     private AirDatepickerOptions translateOptions(DateTimePickerOptions options) {
         AirDatepickerOptions airDatepickerOptions = new AirDatepickerOptions();
         airDatepickerOptions.autoClose = !options.isKeepOpen();
-        airDatepickerOptions.minDate = options.getMinDate() != null ? options.getMinDate() : "";
-        airDatepickerOptions.maxDate = options.getMaxDate() != null ? options.getMaxDate() : "";
-        airDatepickerOptions.hoursStep = options.getHourStep();
-        airDatepickerOptions.minutesStep = options.getMinuteStep();
+        // Pass JS dates: a java.util.Date only works where Date.parse accepts GWT's toString() format
+        airDatepickerOptions.minDate = options.getMinDate() != null ? toJsDate(options.getMinDate()) : "";
+        airDatepickerOptions.maxDate = options.getMaxDate() != null ? toJsDate(options.getMaxDate()) : "";
+        // 0 means "not set"; keep Air Datepicker's default step of 1
+        if (options.getHourStep() > 0) {
+            airDatepickerOptions.hoursStep = options.getHourStep();
+        }
+        if (options.getMinuteStep() > 0) {
+            airDatepickerOptions.minutesStep = options.getMinuteStep();
+        }
 
         List<String> buttons = new ArrayList<>();
         if (options.isShowClearButton()) {
