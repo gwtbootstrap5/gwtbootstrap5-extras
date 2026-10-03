@@ -20,9 +20,10 @@ package org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.tempusdominus;
  * ==========================LICENSE_END=================================
  */
 
-import com.google.gwt.core.client.Scheduler;
+import elemental2.core.JsObject;
 import elemental2.dom.Element;
 import jsinterop.base.Js;
+import jsinterop.base.JsPropertyMap;
 import org.gwtbootstrap5.extras.datetimepicker.client.ui.base.engine.DateTimePickerOptions;
 import org.gwtbootstrap5.extras.datetimepicker.client.ui.base.engine.IDateTimePickerEngine;
 import org.gwtbootstrap5.extras.datetimepicker.client.ui.base.engine.IDateTimePickerHandlers;
@@ -147,35 +148,61 @@ public class TempusDominusEngine implements IDateTimePickerEngine {
 
     // --- Métodos privados ---
 
+    /**
+     * Builds the Tempus Dominus options. A native options object starts empty, so every nested
+     * object is created here, and only options that have a value are set; Tempus Dominus keeps
+     * its defaults for the rest.
+     */
     private TempusDominusOptions translateOptions(DateTimePickerOptions options) {
+        TempusDominusOptions.ButtonsOptions buttons = new TempusDominusOptions.ButtonsOptions();
+        buttons.today = options.isShowTodayButton();
+        buttons.clear = options.isShowClearButton();
+
+        TempusDominusOptions.DisplayOptions display = new TempusDominusOptions.DisplayOptions();
+        display.keepOpen = options.isKeepOpen();
+        display.buttons = buttons;
+        if (options.isOnlyCalendar() || options.isOnlyTime()) {
+            TempusDominusOptions.ComponentsOptions components = new TempusDominusOptions.ComponentsOptions();
+            components.calendar = !options.isOnlyTime();
+            components.clock = !options.isOnlyCalendar();
+            display.components = components;
+        }
+
+        TempusDominusOptions.RestrictionsOptions restrictions = new TempusDominusOptions.RestrictionsOptions();
+        if (options.getMinDate() != null) {
+            restrictions.minDate = toTempusDominusDateTime(options.getMinDate());
+        }
+        if (options.getMaxDate() != null) {
+            restrictions.maxDate = toTempusDominusDateTime(options.getMaxDate());
+        }
+
+        TempusDominusOptions.LocalizationOptions localization = localization(options.getLocale());
+        localization.format = options.getDateTimeFormat();
+
         TempusDominusOptions tempusDominusOptions = new TempusDominusOptions();
-        tempusDominusOptions.display.keepOpen = options.isKeepOpen();
-        tempusDominusOptions.restrictions.minDate = options.getMinDate();
-        tempusDominusOptions.restrictions.maxDate = options.getMaxDate();
-        tempusDominusOptions.stepping = options.getMinuteStep();
-        tempusDominusOptions.display.buttons.today = options.isShowTodayButton();
-        tempusDominusOptions.display.buttons.clear = options.isShowClearButton();
-        if (options.isOnlyCalendar()) {
-            tempusDominusOptions.display.components.calendar = true;
-            tempusDominusOptions.display.components.clock = false;
+        tempusDominusOptions.display = display;
+        tempusDominusOptions.restrictions = restrictions;
+        tempusDominusOptions.localization = localization;
+        if (options.getMinuteStep() > 0) {
+            tempusDominusOptions.stepping = options.getMinuteStep();
         }
-        if (options.isOnlyTime()) {
-            tempusDominusOptions.display.components.calendar = false;
-            tempusDominusOptions.display.components.clock = true;
-        }
-
-        loadLocale(TempusDominusLocales.getLocaleAndLoadItIfNotLoaded(options.getLocale()));
-
-        // Wait for it to init
-        Scheduler.get().scheduleDeferred(() -> {
-            if (instance != null) {
-                instance.setLocale(options.getLocale());
-
-                tempusDominusOptions.localization.format = options.getDateTimeFormat();
-            }
-        });
-
         return tempusDominusOptions;
+    }
+
+    /**
+     * Returns a copy of the full localization for the given locale, so each picker gets its own
+     * language instead of whatever the global Tempus Dominus default is at creation time.
+     */
+    private static TempusDominusOptions.LocalizationOptions localization(String locale) {
+        Object loaded = TempusDominusLocales.getLocaleAndLoadItIfNotLoaded(locale);
+        if (loaded != null) {
+            return Js.uncheckedCast(JsObject.assign(JsPropertyMap.of(), Js.asPropertyMap(loaded).get("localization")));
+        }
+        // English is built in; its "default" locale would format month names in the browser's language
+        TempusDominusOptions.LocalizationOptions english =
+                Js.uncheckedCast(JsObject.assign(JsPropertyMap.of(), TempusDominusGlobal.DefaultEnLocalization));
+        english.locale = locale;
+        return english;
     }
 
     private void appendEvents(Element input, IDateTimePickerHandlers handlers) {
@@ -223,14 +250,6 @@ public class TempusDominusEngine implements IDateTimePickerEngine {
         // javaDate.getTime() returns a long (epoch milliseconds)
         // We cast to double for safe JSInterop translation
         return new TempusDominusDateTime(javaDate.getTime());
-    }
-
-    private void loadLocale(Object locale) {
-        if (locale == null) {
-            return;
-        }
-        TempusDominusGlobal.loadLocale(locale);
-        TempusDominusGlobal.locale((String) Js.asPropertyMap(locale).get("name"));
     }
 
 }

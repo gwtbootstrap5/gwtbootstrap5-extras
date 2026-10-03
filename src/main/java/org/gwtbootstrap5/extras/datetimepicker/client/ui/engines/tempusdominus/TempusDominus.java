@@ -45,7 +45,10 @@ public class TempusDominus {
 
     // --- Options Functions ---
     @JsMethod public native void updateOptions(TempusDominusOptions options);
-    @JsMethod public native void setLocale(String locale);
+    /**
+     * Switches this picker to a locale registered with {@code tempusDominus.loadLocale()}.
+     */
+    @JsMethod public native void locale(String name);
 
     // --- Date Management API ---
     @JsProperty public Object viewDate; // DateTime, JsDate, or String
@@ -53,8 +56,8 @@ public class TempusDominus {
 
     @JsType(isNative = true, namespace = "tempusDominus.TempusDominus", name = "DatesApi")
     public static class DatesApi {
-        @JsMethod public native TempusDominusDateTime[] picked();
-        @JsMethod public native TempusDominusDateTime lastPicked();
+        @JsProperty(name = "picked") public native TempusDominusDateTime[] picked(); // getter
+        @JsProperty(name = "lastPicked") public native TempusDominusDateTime lastPicked(); // getter
         @JsMethod public native void add(Object date); // DateTime, Date, or String
         @JsMethod public native void setValue(Object date); 
         @JsMethod public native void clear();

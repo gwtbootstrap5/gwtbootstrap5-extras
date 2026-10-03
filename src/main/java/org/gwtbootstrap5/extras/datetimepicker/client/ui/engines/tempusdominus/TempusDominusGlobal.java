@@ -42,4 +42,9 @@ public class TempusDominusGlobal {
      * @param name the locale name, e.g. {@code "de"}
      */
     public static native void locale(String name);
+
+    /**
+     * The built-in English localization.
+     */
+    public static Object DefaultEnLocalization;
 }
