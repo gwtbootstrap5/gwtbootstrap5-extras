@@ -23,6 +23,7 @@ package org.gwtbootstrap5.extras.bootbox.client;
 import org.gwtbootstrap5.extras.bootbox.client.callback.ConfirmCallback;
 import org.gwtbootstrap5.extras.bootbox.client.callback.PromptCallback;
 import org.gwtbootstrap5.extras.bootbox.client.callback.SimpleCallback;
+import org.gwtbootstrap5.extras.bootbox.client.js.BootboxGlobal;
 import org.gwtbootstrap5.extras.bootbox.client.options.AlertOptions;
 import org.gwtbootstrap5.extras.bootbox.client.options.BootboxLocale;
 import org.gwtbootstrap5.extras.bootbox.client.options.ConfirmOptions;
@@ -43,9 +44,9 @@ public class Bootbox {
      *
      * @param msg the message to be displayed.
      */
-    public static native void alert(String msg) /*-{
-        $wnd.bootbox.alert(msg);
-    }-*/;
+    public static void alert(String msg) {
+        BootboxGlobal.alert(msg);
+    }
 
     /**
      * Displays a message in a modal dialog box.
@@ -54,20 +55,18 @@ public class Bootbox {
      * @param msg      the message to be displayed.
      * @param callback the callback handler.
      */
-    public static native void alert(String msg, SimpleCallback callback) /*-{
-        $wnd.bootbox.alert(msg, function () {
-            callback.@org.gwtbootstrap5.extras.bootbox.client.callback.SimpleCallback::callback()();
-        });
-    }-*/;
+    public static void alert(String msg, SimpleCallback callback) {
+        BootboxGlobal.alert(msg, callback::callback);
+    }
 
     /**
      * Displays a customized alert with the given {@link AlertOptions}.
      *
      * @param options e
      */
-    public static native void alert(AlertOptions options) /*-{
-        $wnd.bootbox.alert(options);
-    }-*/;
+    public static void alert(AlertOptions options) {
+        BootboxGlobal.alert(options);
+    }
 
     /**
      * Displays a message in a modal dialog box, along with the standard 'OK' and
@@ -76,20 +75,18 @@ public class Bootbox {
      * @param msg      the message to be displayed.
      * @param callback the callback handler.
      */
-    public static native void confirm(String msg, ConfirmCallback callback) /*-{
-        $wnd.bootbox.confirm(msg, function (result) {
-            callback.@org.gwtbootstrap5.extras.bootbox.client.callback.ConfirmCallback::callback(Z)(result);
-        });
-    }-*/;
+    public static void confirm(String msg, ConfirmCallback callback) {
+        BootboxGlobal.confirm(msg, callback::callback);
+    }
 
     /**
      * Displays a customized confirm with the given {@link ConfirmOptions}.
      *
      * @param options e
      */
-    public static native void confirm(ConfirmOptions options) /*-{
-        $wnd.bootbox.confirm(options);
-    }-*/;
+    public static void confirm(ConfirmOptions options) {
+        BootboxGlobal.confirm(options);
+    }
 
     /**
      * Displays a request for information in a modal dialog box, along with the
@@ -98,41 +95,40 @@ public class Bootbox {
      * @param msg      the message to be displayed.
      * @param callback the callback handler.
      */
-    public static native void prompt(String msg, PromptCallback callback) /*-{
-        $wnd.bootbox.prompt(msg, function (result) {
-            callback.@org.gwtbootstrap5.extras.bootbox.client.callback.PromptCallback::callback(Ljava/lang/String;)(result);
-        });
-    }-*/;
+    public static void prompt(String msg, PromptCallback callback) {
+        BootboxGlobal.prompt(msg, callback::callback);
+    }
 
     /**
      * Displays a customized prompt with the given {@link PromptOptions}.
      *
      * @param options e
      */
-    public static native void prompt(PromptOptions options) /*-{
-        $wnd.bootbox.prompt(options);
-    }-*/;
+    public static void prompt(PromptOptions options) {
+        BootboxGlobal.prompt(options);
+    }
 
     /**
      * Displays a completely customizable dialog in a modal dialog box.
      *
      * @param options the dialog options.
      */
-    public static native void dialog(final DialogOptions options) /*-{
-        $wnd.bootbox.dialog(options);
-    }-*/;
+    public static void dialog(final DialogOptions options) {
+        BootboxGlobal.dialog(options);
+    }
 
     /**
      * Sets a callback when dialog gets initialized.
      *
      * @param callback e
      */
-    public static native void init(SimpleCallback callback) /*-{
-        $wnd.bootbox.init(function() {
-            if (callback)
-                callback.@org.gwtbootstrap5.extras.bootbox.client.callback.SimpleCallback::callback()();
+    public static void init(SimpleCallback callback) {
+        BootboxGlobal.init(() -> {
+            if (callback != null) {
+                callback.callback();
+            }
         });
-    }-*/;
+    }
 
     /**
      * Set many of the default options shown in the dialog example.<br>
@@ -143,9 +139,9 @@ public class Bootbox {
      *
      * @param options e
      */
-    public static native void setDefaults(DialogOptions options) /*-{
-        $wnd.bootbox.setDefaults(options);
-    }-*/;
+    public static void setDefaults(DialogOptions options) {
+        BootboxGlobal.setDefaults(options);
+    }
 
     /**
      * Sets a locale.
@@ -154,18 +150,15 @@ public class Bootbox {
      */
     public static void setLocale(final BootboxLocale locale) {
         BootboxLocale l = (locale != null) ? locale : BootboxLocale.getDefault();
-        setLocale(l.getLocale());
+        BootboxGlobal.setLocale(l.getLocale());
     }
 
-    private static native void setLocale(String locale) /*-{
-        $wnd.bootbox.setLocale(locale);
-    }-*/;
 
     /**
      * Hide all currently active bootbox dialogs.
      * <p>Individual dialogs can be closed as per normal Bootstrap dialogs: dialog.modal('hide').
      */
-    public static native void hideAll() /*-{
-        $wnd.bootbox.hideAll();
-    }-*/;
+    public static void hideAll() {
+        BootboxGlobal.hideAll();
+    }
 }

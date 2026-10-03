@@ -21,14 +21,18 @@ package org.gwtbootstrap5.extras.bootbox.client.options;
  */
 
 import org.gwtbootstrap5.extras.bootbox.client.callback.SimpleCallback;
+import org.gwtbootstrap5.extras.bootbox.client.js.JsSimpleCallback;
 
-import com.google.gwt.core.client.JavaScriptObject;
+import jsinterop.annotations.JsOverlay;
+import jsinterop.annotations.JsPackage;
+import jsinterop.annotations.JsType;
 
 /**
  * Alert options.
  *
  * @author Xiaodong Sun
  */
+@JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
 public class AlertOptions extends DialogOptions {
 
     /**
@@ -42,15 +46,15 @@ public class AlertOptions extends DialogOptions {
      * @param message e
      * @return e
      */
+    @JsOverlay
     public static AlertOptions newOptions(final String message) {
-        AlertOptions options = JavaScriptObject.createObject().cast();
+        AlertOptions options = new AlertOptions();
         options.setMessage(message);
         return options;
     }
 
-    public final native void setCallback(SimpleCallback callback) /*-{
-        this.callback = function() {
-            callback.@org.gwtbootstrap5.extras.bootbox.client.callback.SimpleCallback::callback()();
-        };
-    }-*/;
+    @JsOverlay
+    public final void setCallback(SimpleCallback callback) {
+        set("callback", (JsSimpleCallback) callback::callback);
+    }
 }

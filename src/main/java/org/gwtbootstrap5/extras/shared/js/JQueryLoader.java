@@ -26,7 +26,9 @@ import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
 
+import elemental2.dom.DomGlobal;
 import jsinterop.base.Js;
+import jsinterop.base.JsPropertyMap;
 
 /**
  * Loads jQuery for the extras whose library still requires it (Bootbox, Summernote,
@@ -47,6 +49,11 @@ public final class JQueryLoader {
     private static final String JQUERY_URL = "https://code.jquery.com/jquery-3.7.1.min.js";
     private static final String JQUERY_MIGRATE_URL = "https://code.jquery.com/jquery-migrate-3.5.0.min.js";
 
+    private static final String[] BOOTSTRAP_PLUGINS = {
+        "Alert", "Button", "Carousel", "Collapse", "Dropdown", "Modal",
+        "Offcanvas", "Popover", "ScrollSpy", "Tab", "Toast", "Tooltip"
+    };
+
     private JQueryLoader() {
     }
 
@@ -62,15 +69,15 @@ public final class JQueryLoader {
      * Injection is synchronous, so scripts injected afterwards can use jQuery.
      */
     public static void ensureLoaded() {
-        if (isLoaded()) {
-            return;
+        if (!isLoaded()) {
+            ScriptInjector.fromString(Resources.INSTANCE.jQuery().getText())
+                    .setWindow(ScriptInjector.TOP_WINDOW)
+                    .inject();
+            ScriptInjector.fromString(Resources.INSTANCE.jQueryMigrate().getText())
+                    .setWindow(ScriptInjector.TOP_WINDOW)
+                    .inject();
         }
-        ScriptInjector.fromString(Resources.INSTANCE.jQuery().getText())
-                .setWindow(ScriptInjector.TOP_WINDOW)
-                .inject();
-        ScriptInjector.fromString(Resources.INSTANCE.jQueryMigrate().getText())
-                .setWindow(ScriptInjector.TOP_WINDOW)
-                .inject();
+        registerBootstrapPlugins();
     }
 
     /**
@@ -80,11 +87,41 @@ public final class JQueryLoader {
      * @param onLoaded runs once jQuery is available
      */
     public static void ensureLoadedFromUrl(final Runnable onLoaded) {
-        if (isLoaded()) {
+        Runnable ready = () -> {
+            registerBootstrapPlugins();
             onLoaded.run();
+        };
+        if (isLoaded()) {
+            ready.run();
             return;
         }
-        injectUrl(JQUERY_URL, () -> injectUrl(JQUERY_MIGRATE_URL, onLoaded));
+        injectUrl(JQUERY_URL, () -> injectUrl(JQUERY_MIGRATE_URL, ready));
+    }
+
+    /**
+     * Registers Bootstrap's jQuery plugins ({@code $.fn.modal}, {@code $.fn.tooltip}, ...) when
+     * Bootstrap was loaded before jQuery. Bootstrap only registers them if jQuery is present when
+     * Bootstrap itself loads, but core injects Bootstrap before the extras inject jQuery, and
+     * jQuery-based libraries such as Bootbox call {@code $(el).modal(...)}.
+     */
+    private static void registerBootstrapPlugins() {
+        Object bootstrap = Js.global().get("bootstrap");
+        Object jQuery = Js.global().get("jQuery");
+        if (bootstrap == null || jQuery == null
+                || (DomGlobal.document.body != null && DomGlobal.document.body.hasAttribute("data-bs-no-jquery"))) {
+            return;
+        }
+        JsPropertyMap<Object> fn = Js.asPropertyMap(Js.asPropertyMap(jQuery).get("fn"));
+        for (String name : BOOTSTRAP_PLUGINS) {
+            Object plugin = Js.asPropertyMap(bootstrap).get(name);
+            String key = name.toLowerCase();
+            if (plugin == null || fn.has(key) || !Js.asPropertyMap(plugin).has("jQueryInterface")) {
+                continue;
+            }
+            Object jQueryInterface = Js.asPropertyMap(plugin).get("jQueryInterface");
+            Js.asPropertyMap(jQueryInterface).set("Constructor", plugin);
+            fn.set(key, jQueryInterface);
+        }
     }
 
     private static void injectUrl(final String url, final Runnable onSuccess) {

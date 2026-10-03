@@ -1,4 +1,4 @@
-package org.gwtbootstrap5.extras.bootbox.client.options;
+package org.gwtbootstrap5.extras.bootbox.client.js;
 
 /*-
  * ==========================LICENSE_START===============================
@@ -20,42 +20,36 @@ package org.gwtbootstrap5.extras.bootbox.client.options;
  * ==========================LICENSE_END=================================
  */
 
-import org.gwtbootstrap5.extras.bootbox.client.callback.PromptCallback;
-import org.gwtbootstrap5.extras.bootbox.client.js.JsPromptCallback;
-
-import jsinterop.annotations.JsOverlay;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
 /**
- * Prompt options.
- *
- * @author Xiaodong Sun
+ * Native binding for the global {@code bootbox} object.
  */
-@JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
-public class PromptOptions extends DialogOptions {
+@JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "bootbox")
+public class BootboxGlobal {
 
-    /**
-     * 
-     */
-    protected PromptOptions() {}
-    
-    /**
-     * Creates a new {@link PromptOptions}.
-     *
-     * @param message e
-     * @return e
-     */
-    @JsOverlay
-    public static PromptOptions newOptions(final String message) {
-        PromptOptions options = new PromptOptions();
-        options.setMessage(message);
-        options.setCallback(PromptCallback.DEFAULT_PROMPT_CALLBACK);
-        return options;
-    }
+    public static native void alert(String msg);
 
-    @JsOverlay
-    public final void setCallback(PromptCallback callback) {
-        set("callback", (JsPromptCallback) callback::callback);
-    }
+    public static native void alert(String msg, JsSimpleCallback callback);
+
+    public static native void alert(Object options);
+
+    public static native void confirm(String msg, JsConfirmCallback callback);
+
+    public static native void confirm(Object options);
+
+    public static native void prompt(String msg, JsPromptCallback callback);
+
+    public static native void prompt(Object options);
+
+    public static native void dialog(Object options);
+
+    public static native void init(JsSimpleCallback callback);
+
+    public static native void setDefaults(Object options);
+
+    public static native void setLocale(String locale);
+
+    public static native void hideAll();
 }

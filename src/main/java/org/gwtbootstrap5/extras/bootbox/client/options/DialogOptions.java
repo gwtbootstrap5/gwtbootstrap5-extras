@@ -21,18 +21,24 @@ package org.gwtbootstrap5.extras.bootbox.client.options;
  */
 
 import org.gwtbootstrap5.extras.bootbox.client.callback.SimpleCallback;
+import org.gwtbootstrap5.extras.bootbox.client.js.JsSimpleCallback;
 
-import com.google.gwt.core.client.JavaScriptObject;
+import jsinterop.annotations.JsOverlay;
+import jsinterop.annotations.JsPackage;
+import jsinterop.annotations.JsType;
+import jsinterop.base.Js;
+import jsinterop.base.JsPropertyMap;
 
 /**
  * Bootbox dialog options.
  *
  * @author Xiaodong Sun
  */
-public class DialogOptions extends JavaScriptObject {
+@JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
+public class DialogOptions {
 
+    @JsOverlay
     private static final String BUTTON_PREFIX = "bootbox_btn_";
-    private static int BUTTON_INDEX = 0;
 
     protected DialogOptions() {
     }
@@ -43,24 +49,27 @@ public class DialogOptions extends JavaScriptObject {
      * @param message e
      * @return e
      */
+    @JsOverlay
     public static DialogOptions newOptions(final String message) {
-        DialogOptions options = JavaScriptObject.createObject().cast();
+        DialogOptions options = new DialogOptions();
         options.setMessage(message);
         return options;
     }
 
-    final native void setMessage(final String message) /*-{
-        this.message = message;
-    }-*/;
+    @JsOverlay
+    final void setMessage(final String message) {
+        set("message", message);
+    }
 
     /**
      * Adds a header to the dialog and places this text in an H4.
      *
      * @param title e
      */
-    public final native void setTitle(final String title) /*-{
-        this.title = title;
-    }-*/;
+    @JsOverlay
+    public final void setTitle(final String title) {
+        set("title", title);
+    }
 
     /**
      * The locale settings used to translate the three standard button
@@ -68,14 +77,11 @@ public class DialogOptions extends JavaScriptObject {
      *
      * @param locale e
      */
+    @JsOverlay
     public final void setLocale(final BootboxLocale locale) {
         BootboxLocale l = (locale != null) ? locale : BootboxLocale.getDefault();
-        setLocale(l.getLocale());
+        set("locale", l.getLocale());
     }
-
-    private final native void setLocale(final String locale) /*-{
-        this.locale = locale;
-    }-*/;
 
     /**
      * Allows the user to dismiss the dialog by hitting
@@ -85,15 +91,14 @@ public class DialogOptions extends JavaScriptObject {
      *
      * @param callback e
      */
-    public final native void setOnEscape(final SimpleCallback callback) /*-{
-        if (callback) {
-            this.onEscape = function() {
-                callback.@org.gwtbootstrap5.extras.bootbox.client.callback.SimpleCallback::callback()();
-            };
+    @JsOverlay
+    public final void setOnEscape(final SimpleCallback callback) {
+        if (callback != null) {
+            set("onEscape", (JsSimpleCallback) callback::callback);
         } else {
-            this.onEscape = undefined;
+            remove("onEscape");
         }
-    }-*/;
+    }
 
     /**
      * Whether the dialog should be shown immediately.<br>
@@ -102,9 +107,10 @@ public class DialogOptions extends JavaScriptObject {
      *
      * @param show e
      */
-    public final native void setShow(final boolean show) /*-{
-        this.show = show;
-    }-*/;
+    @JsOverlay
+    public final void setShow(final boolean show) {
+        set("show", show);
+    }
 
     /**
      * Whether the dialog should have a backdrop or not.
@@ -118,12 +124,14 @@ public class DialogOptions extends JavaScriptObject {
      *
      * @param backdrop e
      */
-    public final native void setBackdrop(final Boolean backdrop) /*-{
-        if (backdrop == null)
-            this.backdrop = undefined;
-        else
-            this.backdrop = backdrop.@java.lang.Boolean::booleanValue()();
-    }-*/;
+    @JsOverlay
+    public final void setBackdrop(final Boolean backdrop) {
+        if (backdrop == null) {
+            remove("backdrop");
+        } else {
+            set("backdrop", backdrop);
+        }
+    }
 
     /**
      * Whether the dialog should have a close button or not.<br>
@@ -132,9 +140,10 @@ public class DialogOptions extends JavaScriptObject {
      *
      * @param closeButton e
      */
-    public final native void setCloseButton(final boolean closeButton) /*-{
-        this.closeButton = closeButton;
-    }-*/;
+    @JsOverlay
+    public final void setCloseButton(final boolean closeButton) {
+        set("closeButton", closeButton);
+    }
 
     /**
      * Animate the dialog in and out.<br>
@@ -143,9 +152,10 @@ public class DialogOptions extends JavaScriptObject {
      *
      * @param animate e
      */
-    public final native void setAnimate(final boolean animate) /*-{
-        this.animate = animate;
-    }-*/;
+    @JsOverlay
+    public final void setAnimate(final boolean animate) {
+        set("animate", animate);
+    }
 
     /**
      * An additional class to apply to the dialog wrapper.<br>
@@ -154,9 +164,10 @@ public class DialogOptions extends JavaScriptObject {
      *
      * @param className e
      */
-    public final native void setClassName(final String className) /*-{
-        this.className = className;
-    }-*/;
+    @JsOverlay
+    public final void setClassName(final String className) {
+        set("className", className);
+    }
 
     /**
      * Adds the relevant Bootstrap modal size class to the dialog wrapper.<br>
@@ -165,18 +176,21 @@ public class DialogOptions extends JavaScriptObject {
      *
      * @param size e
      */
-    public final native void setSize(final BootboxSize size) /*-{
-        if (size)
-            this.size = size.@org.gwtbootstrap5.extras.bootbox.client.options.BootboxSize::getSize()();
-        else
-            this.size = undefined;
-    }-*/;
+    @JsOverlay
+    public final void setSize(final BootboxSize size) {
+        if (size != null) {
+            set("size", size.getSize());
+        } else {
+            remove("size");
+        }
+    }
 
     /**
      * Adds a custom button.
      *
      * @param label e
      */
+    @JsOverlay
     public final void addButton(String label) {
         addButton(label, (String) null);
     }
@@ -187,6 +201,7 @@ public class DialogOptions extends JavaScriptObject {
      * @param label e
      * @param className e
      */
+    @JsOverlay
     public final void addButton(String label, String className) {
         addButton(label, className, SimpleCallback.DEFAULT_SIMPLE_CALLBACK);
     }
@@ -197,6 +212,7 @@ public class DialogOptions extends JavaScriptObject {
      * @param label e
      * @param callback e
      */
+    @JsOverlay
     public final void addButton(String label, SimpleCallback callback) {
         addButton(label, null, callback);
     }
@@ -208,22 +224,40 @@ public class DialogOptions extends JavaScriptObject {
      * @param className e
      * @param callback e
      */
+    @JsOverlay
     public final void addButton(String label, String className, SimpleCallback callback) {
-        addButton(BUTTON_PREFIX + BUTTON_INDEX++, label, className,
+        addButton(BUTTON_PREFIX + ButtonIndex.next(), label, className,
             callback != null ? callback : SimpleCallback.DEFAULT_SIMPLE_CALLBACK);
     }
 
-    private native void addButton(String name, String label, String className, SimpleCallback callback) /*-{
-        this.buttons = this.buttons || {};
-        this.buttons[name] = {
-            label: label,
-            callback: function() {
-                callback.@org.gwtbootstrap5.extras.bootbox.client.callback.SimpleCallback::callback()();
-            }
-        };
-        if (className) {
-            this.buttons[name].className = className;
+    @JsOverlay
+    private void addButton(String name, String label, String className, SimpleCallback callback) {
+        JsPropertyMap<Object> buttons = Js.uncheckedCast(get("buttons"));
+        if (buttons == null) {
+            buttons = JsPropertyMap.of();
+            set("buttons", buttons);
         }
-    }-*/;
+        JsPropertyMap<Object> button = JsPropertyMap.of(
+            "label", label,
+            "callback", (JsSimpleCallback) callback::callback);
+        if (className != null && !className.isEmpty()) {
+            button.set("className", className);
+        }
+        buttons.set(name, button);
+    }
 
+    @JsOverlay
+    final Object get(final String key) {
+        return Js.asPropertyMap(this).get(key);
+    }
+
+    @JsOverlay
+    final void set(final String key, final Object value) {
+        Js.asPropertyMap(this).set(key, value);
+    }
+
+    @JsOverlay
+    final void remove(final String key) {
+        Js.asPropertyMap(this).delete(key);
+    }
 }

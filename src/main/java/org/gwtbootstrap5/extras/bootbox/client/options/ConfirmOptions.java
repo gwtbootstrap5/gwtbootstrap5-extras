@@ -21,14 +21,18 @@ package org.gwtbootstrap5.extras.bootbox.client.options;
  */
 
 import org.gwtbootstrap5.extras.bootbox.client.callback.ConfirmCallback;
+import org.gwtbootstrap5.extras.bootbox.client.js.JsConfirmCallback;
 
-import com.google.gwt.core.client.JavaScriptObject;
+import jsinterop.annotations.JsOverlay;
+import jsinterop.annotations.JsPackage;
+import jsinterop.annotations.JsType;
 
 /**
  * Confirm options.
  *
  * @author Xiaodong Sun
  */
+@JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
 public class ConfirmOptions extends DialogOptions {
 
     /**
@@ -42,16 +46,16 @@ public class ConfirmOptions extends DialogOptions {
      * @param message e
      * @return e
      */
+    @JsOverlay
     public static ConfirmOptions newOptions(final String message) {
-        ConfirmOptions options = JavaScriptObject.createObject().cast();
+        ConfirmOptions options = new ConfirmOptions();
         options.setMessage(message);
         options.setCallback(ConfirmCallback.DEFAULT_CONFIRM_CALLBACK);
         return options;
     }
 
-    public final native void setCallback(ConfirmCallback callback) /*-{
-        this.callback = function(result) {
-            callback.@org.gwtbootstrap5.extras.bootbox.client.callback.ConfirmCallback::callback(Z)(result);
-        };
-    }-*/;
+    @JsOverlay
+    public final void setCallback(ConfirmCallback callback) {
+        set("callback", (JsConfirmCallback) callback::callback);
+    }
 }
