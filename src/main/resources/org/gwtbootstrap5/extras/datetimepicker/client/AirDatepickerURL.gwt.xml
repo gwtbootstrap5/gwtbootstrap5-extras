@@ -20,7 +20,5 @@
   -->
 
 <module>
-    <inherits name="org.gwtbootstrap5.extras.popper.PopperURL"/>
-
     <entry-point class="org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.airdatepicker.AirDatepickerURLEntryPoint"/>
 </module>

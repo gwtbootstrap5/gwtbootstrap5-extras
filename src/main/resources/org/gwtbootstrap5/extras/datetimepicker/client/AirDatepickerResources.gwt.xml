@@ -21,7 +21,6 @@
 
 <module>
     <inherits name="com.google.gwt.resources.Resources"/>
-    <inherits name="org.gwtbootstrap5.extras.popper.Popper"/>
 
     <public path="resource">
         <include name="air-datepicker-3.5.3/css/air-datepicker.min.cache.css"/>

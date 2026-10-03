@@ -21,7 +21,6 @@
 
 <module>
     <inherits name="com.google.gwt.resources.Resources"/>
-    <inherits name="org.gwtbootstrap5.extras.popper.Popper"/>
 
     <public path="resource">
         <include name="tempus-dominus-6.10.4/css/tempus-dominus.min.cache.css"/>
