@@ -59,7 +59,7 @@ enum RangeOption {
 
     private final String name;
     private final String dataAttrName;
-    private final static String DATA_ATTRIBUTE_PREFIX = "data-bs-slider-";
+    private final static String DATA_ATTRIBUTE_PREFIX = "data-slider-";
 
     /**
      * @param name the option name

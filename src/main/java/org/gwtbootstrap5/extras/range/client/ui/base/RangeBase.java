@@ -47,10 +47,6 @@ import org.gwtbootstrap5.extras.range.client.ui.base.event.SlideStartHandler;
 import org.gwtbootstrap5.extras.range.client.ui.base.event.SlideStopEvent;
 import org.gwtbootstrap5.extras.range.client.ui.base.event.SlideStopHandler;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArrayNumber;
-import com.google.gwt.core.client.JsArrayString;
-import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.editor.client.IsEditor;
@@ -59,10 +55,14 @@ import com.google.gwt.editor.client.adapters.TakesValueEditor;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
+
+import elemental2.core.Global;
+import elemental2.core.JsArray;
+import jsinterop.base.Js;
+import jsinterop.base.JsPropertyMap;
 
 /**
  *
@@ -78,7 +78,7 @@ public abstract class RangeBase<T> extends Widget implements
 
     private FormatterCallback<T> formatterCallback;
     private LeafValueEditor<T> editor;
-    private boolean sliderNamespaceAvailable = true;
+    private BootstrapSlider slider;
 
     private final AttributeMixin<RangeBase<T>> attributeMixin = new AttributeMixin<>(this);
 
@@ -89,27 +89,19 @@ public abstract class RangeBase<T> extends Widget implements
     @Override
     protected void onLoad() {
         super.onLoad();
-        final JavaScriptObject options = JavaScriptObject.createObject();
+        final JsPropertyMap<Object> options = JsPropertyMap.of();
         if (formatterCallback != null) {
-            setFormatterOption(options);
+            options.set(RangeOption.FORMATTER.getName(), formatter());
         }
-        sliderNamespaceAvailable = isSliderNamespaceBound();
-        initSlider(getElement(), options);
-        bindSliderEvents(getElement());
+        slider = new BootstrapSlider(Js.uncheckedCast(getElement()), options);
+        bindSliderEvents();
     }
-
-    /**
-     * Sets formatter option if defined when attaching to the DOM.
-     *
-     * @param options e
-     */
-    protected abstract void setFormatterOption(JavaScriptObject options);
 
     @Override
     protected void onUnload() {
         super.onUnload();
-        unbindSliderEvents(getElement());
-        sliderCommand(getElement(), RangeCommand.DESTROY);
+        slider.destroy();
+        slider = null;
     }
 
     /**
@@ -294,19 +286,19 @@ public abstract class RangeBase<T> extends Widget implements
 
     @Override
     public boolean isEnabled() {
-        if (isAttached()) {
-            return isEnabled(getElement());
+        if (slider != null) {
+            return slider.isEnabled();
         }
         return getBooleanAttribute(RangeOption.ENABLED, true);
     }
 
     @Override
     public void setEnabled(final boolean enabled) {
-        if (isAttached()) {
+        if (slider != null) {
             if (enabled) {
-                sliderCommand(getElement(), RangeCommand.ENABLE);
+                slider.enable();
             } else {
-                sliderCommand(getElement(), RangeCommand.DISABLE);
+                slider.disable();
             }
         } else {
             updateSlider(RangeOption.ENABLED, enabled);
@@ -320,18 +312,28 @@ public abstract class RangeBase<T> extends Widget implements
      */
     public void setFormatter(final FormatterCallback<T> formatterCallback) {
         this.formatterCallback = formatterCallback;
-        if (isAttached()) {
-            setFormatter(getElement());
-            refresh();
+        if (slider != null) {
+            slider.setAttribute(RangeOption.FORMATTER.getName(), formatter());
+            rebuild();
         }
     }
 
     /**
-     * Sets the callback function of the {@link RangeOption#FORMATTER} attribute.
-     *
-     * @param element e
+     * Applies changed options by recreating the slider. bootstrap-slider's refresh() keeps the
+     * existing DOM, so options such as ticks added after creation would break its layout.
+     * The current value is kept.
      */
-    protected abstract void setFormatter(Element element);
+    private void rebuild() {
+        Object options = slider.options;
+        Js.asPropertyMap(options).set(RangeOption.VALUE.getName(), slider.getValue());
+        slider.destroy();
+        slider = new BootstrapSlider(Js.uncheckedCast(getElement()), options);
+        bindSliderEvents();
+    }
+
+    private BootstrapSlider.Formatter formatter() {
+        return value -> formatTooltip(toValue(value));
+    }
 
     protected String formatTooltip(final T value) {
         if (formatterCallback != null)
@@ -456,8 +458,8 @@ public abstract class RangeBase<T> extends Widget implements
 
     @Override
     public void setVisible(final boolean visible) {
-        if (isAttached()) {
-            setVisible(getElement(getElement()), visible);
+        if (slider != null) {
+            setVisible(getSliderElement(), visible);
         } else {
             super.setVisible(visible);
         }
@@ -465,10 +467,10 @@ public abstract class RangeBase<T> extends Widget implements
 
     @Override
     public boolean isVisible() {
-        if (isAttached()) {
-            return isVisible(getElement(getElement()));
+        if (slider != null) {
+            return isVisible(getSliderElement());
         }
-        return isVisible();
+        return super.isVisible();
     }
 
     @Override
@@ -491,8 +493,8 @@ public abstract class RangeBase<T> extends Widget implements
 
         T oldValue = fireEvents ? getValue() : null;
 
-        if (isAttached()) {
-            setValue(getElement(), value);
+        if (slider != null) {
+            slider.setValue(toJsValue(value));
         } else {
             String attrVal = (value == null) ? null : value.toString();
             attributeMixin.setAttribute(RangeOption.VALUE.getDataAttribute(), attrVal);
@@ -505,30 +507,31 @@ public abstract class RangeBase<T> extends Widget implements
     }
 
     /**
-     * Sets the given value to the slider. This method is only relevant if the
-     * slider has been initialized and it will NOT fire the <b>slide</b> event.
+     * Converts a value to the form bootstrap-slider expects: a number,
+     * or a two-number array for range sliders.
      *
-     * @param e e
-     * @param value e
+     * @param value the slider value
+     * @return the JS value
      */
-    protected abstract void setValue(Element e, T value);
+    protected abstract Object toJsValue(T value);
 
     @Override
     public T getValue() {
-        if (isAttached()) {
-            return getValue(getElement());
+        if (slider != null) {
+            return toValue(slider.getValue());
         }
         String attrVal = attributeMixin.getAttribute(RangeOption.VALUE.getDataAttribute());
         return convertValue(attrVal);
     }
 
     /**
-     * Returns the value by invoking the JSNI <strong>getValue</strong> command.
+     * Converts a value received from bootstrap-slider (a number, or a two-number
+     * array for range sliders) to the slider value.
      *
-     * @param e e
-     * @return e
+     * @param value the JS value, may be <code>null</code>
+     * @return the slider value, or <code>null</code>
      */
-    protected abstract T getValue(Element e);
+    protected abstract T toValue(Object value);
 
     /**
      * Converts the value of the {@link RangeOption#VALUE} attribute to the
@@ -542,8 +545,8 @@ public abstract class RangeBase<T> extends Widget implements
     @SuppressWarnings("deprecation")
     @Override
     public com.google.gwt.user.client.Element getStyleElement() {
-        if (isAttached()) {
-            return (com.google.gwt.user.client.Element) getElement(getElement());
+        if (slider != null) {
+            return (com.google.gwt.user.client.Element) getSliderElement();
         }
         return super.getStyleElement();
     }
@@ -552,8 +555,8 @@ public abstract class RangeBase<T> extends Widget implements
      * Toggles the slider between enabled and disabled.
      */
     public void toggle() {
-        if (isAttached()) {
-            sliderCommand(getElement(), RangeCommand.TOGGLE);
+        if (slider != null) {
+            slider.toggle();
         } else {
             setEnabled(!isEnabled());
         }
@@ -564,8 +567,10 @@ public abstract class RangeBase<T> extends Widget implements
      * not been initialized.
      */
     public void refresh() {
-        if (isAttached()) {
-            sliderCommand(getElement(), RangeCommand.REFRESH);
+        if (slider != null) {
+            slider.refresh();
+            // refresh() rebuilds the slider and drops its event callbacks
+            bindSliderEvents();
         }
     }
 
@@ -574,8 +579,8 @@ public abstract class RangeBase<T> extends Widget implements
      * when the slider and tool-tip are initially hidden.
      */
     public void relayout() {
-        if (isAttached()) {
-            sliderCommand(getElement(), RangeCommand.RELAYOUT);
+        if (slider != null) {
+            slider.relayout();
         }
     }
 
@@ -618,70 +623,71 @@ public abstract class RangeBase<T> extends Widget implements
     }
 
     private void updateSlider(RangeOption option, String value) {
-        if (isAttached()) {
-            setAttribute(getElement(), option.getName(), value);
-            refresh();
+        if (slider != null) {
+            slider.setAttribute(option.getName(), value);
+            rebuild();
         } else {
             attributeMixin.setAttribute(option.getDataAttribute(), value);
         }
     }
 
     private void updateSlider(RangeOption option, boolean value) {
-        if (isAttached()) {
-            setAttribute(getElement(), option.getName(), value);
-            refresh();
+        if (slider != null) {
+            slider.setAttribute(option.getName(), value);
+            rebuild();
         } else {
             attributeMixin.setAttribute(option.getDataAttribute(), Boolean.toString(value));
         }
     }
 
     private void updateSlider(RangeOption option, double value) {
-        if (isAttached()) {
-            setAttribute(getElement(), option.getName(), value);
-            refresh();
+        if (slider != null) {
+            slider.setAttribute(option.getName(), value);
+            rebuild();
         } else {
             attributeMixin.setAttribute(option.getDataAttribute(), Double.toString(value));
         }
     }
 
     private void updateSliderForNumberArray(RangeOption option, List<Double> value) {
-        JsArrayNumber array = JavaScriptObject.createArray().cast();
+        JsArray<Double> array = new JsArray<>();
         for (Double val : value) {
             array.push(val);
         }
-        if (isAttached()) {
-            setAttribute(getElement(), option.getName(), array);
-            refresh();
+        if (slider != null) {
+            slider.setAttribute(option.getName(), array);
+            rebuild();
         } else {
-            String arrayStr = JsonUtils.stringify(array);
+            String arrayStr = Global.JSON.stringify(array);
             attributeMixin.setAttribute(option.getDataAttribute(), arrayStr);
         }
     }
 
     private void updateSliderForStringArray(RangeOption option, List<String> value) {
-        JsArrayString array = JavaScriptObject.createArray().cast();
+        JsArray<String> array = new JsArray<>();
         for (String val : value) {
             array.push(val);
         }
-        if (isAttached()) {
-            setAttribute(getElement(), option.getName(), array);
-            refresh();
+        if (slider != null) {
+            slider.setAttribute(option.getName(), array);
+            rebuild();
         } else {
-            String arrayStr = JsonUtils.stringify(array);
+            String arrayStr = Global.JSON.stringify(array);
             attributeMixin.setAttribute(option.getDataAttribute(), arrayStr);
         }
     }
 
     private String getStringAttribute(RangeOption option) {
-        if (isAttached()) {
-            return getStringAttribute(getElement(), option.getName());
+        if (slider != null) {
+            Object value = slider.getAttribute(option.getName());
+            return value == null ? null : String.valueOf(value);
         }
         return attributeMixin.getAttribute(option.getDataAttribute());
     }
 
     private boolean getBooleanAttribute(RangeOption option, boolean defaultValue) {
-        if (isAttached()) {
-            return getBooleanAttribute(getElement(), option.getName());
+        if (slider != null) {
+            return Js.isTruthy(slider.getAttribute(option.getName()));
         }
         String value = attributeMixin.getAttribute(option.getDataAttribute());
         if (value != null && !value.isEmpty()) {
@@ -691,8 +697,9 @@ public abstract class RangeBase<T> extends Widget implements
     }
 
     private double getDoubleAttribute(RangeOption option, double defaultValue) {
-        if (isAttached()) {
-            return getDoubleAttribute(getElement(), option.getName());
+        if (slider != null) {
+            Object value = slider.getAttribute(option.getName());
+            return value == null ? defaultValue : Js.asDouble(value);
         }
         String value = attributeMixin.getAttribute(option.getDataAttribute());
         if (value != null && !value.isEmpty()) {
@@ -702,14 +709,9 @@ public abstract class RangeBase<T> extends Widget implements
     }
 
     private <E extends Enum<E>> E getEnumAttribute(RangeOption option, Class<E> clazz, E defaultValue) {
-        String value;
-        if (isAttached()) {
-            value = getStringAttribute(getElement(), option.getName());
-        } else {
-            value = attributeMixin.getAttribute(option.getDataAttribute());
-        }
+        String value = getStringAttribute(option);
         try {
-            return Enum.valueOf(clazz, value);
+            return Enum.valueOf(clazz, value.toUpperCase());
         } catch (Throwable e) {
             return defaultValue;
         }
@@ -718,13 +720,13 @@ public abstract class RangeBase<T> extends Widget implements
     private List<Double> getNumberArrayAttribute(RangeOption option, List<Double> defaultValue) {
 
         // Get array attribute
-        JsArrayNumber array = null;
-        if (isAttached()) {
-            array = getNumberArrayAttribute(getElement(), option.getName());
+        JsArray<Double> array = null;
+        if (slider != null) {
+            array = Js.uncheckedCast(slider.getAttribute(option.getName()));
         } else {
             String value = attributeMixin.getAttribute(option.getDataAttribute());
             if (value != null && !value.isEmpty()) {
-                array = JsonUtils.safeEval(value);
+                array = Js.uncheckedCast(Global.JSON.parse(value));
             }
         }
 
@@ -734,22 +736,22 @@ public abstract class RangeBase<T> extends Widget implements
         }
 
         // Put array to list
-        List<Double> list = new ArrayList<>(array.length());
-        for (int i = 0; i < array.length(); i++) {
-            list.add(array.get(i));
+        List<Double> list = new ArrayList<>(array.length);
+        for (int i = 0; i < array.length; i++) {
+            list.add(array.getAt(i));
         }
         return list;
     }
 
     private List<String> getStringArrayAttribute(RangeOption option, List<String> defaultValue) {
         // Get array attribute
-        JsArrayString array = null;
-        if (isAttached()) {
-            array = getStringArrayAttribute(getElement(), option.getName());
+        JsArray<String> array = null;
+        if (slider != null) {
+            array = Js.uncheckedCast(slider.getAttribute(option.getName()));
         } else {
             String value = attributeMixin.getAttribute(option.getDataAttribute());
             if (value != null && !value.isEmpty()) {
-                array = JsonUtils.safeEval(value);
+                array = Js.uncheckedCast(Global.JSON.parse(value));
             }
         }
 
@@ -759,39 +761,12 @@ public abstract class RangeBase<T> extends Widget implements
         }
 
         // Put array to list
-        List<String> list = new ArrayList<>(array.length());
-        for (int i = 0; i < array.length(); i++) {
-            list.add(array.get(i));
+        List<String> list = new ArrayList<>(array.length);
+        for (int i = 0; i < array.length; i++) {
+            list.add(array.getAt(i));
         }
         return list;
     }
-
-    protected boolean isSliderNamespaceAvailable() {
-        return sliderNamespaceAvailable;
-    }
-
-    /**
-     * bootstrap-slider always registers the {@code bootstrapSlider} jQuery namespace and only
-     * registers {@code slider} when no other plugin (e.g. jQuery UI) owns it. Use {@code slider}
-     * only for old bootstrap-slider versions that lack the alternate namespace.
-     */
-    private native boolean isSliderNamespaceBound() /*-{
-        return (typeof $wnd.jQuery.fn.bootstrapSlider === 'undefined');
-    }-*/;
-
-    private native void initSlider(Element e, JavaScriptObject options) /*-{
-        if (this.@org.gwtbootstrap5.extras.range.client.ui.base.RangeBase::isSliderNamespaceAvailable()())
-            $wnd.jQuery(e).slider(options);
-        else
-            $wnd.jQuery(e).bootstrapSlider(options);
-    }-*/;
-
-    /**
-     * Called when a {@link SlideEvent} is fired.
-     *
-     * @param event the native event
-     */
-    protected abstract void onSlide(final Event event);
 
     /**
      * Fires a {@link SlideEvent} event.
@@ -803,13 +778,6 @@ public abstract class RangeBase<T> extends Widget implements
     }
 
     /**
-     * Called when a {@link SlideStartEvent} is fired.
-     *
-     * @param event the native event
-     */
-    protected abstract void onSlideStart(final Event event);
-
-    /**
      * Fires a {@link SlideStartEvent} event.
      *
      * @param value the new slide value
@@ -817,13 +785,6 @@ public abstract class RangeBase<T> extends Widget implements
     protected void fireSlideStartEvent(final T value) {
         SlideStartEvent.fire(this, value);
     }
-
-    /**
-     * Called when a {@link SlideStopEvent} is fired.
-     *
-     * @param event the native event
-     */
-    protected abstract void onSlideStop(final Event event);
 
     /**
      * Fires a {@link SlideStopEvent} event.
@@ -835,13 +796,6 @@ public abstract class RangeBase<T> extends Widget implements
     }
 
     /**
-     * Called when a {@link ValueChangeEvent} is fired.
-     *
-     * @param event the native event
-     */
-    protected abstract void onSlideChange(final Event event);
-
-    /**
      * Fires a {@link ValueChangeEvent} event.
      *
      * @param value the new slide value
@@ -850,129 +804,16 @@ public abstract class RangeBase<T> extends Widget implements
         ValueChangeEvent.fire(this, value);
     }
 
-    /**
-     * Binds the slider events.
-     *
-     * @param e
-     */
-    private native void bindSliderEvents(Element e) /*-{
-        var slider = this;
-        $wnd.jQuery(e).on(@org.gwtbootstrap5.extras.range.client.ui.base.event.HasAllSlideHandlers::SLIDE_EVENT, function(event) {
-            slider.@org.gwtbootstrap5.extras.range.client.ui.base.RangeBase::onSlide(Lcom/google/gwt/user/client/Event;)(event);
-        });
-        $wnd.jQuery(e).on(@org.gwtbootstrap5.extras.range.client.ui.base.event.HasAllSlideHandlers::SLIDE_START_EVENT, function(event) {
-            slider.@org.gwtbootstrap5.extras.range.client.ui.base.RangeBase::onSlideStart(Lcom/google/gwt/user/client/Event;)(event);
-        });
-        $wnd.jQuery(e).on(@org.gwtbootstrap5.extras.range.client.ui.base.event.HasAllSlideHandlers::SLIDE_STOP_EVENT, function(event) {
-            slider.@org.gwtbootstrap5.extras.range.client.ui.base.RangeBase::onSlideStop(Lcom/google/gwt/user/client/Event;)(event);
-        });
-        $wnd.jQuery(e).on(@org.gwtbootstrap5.extras.range.client.ui.base.event.HasAllSlideHandlers::SLIDE_CHANGE_EVENT, function(event) {
-            slider.@org.gwtbootstrap5.extras.range.client.ui.base.RangeBase::onSlideChange(Lcom/google/gwt/user/client/Event;)(event);
-        });
-        $wnd.jQuery(e).on(@org.gwtbootstrap5.extras.range.client.ui.base.event.HasAllSlideHandlers::SLIDE_ENABLED_EVENT, function(event) {
-            @org.gwtbootstrap5.extras.range.client.ui.base.event.SlideEnabledEvent::fire(Lorg/gwtbootstrap5/extras/range/client/ui/base/event/HasSlideEnabledHandlers;)(slider);
-        });
-        $wnd.jQuery(e).on(@org.gwtbootstrap5.extras.range.client.ui.base.event.HasAllSlideHandlers::SLIDE_DISABLED_EVENT, function(event) {
-            @org.gwtbootstrap5.extras.range.client.ui.base.event.SlideDisabledEvent::fire(Lorg/gwtbootstrap5/extras/range/client/ui/base/event/HasSlideDisabledHandlers;)(slider);
-        });
-    }-*/;
+    private void bindSliderEvents() {
+        slider.on(SLIDE_EVENT, value -> fireSlideEvent(toValue(value)));
+        slider.on(SLIDE_START_EVENT, value -> fireSlideStartEvent(toValue(value)));
+        slider.on(SLIDE_STOP_EVENT, value -> fireSlideStopEvent(toValue(value)));
+        slider.on(SLIDE_CHANGE_EVENT, value -> fireChangeEvent(toValue(Js.asPropertyMap(value).get("newValue"))));
+        slider.on(SLIDE_ENABLED_EVENT, value -> SlideEnabledEvent.fire(this));
+        slider.on(SLIDE_DISABLED_EVENT, value -> SlideDisabledEvent.fire(this));
+    }
 
-    /**
-     * Unbinds the slider events.
-     *
-     * @param e e
-     */
-    private native void unbindSliderEvents(Element e) /*-{
-        $wnd.jQuery(e).off(@org.gwtbootstrap5.extras.range.client.ui.base.event.HasAllSlideHandlers::SLIDE_EVENT);
-        $wnd.jQuery(e).off(@org.gwtbootstrap5.extras.range.client.ui.base.event.HasAllSlideHandlers::SLIDE_START_EVENT);
-        $wnd.jQuery(e).off(@org.gwtbootstrap5.extras.range.client.ui.base.event.HasAllSlideHandlers::SLIDE_STOP_EVENT);
-        $wnd.jQuery(e).off(@org.gwtbootstrap5.extras.range.client.ui.base.event.HasAllSlideHandlers::SLIDE_CHANGE_EVENT);
-        $wnd.jQuery(e).off(@org.gwtbootstrap5.extras.range.client.ui.base.event.HasAllSlideHandlers::SLIDE_ENABLED_EVENT);
-        $wnd.jQuery(e).off(@org.gwtbootstrap5.extras.range.client.ui.base.event.HasAllSlideHandlers::SLIDE_DISABLED_EVENT);
-    }-*/;
-
-    private native boolean isEnabled(Element e) /*-{
-        if (this.@org.gwtbootstrap5.extras.range.client.ui.base.RangeBase::isSliderNamespaceAvailable()())
-            return $wnd.jQuery(e).slider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::IS_ENABLED);
-        return $wnd.jQuery(e).bootstrapSlider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::IS_ENABLED);
-    }-*/;
-
-    private native void sliderCommand(Element e, String cmd) /*-{
-        if (this.@org.gwtbootstrap5.extras.range.client.ui.base.RangeBase::isSliderNamespaceAvailable()())
-            $wnd.jQuery(e).slider(cmd);
-        else
-            $wnd.jQuery(e).bootstrapSlider(cmd);
-    }-*/;
-
-    private native Element getElement(Element e) /*-{
-        if (this.@org.gwtbootstrap5.extras.range.client.ui.base.RangeBase::isSliderNamespaceAvailable()())
-            return $wnd.jQuery(e).slider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::GET_ELEMENT);
-        return $wnd.jQuery(e).bootstrapSlider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::GET_ELEMENT);
-    }-*/;
-
-    private native void setAttribute(Element e, String attr, String value) /*-{
-        if (this.@org.gwtbootstrap5.extras.range.client.ui.base.RangeBase::isSliderNamespaceAvailable()())
-            $wnd.jQuery(e).slider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::SET_ATTRIBUTE, attr, value);
-        else
-            $wnd.jQuery(e).bootstrapSlider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::SET_ATTRIBUTE, attr, value);
-    }-*/;
-
-    private native void setAttribute(Element e, String attr, boolean value) /*-{
-        if (this.@org.gwtbootstrap5.extras.range.client.ui.base.RangeBase::isSliderNamespaceAvailable()())
-            $wnd.jQuery(e).slider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::SET_ATTRIBUTE, attr, value);
-        else
-            $wnd.jQuery(e).bootstrapSlider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::SET_ATTRIBUTE, attr, value);
-    }-*/;
-
-    private native void setAttribute(Element e, String attr, double value) /*-{
-        if (this.@org.gwtbootstrap5.extras.range.client.ui.base.RangeBase::isSliderNamespaceAvailable()())
-            $wnd.jQuery(e).slider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::SET_ATTRIBUTE, attr, value);
-        else
-            $wnd.jQuery(e).bootstrapSlider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::SET_ATTRIBUTE, attr, value);
-    }-*/;
-
-    private native void setAttribute(Element e, String attr, JsArrayNumber value) /*-{
-        if (this.@org.gwtbootstrap5.extras.range.client.ui.base.RangeBase::isSliderNamespaceAvailable()())
-            $wnd.jQuery(e).slider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::SET_ATTRIBUTE, attr, value);
-        else
-            $wnd.jQuery(e).bootstrapSlider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::SET_ATTRIBUTE, attr, value);
-    }-*/;
-
-    private native void setAttribute(Element e, String attr, JsArrayString value) /*-{
-        if (this.@org.gwtbootstrap5.extras.range.client.ui.base.RangeBase::isSliderNamespaceAvailable()())
-            $wnd.jQuery(e).slider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::SET_ATTRIBUTE, attr, value);
-        else
-            $wnd.jQuery(e).bootstrapSlider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::SET_ATTRIBUTE, attr, value);
-    }-*/;
-
-    private native String getStringAttribute(Element e, String attr) /*-{
-        if (this.@org.gwtbootstrap5.extras.range.client.ui.base.RangeBase::isSliderNamespaceAvailable()())
-            return $wnd.jQuery(e).slider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::GET_ATTRIBUTE, attr);
-        return $wnd.jQuery(e).bootstrapSlider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::GET_ATTRIBUTE, attr);
-    }-*/;
-
-    private native boolean getBooleanAttribute(Element e, String attr) /*-{
-        if (this.@org.gwtbootstrap5.extras.range.client.ui.base.RangeBase::isSliderNamespaceAvailable()())
-            return $wnd.jQuery(e).slider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::GET_ATTRIBUTE, attr);
-        return $wnd.jQuery(e).bootstrapSlider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::GET_ATTRIBUTE, attr);
-    }-*/;
-
-    private native double getDoubleAttribute(Element e, String attr) /*-{
-        if (this.@org.gwtbootstrap5.extras.range.client.ui.base.RangeBase::isSliderNamespaceAvailable()())
-            return $wnd.jQuery(e).slider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::GET_ATTRIBUTE, attr);
-        return $wnd.jQuery(e).bootstrapSlider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::GET_ATTRIBUTE, attr);
-    }-*/;
-
-    private native JsArrayNumber getNumberArrayAttribute(Element e, String attr) /*-{
-        if (this.@org.gwtbootstrap5.extras.range.client.ui.base.RangeBase::isSliderNamespaceAvailable()())
-            return $wnd.jQuery(e).slider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::GET_ATTRIBUTE, attr);
-        return $wnd.jQuery(e).bootstrapSlider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::GET_ATTRIBUTE, attr);
-    }-*/;
-
-    private native JsArrayString getStringArrayAttribute(Element e, String attr) /*-{
-        if (this.@org.gwtbootstrap5.extras.range.client.ui.base.RangeBase::isSliderNamespaceAvailable()())
-            return $wnd.jQuery(e).slider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::GET_ATTRIBUTE, attr);
-        return $wnd.jQuery(e).bootstrapSlider(@org.gwtbootstrap5.extras.range.client.ui.base.RangeCommand::GET_ATTRIBUTE, attr);
-    }-*/;
-
+    private Element getSliderElement() {
+        return Js.uncheckedCast(slider.getElement());
+    }
 }

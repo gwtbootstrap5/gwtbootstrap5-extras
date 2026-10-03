@@ -20,9 +20,9 @@ package org.gwtbootstrap5.extras.range.client.ui;
  * ==========================LICENSE_END=================================
  */
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArrayNumber;
-import com.google.gwt.core.client.JsonUtils;
+import elemental2.core.Global;
+import elemental2.core.JsArray;
+import jsinterop.base.Js;
 
 /**
  * Slider range with a min value and a max value.
@@ -54,8 +54,8 @@ public class Range {
      *
      * @param array array
      */
-    public Range(final JsArrayNumber array) {
-        this(array.get(0), array.get(1));
+    public Range(final JsArray<Double> array) {
+        this(array.getAt(0), array.getAt(1));
     }
 
     /**
@@ -81,10 +81,9 @@ public class Range {
      *
      * @return a JavaScript number array
      */
-    public JsArrayNumber toJsArray() {
-        JsArrayNumber array = JavaScriptObject.createArray().cast();
-        array.push(minValue);
-        array.push(maxValue);
+    public JsArray<Double> toJsArray() {
+        JsArray<Double> array = new JsArray<>();
+        array.push(minValue, maxValue);
         return array;
     }
 
@@ -99,7 +98,7 @@ public class Range {
     public static Range fromString(String value) {
         if (value == null || value.isEmpty())
             return null;
-        JsArrayNumber array = JsonUtils.safeEval(value);
+        JsArray<Double> array = Js.uncheckedCast(Global.JSON.parse(value));
         return new Range(array);
     }
 

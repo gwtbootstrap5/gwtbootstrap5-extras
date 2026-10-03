@@ -22,7 +22,6 @@ package org.gwtbootstrap5.extras.range.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.ScriptInjector;
-import org.gwtbootstrap5.extras.shared.js.JQueryLoader;
 
 import jsinterop.base.Js;
 
@@ -34,9 +33,6 @@ public class RangeEntryPoint implements EntryPoint {
     @Override
     public void onModuleLoad() {
         if (!isSliderLoaded()) {
-            // RangeBase still uses the jQuery plugin until it moves to the vanilla Slider API (phase 4);
-            // bootstrap-slider only registers it when jQuery is already loaded.
-            JQueryLoader.ensureLoaded();
             ScriptInjector.fromString(RangeClientBundle.INSTANCE.slider().getText()).setWindow(ScriptInjector.TOP_WINDOW).inject();
         }
     }
