@@ -21,11 +21,9 @@
 
 <module>
     <public path="resource">
-        <include name="css/summernote-0.9.0.min.cache.css"/>
-        <include name="css/summernote-bs5-0.9.0.min.cache.css"/>
+        <include name="css/summernote-bs5-0.9.1.min.cache.css"/>
         <include name="css/font/*"/>
     </public>
 
-    <stylesheet src="css/summernote-0.9.0.min.cache.css"/>
-    <stylesheet src="css/summernote-bs5-0.9.0.min.cache.css"/>
+    <stylesheet src="css/summernote-bs5-0.9.1.min.cache.css"/>
 </module>

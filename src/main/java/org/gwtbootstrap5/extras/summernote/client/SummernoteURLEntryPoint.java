@@ -33,8 +33,6 @@ public class SummernoteURLEntryPoint implements EntryPoint {
     @Override
     public void onModuleLoad() {
         JQueryLoader.ensureLoadedFromUrl(() -> {
-            ScriptInjector.fromUrl("https://cdnjs.cloudflare.com/ajax/libs/summernote/0.9.1/summernote.min.js").setWindow(ScriptInjector.TOP_WINDOW)
-                    .inject();
             ScriptInjector.fromUrl("https://cdnjs.cloudflare.com/ajax/libs/summernote/0.9.1/summernote-bs5.min.js").setWindow(ScriptInjector.TOP_WINDOW)
                     .inject();
         });

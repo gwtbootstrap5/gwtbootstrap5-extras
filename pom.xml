@@ -57,6 +57,12 @@
 			<groupId>com.google.elemental2</groupId>
 			<artifactId>elemental2-core</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -71,6 +77,8 @@
 				<configuration>
 					<moduleName>org.gwtbootstrap5.gwtbootstrap5-extras</moduleName>
 					<moduleShortName>gwtbootstrap5-extras</moduleShortName>
+					<!-- No GWT tests in extras; plain JVM tests run with surefire below -->
+					<skipTests>true</skipTests>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -80,6 +88,25 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<executions>
+					<!-- gwt-lib binds only gwt:test to the test phase; run the plain JVM tests too -->
+					<execution>
+						<id>jvm-tests</id>
+						<phase>test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<includes>
+								<include>**/*Test.java</include>
+							</includes>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

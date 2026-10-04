@@ -32,7 +32,6 @@ public class SummernoteEntryPoint implements EntryPoint {
     @Override
     public void onModuleLoad() {
         JQueryLoader.ensureLoaded();
-        ScriptInjector.fromString(SummernoteClientBundle.INSTANCE.summernote().getText()).setWindow(ScriptInjector.TOP_WINDOW).inject();
         ScriptInjector.fromString(SummernoteClientBundle.INSTANCE.summernote_BS5().getText()).setWindow(ScriptInjector.TOP_WINDOW).inject();
     }
 }
