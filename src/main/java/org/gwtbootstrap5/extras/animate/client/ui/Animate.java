@@ -105,7 +105,7 @@ public class Animate {
      * @param animation Type of animation to apply.
      * @param count Number of animation repeats. 0 disables animation, any negative value set repeats to infinite.
      * @param duration Animation duration in ms. 0 disables animation, any negative value keeps default of original animation.
-     * @param delay Delay before starting the animation loop in ms. Value <= 0 means no delay.
+     * @param delay Delay before starting the animation loop in ms. Value {@code <= 0} means no delay.
      * @param <T> Any object extending UIObject class (typically Widget).
      * @return Animation's CSS class name, which can be removed to stop animation.
      */
@@ -191,7 +191,7 @@ public class Animate {
      * @param animation Custom CSS class name used as animation.
      * @param count Number of animation repeats. 0 disables animation, any negative value set repeats to infinite.
      * @param duration Animation duration in ms. 0 disables animation, any negative value keeps default of original animation.
-     * @param delay Delay before starting the animation loop in ms. Value <= 0 means no delay.
+     * @param delay Delay before starting the animation loop in ms. Value {@code <= 0} means no delay.
      * @param <T> Any object extending UIObject class (typically Widget).
      * @return Animation's CSS class name, which can be removed to stop animation.
      */

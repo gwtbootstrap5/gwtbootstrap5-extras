@@ -40,7 +40,7 @@ public class SummernoteKeyUpEvent extends GwtEvent<SummernoteKeyUpHandler> {
      * manager. If no such handlers exist, this method will do nothing.
      *
      * @param source the source of the handlers
-     * @param keyUpEvent native key up event
+     * @param nativeEvent native key up event
      */
     public static void fire(final HasSummernoteKeyUpHandlers source, NativeEvent nativeEvent) {
         if (TYPE != null) {

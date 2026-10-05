@@ -22,7 +22,7 @@ package org.gwtbootstrap5.extras.datetimepicker.client.ui.base.interfaces;
 
 /**
  * Number. Default: 5
- * <p/>
+ * <p>
  * The increment used to build the hour view. A preset is created for each minuteStep minutes.
  *
  * @author Joshua Godi

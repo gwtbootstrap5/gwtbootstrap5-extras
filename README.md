@@ -5,18 +5,20 @@ You can easily add GwtBootstrap5-Extras to your project by including the library
 
 ```xml
 <dependency>
-    <groupId>org.gwtbootstrap5</groupId>
+    <groupId>io.github.gwtbootstrap5</groupId>
     <artifactId>gwtbootstrap5-extras</artifactId>
-    <version>VERSION</version>
+    <version>0.2.0</version>
     <scope>provided</scope>
 </dependency>
 ```
 
 ### Final Release
+* 0.2.0 - Released on 5 October 2026.
+  * Based on GwtBootstrap5 v0.2.0. JsInterop instead of JSNI, new `io.github.gwtbootstrap5` groupId. See [UPGRADING.md](https://github.com/gwtbootstrap5/gwtbootstrap5-parent/blob/master/UPGRADING.md).
 * 0.1.12 - Released on 16 March 2026. 
   * Based on GwtBootstrap5 v0.1.12
-* [Demo](Soon) - The GwtBootstrap5 0.1.12 Demo.
-* [API Docs](Soon) - The GwtBootstrap5-Extras 0.1.12 API Javadoc.
+* [Demo](Soon) - The GwtBootstrap5 Demo.
+* [API Docs](https://javadoc.io/doc/io.github.gwtbootstrap5/gwtbootstrap5-extras) - The GwtBootstrap5-Extras API Javadoc.
 
 ### Resources
 * [Project Wiki](https://github.com/themarioga/gwtbootstrap5-extras/wiki) - Help with getting started and other useful project help.

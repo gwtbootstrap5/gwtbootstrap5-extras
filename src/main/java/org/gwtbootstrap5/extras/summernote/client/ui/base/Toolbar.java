@@ -27,7 +27,7 @@ import elemental2.core.JsArray;
 
 /**
  * Wrapper for the Summernote WYSIWYG Editor
- * <p/>
+ * <p>
  * See: <a href="http://summernote.org/">...</a>
  *
  * @author Xiaodong Sun

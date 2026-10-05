@@ -57,7 +57,7 @@ import jsinterop.base.JsPropertyMap;
 
 /**
  * Wrapper for the Summernote WYSIWYG Editor
- * <p/>
+ * <p>
  * See: <a href="https://summernote.org/">...</a>
  *
  * @author Xiaodong Sun
@@ -386,7 +386,7 @@ public class SummernoteBase extends Div implements HasAllSummernoteHandlers, Has
     /**
      * Returns <code>true</code> if the content is empty.<br>
      * <br>
-     * Editing area needs <code>&lt;p&gt;&lt;br&gt;&lt;/p&gt;</code></code>
+     * Editing area needs <code>&lt;p&gt;&lt;br&gt;&lt;/p&gt;</code>
      * for focus, even if contents is empty. So summernote supports this method
      * for helping to check contents is empty.
      *

@@ -60,7 +60,7 @@ public class SelectEditor<T> extends TakesValueEditor<T> implements HasEditorDel
     }
 
     /**
-     * Calls {@link SelectBase#()}. If a ParseException is thrown, it will be available
+     * Calls {@link SelectBase#getValue()}. If a ParseException is thrown, it will be available
      * through {@link com.google.gwt.editor.client.EditorError#getUserData() EditorError.getUserData()}.
      *
      * @return a value of type T

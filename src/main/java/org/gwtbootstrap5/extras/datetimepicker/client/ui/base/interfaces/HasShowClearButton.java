@@ -22,7 +22,7 @@ package org.gwtbootstrap5.extras.datetimepicker.client.ui.base.interfaces;
 
 /**
  * Boolean, Default: false
- * <p/>
+ * <p>
  * If true, displays a clear button at the bottom of the datetimepicker to clear the current date.
  * If true, the "Clear" button will clear the currently selected date from the datetimepicker;
  *

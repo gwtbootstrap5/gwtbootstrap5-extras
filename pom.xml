@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.gwtbootstrap5</groupId>
+		<groupId>io.github.gwtbootstrap5</groupId>
 		<artifactId>gwtbootstrap5-parent</artifactId>
 		<version>0.2.0</version>
 	</parent>
@@ -12,13 +12,13 @@
 	<artifactId>gwtbootstrap5-extras</artifactId>
 	<name>GwtBootstrap5 Extras</name>
 	<description>Extra, third-party widgets/components for GwtBootstrap5</description>
-	<url>https://gwtbootstrap5.org</url>
+	<url>https://github.com/gwtbootstrap5/gwtbootstrap5-extras</url>
 	<packaging>gwt-lib</packaging>
 
 	<scm>
 		<connection>scm:git:git@github.com:gwtbootstrap5/gwtbootstrap5-extras.git</connection>
 		<developerConnection>scm:git:git@github.com:gwtbootstrap5/gwtbootstrap5-extras.git</developerConnection>
-		<url>git@github.com:gwtbootstrap5/gwtbootstrap5-extras.git</url>
+		<url>https://github.com/gwtbootstrap5/gwtbootstrap5-extras</url>
 		<tag>HEAD</tag>
 	</scm>
 
@@ -110,19 +110,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<repositories>
-		<!-- Required for CI to fetch the latest snapshot releases of gwtbootstrap5 -->
-		<repository>
-			<id>sonatype-nexus-snapshots</id>
-			<url>http://oss.sonatype.org/content/repositories/snapshots</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</repository>
-	</repositories>
-
 </project>
