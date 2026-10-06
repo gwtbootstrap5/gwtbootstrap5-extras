@@ -25,28 +25,73 @@ import jsinterop.annotations.JsMethod;
 import jsinterop.annotations.JsProperty;
 import jsinterop.annotations.JsType;
 
+/**
+ * JsInterop binding of {@code tempusDominus.DateTime}, the {@code Date} subclass of Tempus
+ * Dominus.
+ */
 @JsType(isNative = true, namespace = "tempusDominus", name = "DateTime")
 public class TempusDominusDateTime {
 
+    /** Creates the current date and time. */
     @JsConstructor
     public TempusDominusDateTime() {}
 
+    /**
+     * Creates a date.
+     *
+     * @param epochMilliseconds the time, in milliseconds since 1970
+     */
     @JsConstructor
     public TempusDominusDateTime(double epochMilliseconds) {}
 
+    /**
+     * Creates a date.
+     *
+     * @param date a JS {@code Date} or a string
+     */
     @JsConstructor
     public TempusDominusDateTime(Object date) {} // Can pass a JS Date or String
 
+    /** The year. */
     @JsProperty public int year;
-    @JsProperty public int month; // 0-indexed
+    /** The month, from 0 (January). */
+    @JsProperty public int month;
+    /** The day of the month. */
     @JsProperty public int date;
+    /** The hours. */
     @JsProperty public int hours;
+    /** The minutes. */
     @JsProperty public int minutes;
+    /** The seconds. */
     @JsProperty public int seconds;
 
     @JsMethod public native TempusDominusDateTime clone();
+    /**
+     * Formats the date.
+     *
+     * @param formatString the format, such as {@code "dd/MM/yyyy"}
+     * @return the formatted date
+     */
     @JsMethod public native String format(String formatString);
+    /**
+     * Returns whether the date is before another.
+     *
+     * @param other the other date
+     * @return {@code true} if it is
+     */
     @JsMethod public native boolean isBefore(TempusDominusDateTime other);
+    /**
+     * Returns whether the date is after another.
+     *
+     * @param other the other date
+     * @return {@code true} if it is
+     */
     @JsMethod public native boolean isAfter(TempusDominusDateTime other);
+    /**
+     * Returns whether the date is the same as another.
+     *
+     * @param other the other date
+     * @return {@code true} if it is
+     */
     @JsMethod public native boolean isSame(TempusDominusDateTime other);
 }

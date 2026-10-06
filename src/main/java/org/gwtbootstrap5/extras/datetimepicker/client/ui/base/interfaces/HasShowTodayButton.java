@@ -30,5 +30,10 @@ package org.gwtbootstrap5.extras.datetimepicker.client.ui.base.interfaces;
  * @author Joshua Godi
  */
 public interface HasShowTodayButton {
+    /**
+     * Sets whether the picker shows a button that picks today.
+     *
+     * @param showTodayButton {@code true} to show it
+     */
     void setShowTodayButton(boolean showTodayButton);
 }

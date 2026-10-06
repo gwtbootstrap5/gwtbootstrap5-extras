@@ -28,6 +28,16 @@ package org.gwtbootstrap5.extras.datetimepicker.client.ui.base.interfaces;
  * @author Joshua Godi
  */
 public interface HasAutoClose {
+    /**
+     * Sets whether the picker stays open after a date is picked.
+     *
+     * @param autoClose {@code true} to keep it open
+     */
     void setKeepOpen(boolean autoClose);
+    /**
+     * Returns whether the picker stays open after a date is picked.
+     *
+     * @return {@code true} if it stays open
+     */
     boolean isKeepOpen();
 }

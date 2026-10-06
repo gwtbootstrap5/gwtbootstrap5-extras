@@ -30,7 +30,19 @@ import org.gwtbootstrap5.client.shared.event.ShowHandler;
  * @author Joshua Godi
  */
 public interface HasDateTimePickerHandlers {
+    /**
+     * Adds a handler called when the picker opens.
+     *
+     * @param showHandler the handler
+     * @return the registration that removes the handler
+     */
     HandlerRegistration addShowHandler(ShowHandler showHandler);
 
+    /**
+     * Adds a handler called when the picker closes.
+     *
+     * @param hideHandler the handler
+     * @return the registration that removes the handler
+     */
     HandlerRegistration addHideHandler(HideHandler hideHandler);
 }

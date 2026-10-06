@@ -23,10 +23,18 @@ package org.gwtbootstrap5.extras.datetimepicker.client.ui.base.engine;
 import java.util.Date;
 import java.util.List;
 
+/** What an engine calls when its picker opens, closes or changes. */
 public interface IDateTimePickerHandlers {
 
+    /** Called when the picker opens. */
     void onShow();
+    /** Called when the picker closes. */
     void onHide();
+    /**
+     * Called when the selected dates change.
+     *
+     * @param dates the selected dates
+     */
     void onChangeValue(List<Date> dates);
 
 }

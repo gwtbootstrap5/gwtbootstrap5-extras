@@ -25,9 +25,15 @@ import com.google.gwt.core.client.ScriptInjector;
 import org.gwtbootstrap5.client.ui.util.StyleInjector;
 
 /**
+ * Loads Tempus Dominus from a CDN instead of the bundled files.
+ *
  * @author Sven Jacobs
  */
 public class TempusDominusURLEntryPoint implements EntryPoint {
+
+    /** Creates the entry point; GWT calls it when the module loads. */
+    public TempusDominusURLEntryPoint() {
+    }
 
     @Override
     public void onModuleLoad() {

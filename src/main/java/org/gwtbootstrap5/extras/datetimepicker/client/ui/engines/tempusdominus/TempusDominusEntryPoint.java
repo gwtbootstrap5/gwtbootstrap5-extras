@@ -24,9 +24,15 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.ScriptInjector;
 
 /**
+ * Loads the bundled Tempus Dominus script and style sheet, unless the page loads them already.
+ *
  * @author Sven Jacobs
  */
 public class TempusDominusEntryPoint implements EntryPoint {
+
+    /** Creates the entry point; GWT calls it when the module loads. */
+    public TempusDominusEntryPoint() {
+    }
 
     @Override
     public void onModuleLoad() {

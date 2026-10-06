@@ -24,10 +24,19 @@ import org.gwtbootstrap5.extras.datetimepicker.client.ui.base.engine.IDateTimePi
 import org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.airdatepicker.AirDatepickerEngine;
 import org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.tempusdominus.TempusDominusEngine;
 
+/** The JavaScript libraries that can draw a date picker. */
 public enum DateTimePickerEngines {
+    /** Tempus Dominus 6. */
     TEMPUSDOMINUS,
+    /** Air Datepicker 3. */
     AIRDATEPICKER;
 
+    /**
+     * Creates a new engine of a library.
+     *
+     * @param engine the library
+     * @return the engine
+     */
     public static IDateTimePickerEngine getEngine(DateTimePickerEngines engine) {
         IDateTimePickerEngine dateTimePickerEngine = new TempusDominusEngine();
         switch (engine) {

@@ -25,10 +25,23 @@ import org.gwtbootstrap5.extras.datetimepicker.client.ui.base.DateTimePickerBase
 import org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.DateTimePickerEngines;
 
 /**
+ * Date picker: a text box that opens a calendar, without the time. The engine is
+ * {@code TEMPUSDOMINUS} (Tempus Dominus 6) or {@code AIRDATEPICKER} (Air Datepicker 3).
+ * <h2>UiBinder example</h2>
+ * <pre>{@code
+ *     <dp:DatePicker engine="TEMPUSDOMINUS" placeholder="Pick a date"/>
+ * }</pre>
+ * with {@code xmlns:dp="urn:import:org.gwtbootstrap5.extras.datepicker.client.ui"}.
+ *
  * @author themarioga
  */
 public class DatePicker extends DateTimePickerBase {
 
+    /**
+     * Creates a date picker.
+     *
+     * @param engine the JavaScript library that draws the calendar
+     */
     @UiConstructor
     public DatePicker(DateTimePickerEngines engine) {
         super(DateTimePickerEngines.getEngine(engine));

@@ -29,7 +29,17 @@ package org.gwtbootstrap5.extras.datetimepicker.client.ui.base.interfaces;
  * @see String
  */
 public interface HasLocalization {
+    /**
+     * Sets the language of the picker; the engine loads its translation.
+     *
+     * @param locale the locale, such as {@code "es"}
+     */
     void setLocale(String locale);
 
+    /**
+     * Returns the language of the picker.
+     *
+     * @return the locale
+     */
     String getLocale();
 }

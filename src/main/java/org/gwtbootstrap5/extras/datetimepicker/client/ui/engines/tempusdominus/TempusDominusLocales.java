@@ -27,35 +27,65 @@ import org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.airdatepicker.A
 import jsinterop.base.Js;
 
 /**
+ * The languages of Tempus Dominus bundled with the module, by code. A picker loads the translation
+ * it needs.
+ *
  * @author Joshua Godi
  */
 public enum TempusDominusLocales {
+    /** Arabic ({@code ar}). */
     AR("ar", TempusDominusClientBundle.INSTANCE.tdlocales_ar()),
+    /** Arabic (Saudi Arabia) ({@code ar-SA}). */
     AR_SA("ar-SA", TempusDominusClientBundle.INSTANCE.tdlocales_ar_SA()),
+    /** Catalan ({@code ca}). */
     CA("ca", TempusDominusClientBundle.INSTANCE.tdlocales_ca()),
+    /** Czech ({@code cs}). */
     CS("cs", TempusDominusClientBundle.INSTANCE.tdlocales_cs()),
+    /** German ({@code de}). */
     DE("de", TempusDominusClientBundle.INSTANCE.tdlocales_de()),
+    /** Spanish ({@code es}). */
     ES("es", TempusDominusClientBundle.INSTANCE.tdlocales_es()),
+    /** Finnish ({@code fi}). */
     FI("fi", TempusDominusClientBundle.INSTANCE.tdlocales_fi()),
+    /** French ({@code fr}). */
     FR("fr", TempusDominusClientBundle.INSTANCE.tdlocales_fr()),
+    /** Croatian ({@code hr}). */
     HR("hr", TempusDominusClientBundle.INSTANCE.tdlocales_hr()),
+    /** Armenian ({@code hy}). Despite its name, it is Armenian. */
     HU("hy", TempusDominusClientBundle.INSTANCE.tdlocales_hy()),
+    /** Italian ({@code it}). */
     IT("it", TempusDominusClientBundle.INSTANCE.tdlocales_it()),
+    /** Dutch ({@code nl}). */
     NL("nl", TempusDominusClientBundle.INSTANCE.tdlocales_nl()),
+    /** Polish ({@code pl}). */
     PL("pl", TempusDominusClientBundle.INSTANCE.tdlocales_pl()),
+    /** Portuguese (Portugal) ({@code pt-PT}). */
     PT_PT("pt-PT", TempusDominusClientBundle.INSTANCE.tdlocales_pt_PT()),
+    /** Romanian ({@code ro}). */
     RO("ro", TempusDominusClientBundle.INSTANCE.tdlocales_ro()),
+    /** Russian ({@code ru}). */
     RU("ru", TempusDominusClientBundle.INSTANCE.tdlocales_ru()),
+    /** Slovak ({@code sk}). */
     SK("sk", TempusDominusClientBundle.INSTANCE.tdlocales_sk()),
+    /** Slovenian ({@code sl}). */
     SL("sl", TempusDominusClientBundle.INSTANCE.tdlocales_sl()),
+    /** Serbian ({@code sr}). */
     SR("sr", TempusDominusClientBundle.INSTANCE.tdlocales_sr()),
+    /** Serbian (Latin script) ({@code sr-latin}). */
     SR_LATIN("sr-latin", TempusDominusClientBundle.INSTANCE.tdlocales_sr_LATN()),
+    /** Turkish ({@code tr}). */
     TR("tr", TempusDominusClientBundle.INSTANCE.tdlocales_tr()),
+    /** Ukrainian ({@code uk}). */
     UK("uk", TempusDominusClientBundle.INSTANCE.tdlocales_uk()),
+    /** Chinese (China) ({@code zh-CN}). */
     ZH_CN("zh-CN", TempusDominusClientBundle.INSTANCE.tdlocales_zh_CN()),
+    /** Chinese (Hong Kong) ({@code zh-HK}). */
     ZH_HK("zh-HK", TempusDominusClientBundle.INSTANCE.tdlocales_zh_HK()),
+    /** Chinese (Macao) ({@code zh-MO}). */
     ZH_MO("zh-MO", TempusDominusClientBundle.INSTANCE.tdlocales_zh_MO()),
+    /** Chinese (Taiwan) ({@code zh-TW}). */
     ZH_TW("zh-TW", TempusDominusClientBundle.INSTANCE.tdlocales_zh_TW()),
+    /** English ({@code en}). */
     EN("en", null); // Base language, don't need another file
 
     private final String code;
@@ -66,14 +96,30 @@ public enum TempusDominusLocales {
         this.code = code;
     }
 
+    /**
+     * Returns the code of the language.
+     *
+     * @return the code, such as {@code "es"}
+     */
     public String getCode() {
         return code;
     }
 
+    /**
+     * Returns the script of the translation.
+     *
+     * @return the script, or {@code null} for English, which is built in
+     */
     public TextResource getJs() {
         return js;
     }
 
+    /**
+     * Returns the language of a code.
+     *
+     * @param code the code, such as {@code "es"}
+     * @return the language, or {@code null} if it isn't bundled
+     */
     public static TempusDominusLocales fromCode(final String code) {
         for (final TempusDominusLocales locale : values()) {
             if (locale.getCode().equals(code)) {

@@ -28,6 +28,16 @@ package org.gwtbootstrap5.extras.datetimepicker.client.ui.base.interfaces;
  * @author Joshua Godi
  */
 public interface HasFormat {
+    /**
+     * Sets the format of the date, in the tokens of the engine.
+     *
+     * @param dateFormat the format, such as {@code "dd/MM/yyyy"}
+     */
     void setDateFormat(String dateFormat);
+    /**
+     * Sets the format of the time, in the tokens of the engine.
+     *
+     * @param timeFormat the format, such as {@code "HH:mm"}
+     */
     void setTimeFormat(String timeFormat);
 }

@@ -28,6 +28,16 @@ package org.gwtbootstrap5.extras.datetimepicker.client.ui.base.interfaces;
  * @author Joshua Godi
  */
 public interface HasTimeStepping {
+    /**
+     * Sets the step of the hours in the clock.
+     *
+     * @param hourStep the step
+     */
     void setHourStep(int hourStep);
+    /**
+     * Sets the step of the minutes in the clock.
+     *
+     * @param minuteStep the step
+     */
     void setMinuteStep(int minuteStep);
 }

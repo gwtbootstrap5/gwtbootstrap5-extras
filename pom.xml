@@ -29,6 +29,14 @@
 		</license>
 	</licenses>
 
+	<properties>
+		<!--
+			Packages whose public API is fully documented: CI checks them with -P javadoc-check, so
+			they can't get gaps again. A package joins the list in the commit that documents it.
+		-->
+		<javadoc.documented.packages>org.gwtbootstrap5.extras.datepicker.client.ui,org.gwtbootstrap5.extras.datetimepicker.client.ui,org.gwtbootstrap5.extras.datetimepicker.client.ui.base,org.gwtbootstrap5.extras.datetimepicker.client.ui.base.engine,org.gwtbootstrap5.extras.datetimepicker.client.ui.base.interfaces,org.gwtbootstrap5.extras.datetimepicker.client.ui.base.validators,org.gwtbootstrap5.extras.datetimepicker.client.ui.engines,org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.airdatepicker,org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.tempusdominus,org.gwtbootstrap5.extras.timepicker.client.ui</javadoc.documented.packages>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>

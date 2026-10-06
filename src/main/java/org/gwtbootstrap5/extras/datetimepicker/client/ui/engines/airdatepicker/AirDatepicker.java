@@ -25,6 +25,7 @@ import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsProperty;
 import jsinterop.annotations.JsType;
 
+/** JsInterop binding of an Air Datepicker instance: {@code new AirDatepicker(element, options)}. */
 @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "AirDatepicker")
 public class AirDatepicker {
 
@@ -60,38 +61,103 @@ public class AirDatepicker {
     @JsProperty public Object $el;
 
     // --- AirDatePicker ---
+    /**
+     * Applies new options.
+     *
+     * @param options the options to change
+     */
     @JsMethod public native void update(AirDatepickerOptions options);
+    /** Destroys the datepicker and removes its calendar. */
     @JsMethod public native void destroy();
 
     // --- API methods ---
+    /** Opens the calendar. */
     @JsMethod public native void show();
+    /** Closes the calendar. */
     @JsMethod public native void hide();
+    /** Goes to the next month, year or decade. */
     @JsMethod public native void next();
+    /** Goes to the previous month, year or decade. */
     @JsMethod public native void prev();
-    
-    // date is a JS Date or an array of them
+
+    /**
+     * Unselects every date.
+     *
+     * @param opts {@code silent} not to fire {@code onSelect}
+     */
     @JsMethod public native void clear(ClearDateOptions opts);
+    /**
+     * Selects a date.
+     *
+     * @param date the date, a JS {@code Date}, or an array of them
+     */
     @JsMethod public native void selectDate(Object date);
+    /**
+     * Selects a date.
+     *
+     * @param date the date, a JS {@code Date}, or an array of them
+     * @param opts whether the time is updated and {@code onSelect} fired
+     */
     @JsMethod public native void selectDate(Object date, SelectDateOptions opts);
+    /**
+     * Unselects a date.
+     *
+     * @param date the date, a JS {@code Date}
+     */
     @JsMethod public native void unselectDate(Object date);
+    /**
+     * Moves the calendar to a date.
+     *
+     * @param date the date, a JS {@code Date}
+     */
     @JsMethod public native void setViewDate(Object date);
+    /**
+     * Gives a date the keyboard focus.
+     *
+     * @param date the date, a JS {@code Date}
+     */
     @JsMethod public native void setFocusDate(Object date);
+    /**
+     * Gives a date the keyboard focus.
+     *
+     * @param date the date, a JS {@code Date}
+     * @param opts whether the calendar moves to the date
+     */
     @JsMethod public native void setFocusDate(Object date, FocusDateOptions opts);
 
     // Option objects of the methods above
+    /** Options of {@link AirDatepicker#clear}. */
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class ClearDateOptions {
+        /** Creates an empty options object; the properties left unset keep their defaults. */
+        public ClearDateOptions() {
+        }
+
+        /** {@code true} not to fire {@code onSelect}. */
         @JsProperty public boolean silent;
     }
 
+    /** Options of {@link AirDatepicker#selectDate(Object, SelectDateOptions)}. */
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class SelectDateOptions {
+        /** Creates an empty options object; the properties left unset keep their defaults. */
+        public SelectDateOptions() {
+        }
+
+        /** Whether the time of the selected date is updated too. */
         @JsProperty public boolean updateTime;
+        /** {@code true} not to fire {@code onSelect}. */
         @JsProperty public boolean silent;
     }
 
+    /** Options of {@link AirDatepicker#setFocusDate(Object, FocusDateOptions)}. */
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class FocusDateOptions {
+        /** Creates an empty options object; the properties left unset keep their defaults. */
+        public FocusDateOptions() {
+        }
+
+        /** Whether the calendar moves to the focused date. */
         @JsProperty public boolean viewDateTransition;
     }
 }

@@ -54,6 +54,12 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * Base class of the date and time pickers: a Bootstrap text box whose JavaScript picker, drawn
+ * by an {@link IDateTimePickerEngine}, is created when the widget is attached and destroyed when
+ * it
+ * is detached, keeping its value. Its value is a {@code java.util.Date}; it validates like the
+ * other form controls.
+ *
  * @author Joshua Godi
  * @author Steven Jardine
  * @author themarioga
@@ -69,11 +75,18 @@ public abstract class DateTimePickerBase extends Widget implements HasEnabled, H
     private final ErrorHandlerMixin<Date> errorHandlerMixin = new ErrorHandlerMixin<>(this);
     private final DatePickerBlankValidatorMixin validatorMixin = new DatePickerBlankValidatorMixin(this, errorHandlerMixin.getErrorHandler());
 
+    /** The engine that draws the picker. */
     protected final IDateTimePickerEngine dateTimePickerEngine;
+    /** The options of the picker, passed to the engine. */
     protected final DateTimePickerOptions options;
 
     private Date valueSetBeforeInit;
 
+    /**
+     * Creates a picker drawn by the given engine.
+     *
+     * @param dateTimePickerEngine the engine
+     */
     protected DateTimePickerBase(IDateTimePickerEngine dateTimePickerEngine) {
         textBox = new TextBox();
         setElement((Element) textBox.getElement());
@@ -120,19 +133,29 @@ public abstract class DateTimePickerBase extends Widget implements HasEnabled, H
      * 2. DateTimePicker.setValue(newDate); // Date newDate.
      * <p>
      * Otherwise date value is not updated.
+     *
+     * @param options the options to apply
      */
     public void reload(DateTimePickerOptions options) {
         dateTimePickerEngine.updateProperties(options);
     }
 
+    /** Opens the picker. */
     public void show() {
         dateTimePickerEngine.show();
     }
 
+    /** Closes the picker. */
     public void hide() {
         dateTimePickerEngine.hide();
     }
 
+    /**
+     * Sets whether typing a date in the text box selects it in the picker, after
+     * {@link #setTypingDelay(int) the typing delay}.
+     *
+     * @param value {@code true} to select typed dates
+     */
     public void setSelectDateOnWrite(boolean value) {
         options.setSelectDateOnWrite(value);
 
@@ -141,6 +164,11 @@ public abstract class DateTimePickerBase extends Widget implements HasEnabled, H
         }
     }
 
+    /**
+     * Sets how long the picker waits after a key press before reading a typed date.
+     *
+     * @param delay the delay in milliseconds, 1000 by default
+     */
     public void setTypingDelay(int delay) {
         options.setTypingDelay(delay);
 
@@ -149,18 +177,38 @@ public abstract class DateTimePickerBase extends Widget implements HasEnabled, H
         }
     }
 
+    /**
+     * Aligns the text in the text box.
+     *
+     * @param align the alignment
+     */
     public void setAlignment(final ValueBoxBase.TextAlignment align) {
         textBox.setAlignment(align);
     }
 
+    /**
+     * Returns the text typed in the text box.
+     *
+     * @return the text
+     */
     public String getBaseValue() {
         return textBox.getValue();
     }
 
+    /**
+     * Returns the text box of the picker.
+     *
+     * @return the text box
+     */
     public TextBox getTextBox() {
         return textBox;
     }
 
+    /**
+     * Returns the options of the picker. After changing them, call {@link #reload} to apply them.
+     *
+     * @return the options
+     */
     public DateTimePickerOptions getOptions() {
         return options;
     }
@@ -482,6 +530,7 @@ public abstract class DateTimePickerBase extends Widget implements HasEnabled, H
         }
     }
 
+    /** Clears the selected date, firing the change events. */
     public void clear() {
         if (dateTimePickerEngine != null) {
             dateTimePickerEngine.clear(false);

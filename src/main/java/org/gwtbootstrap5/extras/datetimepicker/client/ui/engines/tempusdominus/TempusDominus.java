@@ -26,41 +26,103 @@ import jsinterop.annotations.JsMethod;
 import jsinterop.annotations.JsProperty;
 import jsinterop.annotations.JsType;
 
+/**
+ * JsInterop binding of a Tempus Dominus instance:
+ * {@code new tempusDominus.TempusDominus(element, options)}.
+ */
 @JsType(isNative = true, namespace = "tempusDominus", name = "TempusDominus")
 public class TempusDominus {
 
+    /**
+     * Creates a picker on an element.
+     *
+     * @param element the input or its container
+     * @param options the options
+     */
     @JsConstructor
     public TempusDominus(Element element, TempusDominusOptions options) {}
 
+    /**
+     * Creates a picker on an element.
+     *
+     * @param element the input or its container
+     */
     @JsConstructor
     public TempusDominus(Element element) {}
 
     // --- Core Display Functions ---
+    /** Opens the picker. */
     @JsMethod public native void show();
+    /** Closes the picker. */
     @JsMethod public native void hide();
+    /** Opens the picker if it is closed, closes it otherwise. */
     @JsMethod public native void toggle();
+    /** Destroys the picker and removes its widget from the page. */
     @JsMethod public native void dispose();
+    /** Enables the picker and its input. */
     @JsMethod public native void enable();
+    /** Disables the picker and its input. */
     @JsMethod public native void disable();
 
     // --- Options Functions ---
+    /**
+     * Applies new options.
+     *
+     * @param options the options to change
+     */
     @JsMethod public native void updateOptions(TempusDominusOptions options);
     /**
      * Switches this picker to a locale registered with {@code tempusDominus.loadLocale()}.
+     *
+     * @param name the name of the locale, such as {@code "es"}
      */
     @JsMethod public native void locale(String name);
 
     // --- Date Management API ---
-    @JsProperty public Object viewDate; // DateTime, JsDate, or String
+    /** The date the view shows: a {@code DateTime}, a JS {@code Date} or a string. */
+    @JsProperty public Object viewDate;
+    /** The selected dates. */
     @JsProperty public DatesApi dates;
 
+    /** The selected dates of a Tempus Dominus picker. */
     @JsType(isNative = true, namespace = "tempusDominus.TempusDominus", name = "DatesApi")
     public static class DatesApi {
-        @JsProperty(name = "picked") public native TempusDominusDateTime[] picked(); // getter
-        @JsProperty(name = "lastPicked") public native TempusDominusDateTime lastPicked(); // getter
-        @JsMethod public native void add(Object date); // DateTime, Date, or String
+        /** Don't call it: the picker has one, {@code dates}. */
+        public DatesApi() {
+        }
+
+        /**
+         * Returns the picked dates.
+         *
+         * @return the dates
+         */
+        @JsProperty(name = "picked") public native TempusDominusDateTime[] picked();
+        /**
+         * Returns the date picked last.
+         *
+         * @return the date, or {@code null}
+         */
+        @JsProperty(name = "lastPicked") public native TempusDominusDateTime lastPicked();
+        /**
+         * Adds a date to the picked dates.
+         *
+         * @param date a {@code DateTime}, a JS {@code Date} or a string
+         */
+        @JsMethod public native void add(Object date);
+        /**
+         * Replaces the picked date.
+         *
+         * @param date a {@code DateTime}, a JS {@code Date} or a string, or {@code null} to clear it
+         */
         @JsMethod public native void setValue(Object date); 
+        /** Clears the picked dates. */
         @JsMethod public native void clear();
+        /**
+         * Formats a date the way the input shows it.
+         *
+         * @param date the date
+         * @return the text
+         */
         @JsMethod public native String formatInput(TempusDominusDateTime date);
     }
 }

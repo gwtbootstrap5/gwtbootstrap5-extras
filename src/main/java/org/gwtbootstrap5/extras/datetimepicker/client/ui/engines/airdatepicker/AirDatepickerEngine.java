@@ -37,7 +37,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/** {@link IDateTimePickerEngine} drawn by Air Datepicker 3. */
 public class AirDatepickerEngine implements IDateTimePickerEngine {
+
+    /** Creates an engine; {@code DateTimePickerEngines.getEngine} creates them for the pickers. */
+    public AirDatepickerEngine() {
+    }
 
     private AirDatepicker instance;
     private AirDatepickerOptions options;

@@ -29,5 +29,10 @@ package org.gwtbootstrap5.extras.datetimepicker.client.ui.base.interfaces;
  * @author Rishiraj Anand
  */
 public interface HasShowClearButton {
+    /**
+     * Sets whether the picker shows a button that clears the date.
+     *
+     * @param showClearButton {@code true} to show it
+     */
     void setShowClearButton(boolean showClearButton);
 }

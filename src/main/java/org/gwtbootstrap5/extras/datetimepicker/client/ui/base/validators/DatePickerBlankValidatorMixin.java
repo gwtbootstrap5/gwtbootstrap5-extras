@@ -26,13 +26,28 @@ import org.gwtbootstrap5.extras.datetimepicker.client.ui.base.DateTimePickerBase
 
 import java.util.Date;
 
+/**
+ * Blank validator of a date picker, which doesn't validate on blur while the picker is open: the
+ * text box loses the focus to the calendar.
+ */
 public class DatePickerBlankValidatorMixin extends BlankValidatorMixin<DateTimePickerBase, Date> {
     private boolean showing = false;
 
+    /**
+     * Tells the mixin whether the picker is open.
+     *
+     * @param showing {@code true} while it is open
+     */
     public void setShowing(boolean showing) {
         this.showing = showing;
     }
 
+    /**
+     * Creates the mixin of a picker.
+     *
+     * @param inputWidget the picker
+     * @param errorHandler the error handler that shows the errors
+     */
     public DatePickerBlankValidatorMixin(DateTimePickerBase inputWidget, org.gwtbootstrap5.client.ui.form.error.ErrorHandler errorHandler) {
         super(inputWidget, errorHandler);
     }

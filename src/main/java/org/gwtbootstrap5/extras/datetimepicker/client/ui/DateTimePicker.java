@@ -25,10 +25,24 @@ import org.gwtbootstrap5.extras.datetimepicker.client.ui.base.DateTimePickerBase
 import org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.DateTimePickerEngines;
 
 /**
+ * Date and time picker: a text box that opens a calendar and a clock. The engine is
+ * {@code TEMPUSDOMINUS} (Tempus Dominus 6) or {@code AIRDATEPICKER} (Air Datepicker 3).
+ * <h2>UiBinder example</h2>
+ * <pre>{@code
+ *     <dtp:DateTimePicker engine="AIRDATEPICKER" minuteStep="15" placeholder="Pick a date and
+ * time"/>
+ * }</pre>
+ * with {@code xmlns:dtp="urn:import:org.gwtbootstrap5.extras.datetimepicker.client.ui"}.
+ *
  * @author themarioga
  */
 public class DateTimePicker extends DateTimePickerBase {
 
+    /**
+     * Creates a date and time picker.
+     *
+     * @param engine the JavaScript library that draws the calendar
+     */
     @UiConstructor
     public DateTimePicker(DateTimePickerEngines engine) {
         super(DateTimePickerEngines.getEngine(engine));

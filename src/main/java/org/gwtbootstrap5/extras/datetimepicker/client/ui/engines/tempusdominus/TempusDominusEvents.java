@@ -24,27 +24,53 @@ import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsProperty;
 import jsinterop.annotations.JsType;
 
+/** Names and details of the events that Tempus Dominus fires on its input. */
 public class TempusDominusEvents {
+    /** Creates an instance. It only holds nested types and constants, so there is no need to. */
+    public TempusDominusEvents() {
+    }
+
     // Event Names
+    /** Fired when the selected date changes. */
     public static final String CHANGE = "change.td";
+    /** Fired when the view changes. */
     public static final String UPDATE = "update.td";
+    /** Fired when a date can't be selected. */
     public static final String ERROR = "error.td";
+    /** Fired when the picker opens. */
     public static final String SHOW = "show.td";
+    /** Fired when the picker closes. */
     public static final String HIDE = "hide.td";
 
     // Detail object emitted in the 'change.td' CustomEvent
+    /** Detail of the change event. */
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class ChangeEventDetail {
-        @JsProperty public TempusDominusDateTime date;      // The newly selected date
-        @JsProperty public TempusDominusDateTime oldDate;   // The previously selected date
+        /** Creates an empty object; the library creates them. */
+        public ChangeEventDetail() {
+        }
+
+        /** The newly selected date. */
+        @JsProperty public TempusDominusDateTime date;
+        /** The previously selected date. */
+        @JsProperty public TempusDominusDateTime oldDate;
+        /** Whether the new date is valid. */
         @JsProperty public boolean isValid;
     }
     
     // Detail object emitted in the 'error.td' CustomEvent
+    /** Detail of the error event. */
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class ErrorEventDetail {
+        /** Creates an empty object; the library creates them. */
+        public ErrorEventDetail() {
+        }
+
+        /** The kind of error. */
         @JsProperty public String type;
+        /** The error message. */
         @JsProperty public String message;
+        /** The date that caused the error. */
         @JsProperty public TempusDominusDateTime date;
     }
 }

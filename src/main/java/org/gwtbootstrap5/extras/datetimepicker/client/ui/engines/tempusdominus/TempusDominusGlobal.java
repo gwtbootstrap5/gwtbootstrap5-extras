@@ -29,6 +29,10 @@ import jsinterop.annotations.JsType;
 @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "tempusDominus")
 public class TempusDominusGlobal {
 
+    /** Creates an instance. Every method is static, so there is no need to. */
+    public TempusDominusGlobal() {
+    }
+
     /**
      * Registers a locale (an object with {@code name} and {@code localization}) with Tempus Dominus.
      *

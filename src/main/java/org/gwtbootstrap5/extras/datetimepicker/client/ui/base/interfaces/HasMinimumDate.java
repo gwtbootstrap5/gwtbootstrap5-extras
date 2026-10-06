@@ -30,7 +30,13 @@ import java.util.Date;
  * @author Joshua Godi
  */
 public interface HasMinimumDate {
+    /**
+     * Sets the earliest date that can be picked.
+     *
+     * @param minDate the date
+     */
     void setMinDate(Date minDate);
 
+    /** Removes the earliest date limit. */
     void clearMinDate();
 }

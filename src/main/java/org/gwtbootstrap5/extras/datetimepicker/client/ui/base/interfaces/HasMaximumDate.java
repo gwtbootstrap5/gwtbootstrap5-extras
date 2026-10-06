@@ -30,7 +30,13 @@ import java.util.Date;
  * @author Joshua Godi
  */
 public interface HasMaximumDate {
+    /**
+     * Sets the latest date that can be picked.
+     *
+     * @param maxDate the date
+     */
     void setMaxDate(Date maxDate);
 
+    /** Removes the latest date limit. */
     void clearMaxDate();
 }

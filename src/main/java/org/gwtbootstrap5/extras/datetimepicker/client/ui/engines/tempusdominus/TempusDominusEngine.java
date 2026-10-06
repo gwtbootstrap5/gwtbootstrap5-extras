@@ -33,7 +33,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/** {@link IDateTimePickerEngine} drawn by Tempus Dominus 6. */
 public class TempusDominusEngine implements IDateTimePickerEngine {
+
+    /** Creates an engine; {@code DateTimePickerEngines.getEngine} creates them for the pickers. */
+    public TempusDominusEngine() {
+    }
 
     private TempusDominus instance;
     private TempusDominusOptions options;
