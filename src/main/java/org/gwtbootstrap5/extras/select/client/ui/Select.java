@@ -20,6 +20,7 @@ package org.gwtbootstrap5.extras.select.client.ui;
  * ==========================LICENSE_END=================================
  */
 
+import com.google.gwt.uibinder.client.UiConstructor;
 import org.gwtbootstrap5.extras.select.client.ui.base.SelectBase;
 import org.gwtbootstrap5.extras.select.client.ui.engines.SelectEngine;
 
@@ -29,6 +30,7 @@ public class Select<T> extends SelectBase<T> {
 
     protected T valueSelectedBeforeInit;
 
+    @UiConstructor
     public Select(SelectEngine engine) {
         super(SelectEngine.getEngine(engine));
     }

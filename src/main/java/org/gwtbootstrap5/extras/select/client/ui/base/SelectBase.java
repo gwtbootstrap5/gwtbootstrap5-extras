@@ -94,6 +94,19 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
         this.properties = new SelectProperties();
 
         this.properties.setMultiple(isMultiple());
+
+        // Strings, numbers and enums work as they are; other options need setItemProvider
+        this.itemProvider = new ItemProvider<T>() {
+            @Override
+            public String getValue(final T item) {
+                return String.valueOf(item);
+            }
+
+            @Override
+            public String getText(final T item) {
+                return String.valueOf(item);
+            }
+        };
     }
 
     /**
@@ -516,7 +529,11 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
         }
     }
 
-    protected void setItemProvider(ItemProvider<T> itemProvider) {
+    /**
+     * Sets how an option becomes the value and the text of its {@code <option>}. By default both
+     * are {@code String.valueOf(option)}.
+     */
+    public void setItemProvider(ItemProvider<T> itemProvider) {
         this.itemProvider = itemProvider;
     }
 
@@ -642,7 +659,10 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
         return selected;
     }
 
-    protected interface ItemProvider<T> {
+    /**
+     * Gives the value (unique per option) and the text shown for an option.
+     */
+    public interface ItemProvider<T> {
         String getValue(T item);
 
         String getText(T item);

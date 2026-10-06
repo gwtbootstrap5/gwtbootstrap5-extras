@@ -34,7 +34,7 @@ public class TomSelectURLEntryPoint implements EntryPoint {
         ScriptInjector.fromUrl("https://cdn.jsdelivr.net/npm/tom-select@2.5.2/dist/js/tom-select.complete.min.js")
                 .setWindow(ScriptInjector.TOP_WINDOW).inject();
 
-        StyleInjector.injectCSS("https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css");
+        StyleInjector.injectCSS("https://cdn.jsdelivr.net/npm/tom-select@2.5.2/dist/css/tom-select.bootstrap5.min.css");
     }
 
 }

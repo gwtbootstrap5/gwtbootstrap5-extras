@@ -20,6 +20,7 @@ package org.gwtbootstrap5.extras.select.client.ui;
  * ==========================LICENSE_END=================================
  */
 
+import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -35,6 +36,7 @@ public class MultipleSelect<T> extends SelectBase<T> implements HasValues<T> {
 
     protected List<T> valuesSelectedBeforeInit = new ArrayList<>();
 
+    @UiConstructor
     public MultipleSelect(SelectEngine engine) {
         super(SelectEngine.getEngine(engine));
     }
