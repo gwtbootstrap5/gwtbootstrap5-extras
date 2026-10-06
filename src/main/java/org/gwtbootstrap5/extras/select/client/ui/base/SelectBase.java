@@ -133,11 +133,22 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * <p>
+     * Destroys the JavaScript select, so a widget that is removed and added again doesn't leave
+     * its old dropdown in the page. {@link #onLoad()} creates it again with the same options;
+     * subclasses keep the selected values.
+     * </p>
+     */
     @Override
     protected void onUnload() {
-        super.onUnload();
+        if (isEngineStarted()) {
+            engine.destroy();
+        }
 
-        // ToDo: habría que hacer destroy?
+        super.onUnload();
     }
 
     public void show() {

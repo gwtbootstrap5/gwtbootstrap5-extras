@@ -59,6 +59,16 @@ public class MultipleSelect<T> extends SelectBase<T> implements HasValues<T> {
     }
 
     @Override
+    protected void onUnload() {
+        // Kept while the JavaScript select is destroyed, and set again by onLoad
+        if (isEngineStarted()) {
+            valuesSelectedBeforeInit = new ArrayList<>(getSelectedOptions());
+        }
+
+        super.onUnload();
+    }
+
+    @Override
     public boolean isMultiple() {
         return true;
     }
@@ -161,7 +171,7 @@ public class MultipleSelect<T> extends SelectBase<T> implements HasValues<T> {
             return getSelectedOptions();
         }
 
-        return List.of();
+        return new ArrayList<>(valuesSelectedBeforeInit);
     }
 
     /**

@@ -36,10 +36,12 @@ public class AirDatepickerCallbacks {
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class OnSelectProps {
+        /** The selected date as a JS {@code Date}, or an array of them. */
         @JsProperty
-        public Object date; // Date o Array de Dates
+        public Object date;
+        /** The selected date formatted as a string, or an array of them. */
         @JsProperty
-        public String formattedDate; // String o Array de Strings
+        public String formattedDate;
         @JsProperty
         public AirDatepicker datepicker;
     }
@@ -52,8 +54,9 @@ public class AirDatepickerCallbacks {
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class OnBeforeSelectProps {
+        /** The date about to be selected as a JS {@code Date}, or an array of them. */
         @JsProperty
-        public Object date; // Date o Array de Dates
+        public Object date;
         @JsProperty
         public AirDatepicker datepicker;
     }
@@ -88,10 +91,12 @@ public class AirDatepickerCallbacks {
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class OnRenderCellProps {
+        /** The date of the cell, as a JS {@code Date}. */
         @JsProperty
-        public Object date; // Date
+        public Object date;
+        /** The type of the cell: {@code "day"}, {@code "month"} or {@code "year"}. */
         @JsProperty
-        public String cellType; // 'day', 'month', 'year'
+        public String cellType;
         @JsProperty
         public AirDatepicker datepicker;
     }
@@ -125,8 +130,9 @@ public class AirDatepickerCallbacks {
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class OnClickDayNameProps {
+        /** The index of the day name that was clicked, from 0. */
         @JsProperty
-        public int index; // Index
+        public int index;
         @JsProperty
         public AirDatepicker datepicker;
     }
@@ -139,8 +145,9 @@ public class AirDatepickerCallbacks {
 
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class OnFocusProps {
+        /** The focused date. */
         @JsProperty
-        public JsDate date; // Date o Array de Dates
+        public JsDate date;
         @JsProperty
         public AirDatepicker datepicker;
     }

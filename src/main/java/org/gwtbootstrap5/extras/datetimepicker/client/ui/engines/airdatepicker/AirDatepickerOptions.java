@@ -28,42 +28,52 @@ import jsinterop.annotations.JsType;
 @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
 public class AirDatepickerOptions {
 
-    // --- Opciones Generales ---
+    // --- General options ---
     @JsProperty public String classes;
     @JsProperty public boolean inline;
-    @JsProperty public Object locale; // Object with locales
-    @JsProperty public Object startDate; // Date, String or Number
+    /** The locale object, from {@code AirDatepickerLocales}. */
+    @JsProperty public Object locale;
+    /** The date the calendar opens on: a JS {@code Date}, a string or a timestamp. */
+    @JsProperty public Object startDate;
     @JsProperty public int firstDay;
     @JsProperty public int[] weekends;
     @JsProperty public boolean isMobile;
-    @JsProperty public String dateFormat; // Ej: 'dd/MM/yyyy'
-    @JsProperty public Object altField; // Element or selector (String)
+    /** The date format, for example {@code "dd/MM/yyyy"}. */
+    @JsProperty public String dateFormat;
+    /** A second field that receives the date in {@link #altFieldDateFormat}: an element or a CSS selector. */
+    @JsProperty public Object altField;
     @JsProperty public String altFieldDateFormat;
     @JsProperty public boolean toggleSelected;
     @JsProperty public boolean keyboardNav;
 
-    // --- Posicionamiento y Vista ---
+    // --- Position and view ---
     @JsProperty public Element container;
-    @JsProperty public String position; // Ej: 'bottom left'
-    @JsProperty public String view; // 'days', 'months', 'years'
+    /** Where the calendar opens relative to the input, for example {@code "bottom left"}. */
+    @JsProperty public String position;
+    /** The initial view: {@code "days"}, {@code "months"} or {@code "years"}. */
+    @JsProperty public String view;
     @JsProperty public String minView;
     @JsProperty public boolean showOtherMonths;
     @JsProperty public boolean selectOtherMonths;
     @JsProperty public boolean moveToOtherMonthsOnSelect;
 
-    // --- Restricciones de Rango ---
-    @JsProperty public Object minDate; // Date
-    @JsProperty public Object maxDate; // Date
+    // --- Date limits ---
+    /** The earliest date that can be selected, as a JS {@code Date}. */
+    @JsProperty public Object minDate;
+    /** The latest date that can be selected, as a JS {@code Date}. */
+    @JsProperty public Object maxDate;
     @JsProperty public boolean disableNavWhenOutOfRange;
 
-    // --- Selección Múltiple y Rangos ---
-    @JsProperty public Object multipleDates; // boolean o int (max)
+    // --- Multiple dates and ranges ---
+    /** {@code true} to select several dates, or the maximum number of dates as a number. */
+    @JsProperty public Object multipleDates;
     @JsProperty public String multipleDatesSeparator;
     @JsProperty public boolean range;
     @JsProperty public boolean dynamicRange;
 
-    // --- Botones ---
-    @JsProperty public Object buttons; // String (ej: 'clear') o Array de objetos Button
+    // --- Buttons ---
+    /** The buttons under the calendar: a name such as {@code "clear"} or {@code "today"}, or an array of names or button objects. */
+    @JsProperty public Object buttons;
     @JsProperty public String monthsField;
     @JsProperty public String showEvent;
     @JsProperty public boolean autoClose;

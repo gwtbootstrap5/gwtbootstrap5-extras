@@ -28,30 +28,48 @@ import jsinterop.annotations.JsType;
 @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "AirDatepicker")
 public class AirDatepicker {
 
-    // Constructores (acepta un selector CSS o un Elemento DOM)
+    /**
+     * Creates a datepicker with the default options.
+     *
+     * @param element a CSS selector or the DOM element to attach the datepicker to
+     */
     public AirDatepicker(Object element) {}
+
+    /**
+     * Creates a datepicker.
+     *
+     * @param element a CSS selector or the DOM element to attach the datepicker to
+     * @param options the Air Datepicker options
+     */
     public AirDatepicker(Object element, AirDatepickerOptions options) {}
 
     // --- Propiedades ---
-    @JsProperty public Object[] selectedDates; // Array de objetos Date
-    @JsProperty public Object focusDate;       // Objeto Date
-    @JsProperty public String currentView;     // 'days', 'months', 'years'
-    @JsProperty public Object viewDate;        // Objeto Date
-    @JsProperty public boolean visible;        // Is visible or not
-    @JsProperty public Object el;              // Elemento DOM base
-    @JsProperty public Object $el;             // Elemento DOM base (si usas jQuery)
+    /** The selected dates, as JS {@code Date} objects. */
+    @JsProperty public Object[] selectedDates;
+    /** The focused date, as a JS {@code Date}. */
+    @JsProperty public Object focusDate;
+    /** The current view: {@code "days"}, {@code "months"} or {@code "years"}. */
+    @JsProperty public String currentView;
+    /** The date the current view shows, as a JS {@code Date}. */
+    @JsProperty public Object viewDate;
+    /** Whether the datepicker is visible. */
+    @JsProperty public boolean visible;
+    /** The DOM element the datepicker is attached to. */
+    @JsProperty public Object el;
+    /** The element the datepicker is attached to, wrapped by jQuery when jQuery is on the page. */
+    @JsProperty public Object $el;
 
     // --- AirDatePicker ---
     @JsMethod public native void update(AirDatepickerOptions options);
     @JsMethod public native void destroy();
 
-    // --- Métodos de la API ---
+    // --- API methods ---
     @JsMethod public native void show();
     @JsMethod public native void hide();
     @JsMethod public native void next();
     @JsMethod public native void prev();
     
-    // date puede ser un Date de Java/JS o un Array de Dates
+    // date is a JS Date or an array of them
     @JsMethod public native void clear(ClearDateOptions opts);
     @JsMethod public native void selectDate(Object date);
     @JsMethod public native void selectDate(Object date, SelectDateOptions opts);
@@ -60,7 +78,7 @@ public class AirDatepicker {
     @JsMethod public native void setFocusDate(Object date);
     @JsMethod public native void setFocusDate(Object date, FocusDateOptions opts);
 
-    // DTOs auxiliares para los métodos
+    // Option objects of the methods above
     @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
     public static class ClearDateOptions {
         @JsProperty public boolean silent;

@@ -94,12 +94,22 @@ public abstract class DateTimePickerBase extends Widget implements HasEnabled, H
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * <p>
+     * Destroys the JavaScript date picker, so a widget that is removed and added again doesn't
+     * leave its old calendar in the page. The value is kept and set again by {@link #onLoad()}.
+     * </p>
+     */
     @Override
     protected void onUnload() {
-        super.onUnload();
+        if (dateTimePickerEngine != null && dateTimePickerEngine.isStarted()) {
+            valueSetBeforeInit = dateTimePickerEngine.getDate();
+            dateTimePickerEngine.destroy();
+        }
 
-        // ToDo: no se si hará falta destroy
+        super.onUnload();
     }
 
     /**
@@ -481,11 +491,11 @@ public abstract class DateTimePickerBase extends Widget implements HasEnabled, H
     /** {@inheritDoc} */
     @Override
     public Date getValue() {
-        if (dateTimePickerEngine != null) {
+        if (dateTimePickerEngine != null && dateTimePickerEngine.isStarted()) {
             return dateTimePickerEngine.getDate();
         }
 
-        return null;
+        return valueSetBeforeInit;
     }
 
     /** {@inheritDoc} */

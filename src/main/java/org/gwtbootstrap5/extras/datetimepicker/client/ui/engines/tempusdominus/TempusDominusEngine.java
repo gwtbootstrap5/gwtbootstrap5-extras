@@ -22,6 +22,7 @@ package org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.tempusdominus;
 
 import elemental2.core.JsObject;
 import elemental2.dom.Element;
+import elemental2.dom.EventListener;
 import jsinterop.base.Js;
 import jsinterop.base.JsPropertyMap;
 import org.gwtbootstrap5.extras.datetimepicker.client.ui.base.engine.DateTimePickerOptions;
@@ -36,6 +37,12 @@ public class TempusDominusEngine implements IDateTimePickerEngine {
 
     private TempusDominus instance;
     private TempusDominusOptions options;
+
+    // Kept to remove them in destroy(), so a new init doesn't add them twice
+    private Element input;
+    private EventListener changeListener;
+    private EventListener showListener;
+    private EventListener hideListener;
 
     public void init(com.google.gwt.dom.client.Element element, DateTimePickerOptions options, IDateTimePickerHandlers handlers) {
         Element input = Js.cast(element);
@@ -60,12 +67,19 @@ public class TempusDominusEngine implements IDateTimePickerEngine {
 
     @Override
     public void destroy() {
+        if (input != null) {
+            input.removeEventListener(TempusDominusEvents.CHANGE, changeListener);
+            input.removeEventListener(TempusDominusEvents.SHOW, showListener);
+            input.removeEventListener(TempusDominusEvents.HIDE, hideListener);
+            input = null;
+        }
         if (instance != null) {
             instance.dispose();
+            instance = null;
         }
     }
 
-    // --- Métodos de la API expuestos en Java puro ---
+    // --- API methods exposed to Java ---
 
     @Override
     public void show() {
@@ -146,7 +160,7 @@ public class TempusDominusEngine implements IDateTimePickerEngine {
         return instance != null;
     }
 
-    // --- Métodos privados ---
+    // --- Private methods ---
 
     /**
      * Builds the Tempus Dominus options. A native options object starts empty, so every nested
@@ -206,22 +220,26 @@ public class TempusDominusEngine implements IDateTimePickerEngine {
     }
 
     private void appendEvents(Element input, IDateTimePickerHandlers handlers) {
+        this.input = input;
         // Strongly typed event listener for the 'change.td' event
-        input.addEventListener(TempusDominusEvents.CHANGE, evt -> {
+        changeListener = evt -> {
             if (instance != null) {
                 handlers.onChangeValue(getMultipleDates());
             }
-        });
-        input.addEventListener(TempusDominusEvents.SHOW, evt -> {
+        };
+        showListener = evt -> {
             if (instance != null) {
                 handlers.onShow();
             }
-        });
-        input.addEventListener(TempusDominusEvents.HIDE, evt -> {
+        };
+        hideListener = evt -> {
             if (instance != null) {
                 handlers.onHide();
             }
-        });
+        };
+        input.addEventListener(TempusDominusEvents.CHANGE, changeListener);
+        input.addEventListener(TempusDominusEvents.SHOW, showListener);
+        input.addEventListener(TempusDominusEvents.HIDE, hideListener);
     }
 
     private java.util.Date toJavaDate(TempusDominusDateTime tdDateTime) {

@@ -77,6 +77,7 @@ public class TomSelectEngine implements ISelectEngine {
     public void destroy() {
         if (instance != null) {
             instance.destroy();
+            instance = null;
         }
     }
 

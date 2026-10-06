@@ -25,6 +25,7 @@ import elemental2.core.JsArray;
 import elemental2.core.JsDate;
 import elemental2.dom.DomGlobal;
 import elemental2.dom.Element;
+import elemental2.dom.EventListener;
 import elemental2.dom.HTMLInputElement;
 import jsinterop.base.Js;
 import org.gwtbootstrap5.extras.datetimepicker.client.ui.base.engine.DateTimePickerOptions;
@@ -43,33 +44,41 @@ public class AirDatepickerEngine implements IDateTimePickerEngine {
 
     private double typingTimerId = 0;
 
+    // Kept to remove them in destroy(), so a new init doesn't add them twice
+    private Element input;
+    private EventListener keyUpListener;
+    private EventListener blurListener;
+
     @Override
     public void init(com.google.gwt.dom.client.Element element, DateTimePickerOptions options, IDateTimePickerHandlers handlers) {
         Element input = Js.cast(element);
 
-        // Inicializamos las opciones
+        // Translate the options
         this.options = translateOptions(options);
 
-        // Añadimos los eventos a las opciones
+        // Add the event callbacks to the options
         appendEvents(handlers);
 
-        // Añadimos evento de keyup como hack para que se refresque en vivo
+        // Listen to keyup so the picker follows the input while the user types
         if (options.isFocusDateOnWrite() || options.isSelectDateOnWrite()) {
-            input.addEventListener("keyup", event -> {
+            this.input = input;
+            keyUpListener = event -> {
                 DomGlobal.clearTimeout(typingTimerId);
 
                 typingTimerId = DomGlobal.setTimeout(p0 -> manageTypingEvent(options, ((HTMLInputElement) input).value), options.getTypingDelay());
-            });
-            input.addEventListener("blur", event -> {
+            };
+            blurListener = event -> {
                 if (typingTimerId != 0) {
                     DomGlobal.clearTimeout(typingTimerId);
 
                     manageTypingEvent(options, ((HTMLInputElement) input).value);
                 }
-            });
+            };
+            input.addEventListener("keyup", keyUpListener);
+            input.addEventListener("blur", blurListener);
         }
 
-        // Inicializamos el datepicker nativo
+        // Create the native datepicker
         this.instance = new AirDatepicker(input, this.options);
     }
 
@@ -83,12 +92,20 @@ public class AirDatepickerEngine implements IDateTimePickerEngine {
 
     @Override
     public void destroy() {
+        if (input != null) {
+            DomGlobal.clearTimeout(typingTimerId);
+            typingTimerId = 0;
+            input.removeEventListener("keyup", keyUpListener);
+            input.removeEventListener("blur", blurListener);
+            input = null;
+        }
         if (instance != null) {
             instance.destroy();
+            instance = null;
         }
     }
 
-    // --- Métodos de la API expuestos en Java puro ---
+    // --- API methods exposed to Java ---
 
     @Override
     public void show() {
@@ -183,7 +200,7 @@ public class AirDatepickerEngine implements IDateTimePickerEngine {
         return instance != null;
     }
 
-    // --- Métodos privados ---
+    // --- Private methods ---
 
     private AirDatepickerOptions translateOptions(DateTimePickerOptions options) {
         AirDatepickerOptions airDatepickerOptions = new AirDatepickerOptions();
@@ -220,13 +237,13 @@ public class AirDatepickerEngine implements IDateTimePickerEngine {
     }
 
     private void appendEvents(IDateTimePickerHandlers handlers) {
-        // Interceptamos el callback nativo para convertir los tipos de JS a Java
+        // Wrap the native callbacks to convert the JS types to Java
         if (handlers != null) {
             options.onSelect = props -> {
                 List<Date> javaDates = new ArrayList<>();
 
                 if (props.date != null) {
-                    // Comprobamos si JS devolvió un Array (múltiples fechas) o un solo Date
+                    // JS passes an array for multiple dates and a single Date otherwise
                     if (JsArray.isArray(props.date)) {
                         JsArray<JsDate> jsDates = Js.cast(props.date);
 
@@ -234,13 +251,13 @@ public class AirDatepickerEngine implements IDateTimePickerEngine {
                             javaDates.add(toJavaDate(jsDates.getAt(i)));
                         }
                     } else {
-                        // Es una sola fecha
+                        // A single date
                         JsDate jsDate = Js.cast(props.date);
                         javaDates.add(toJavaDate(jsDate));
                     }
                 }
 
-                // Ejecutamos el handler de Java
+                // Call the Java handler
                 handlers.onChangeValue(javaDates);
             };
             options.onShow = props -> handlers.onShow();
@@ -250,13 +267,13 @@ public class AirDatepickerEngine implements IDateTimePickerEngine {
 
     private JsDate toJsDate(Date javaDate) {
         if (javaDate == null) return null;
-        // JsDate requiere los milisegundos en formato double
+        // JsDate takes the epoch milliseconds as a double
         return new JsDate((double) javaDate.getTime());
     }
 
     private Date toJavaDate(JsDate jsDate) {
         if (jsDate == null) return null;
-        // Convertimos los milisegundos de JS de vuelta a long para java.util.Date
+        // java.util.Date takes the epoch milliseconds as a long
         return new Date((long) jsDate.getTime());
     }
 

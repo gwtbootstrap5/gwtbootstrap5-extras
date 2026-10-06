@@ -45,6 +45,14 @@ public class Select<T> extends SelectBase<T> {
     }
 
     @Override
+    protected void onUnload() {
+        // Kept while the JavaScript select is destroyed, and set again by onLoad
+        valueSelectedBeforeInit = getValue();
+
+        super.onUnload();
+    }
+
+    @Override
     public boolean isMultiple() {
         return false;
     }
@@ -78,6 +86,8 @@ public class Select<T> extends SelectBase<T> {
         if (value == null) {
             if (isEngineStarted()) {
                 engine.clear(!fireEvents);
+            } else {
+                valueSelectedBeforeInit = null;
             }
             return;
         }
@@ -99,6 +109,6 @@ public class Select<T> extends SelectBase<T> {
             return optionList.get(engine.getValue());
         }
 
-        return null;
+        return valueSelectedBeforeInit;
     }
 }
