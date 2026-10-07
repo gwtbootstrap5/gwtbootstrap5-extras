@@ -30,6 +30,10 @@ import org.gwtbootstrap5.extras.bootbox.client.options.ConfirmOptions;
 import org.gwtbootstrap5.extras.bootbox.client.options.DialogOptions;
 import org.gwtbootstrap5.extras.bootbox.client.options.PromptOptions;
 
+import elemental2.dom.DomGlobal;
+import elemental2.dom.Element;
+import elemental2.dom.EventListener;
+
 /**
  * Bootbox.js is a small JavaScript library which allows you
  * to create programmatic dialog boxes using Bootstrap modals.
@@ -38,6 +42,12 @@ import org.gwtbootstrap5.extras.bootbox.client.options.PromptOptions;
  * @see <a href="https://bootboxjs.com/">...</a>
  */
 public class Bootbox {
+
+    private static final String SHOWN_EVENT = "shown.bs.modal";
+    private static final String BOOTBOX_CLASS = "bootbox";
+
+    // The listener of init(SimpleCallback), kept to remove it when the callback changes
+    private static EventListener shownListener;
 
     /** Creates an instance. It only has static methods, so there is no need to. */
     public Bootbox() {
@@ -122,16 +132,29 @@ public class Bootbox {
     }
 
     /**
-     * Sets a callback when dialog gets initialized.
+     * Sets a callback that runs every time a Bootbox dialog is shown, whether it comes from
+     * {@code alert}, {@code confirm}, {@code prompt} or {@code dialog}. It runs once the dialog
+     * is visible, on Bootstrap's {@code shown.bs.modal} event.
+     * <p>
+     * There is one such callback: calling this again replaces the previous one, and
+     * {@code null} removes it. To run code for a single dialog, use
+     * {@link DialogOptions#setOnShown(SimpleCallback)} instead.
      *
-     * @param callback called once Bootbox is initialized, or {@code null}
+     * @param callback called each time a dialog is shown, or {@code null} to remove it
      */
     public static void init(SimpleCallback callback) {
-        BootboxGlobal.init(() -> {
-            if (callback != null) {
-                callback.callback();
-            }
-        });
+        if (shownListener != null) {
+            DomGlobal.document.removeEventListener(SHOWN_EVENT, shownListener);
+            shownListener = null;
+        }
+        if (callback != null) {
+            shownListener = event -> {
+                if (event.target instanceof Element && ((Element) event.target).classList.contains(BOOTBOX_CLASS)) {
+                    callback.callback();
+                }
+            };
+            DomGlobal.document.addEventListener(SHOWN_EVENT, shownListener);
+        }
     }
 
     /**

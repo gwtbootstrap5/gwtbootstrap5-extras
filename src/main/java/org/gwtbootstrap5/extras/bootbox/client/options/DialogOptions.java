@@ -94,11 +94,47 @@ public class DialogOptions {
      */
     @JsOverlay
     public final void setOnEscape(final SimpleCallback callback) {
-        if (callback != null) {
-            set("onEscape", (JsSimpleCallback) callback::callback);
-        } else {
-            remove("onEscape");
-        }
+        setCallback("onEscape", callback);
+    }
+
+    /**
+     * Calls the callback when the dialog starts to show, before its animation (Bootstrap's {@code show.bs.modal} event).
+     *
+     * @param callback the callback, or {@code null} for none
+     */
+    @JsOverlay
+    public final void setOnShow(final SimpleCallback callback) {
+        setCallback("onShow", callback);
+    }
+
+    /**
+     * Calls the callback once the dialog is visible, after its animation (Bootstrap's {@code shown.bs.modal} event).
+     *
+     * @param callback the callback, or {@code null} for none
+     */
+    @JsOverlay
+    public final void setOnShown(final SimpleCallback callback) {
+        setCallback("onShown", callback);
+    }
+
+    /**
+     * Calls the callback when the dialog starts to hide, before its animation (Bootstrap's {@code hide.bs.modal} event).
+     *
+     * @param callback the callback, or {@code null} for none
+     */
+    @JsOverlay
+    public final void setOnHide(final SimpleCallback callback) {
+        setCallback("onHide", callback);
+    }
+
+    /**
+     * Calls the callback once the dialog is hidden, after its animation (Bootstrap's {@code hidden.bs.modal} event). Bootbox removes the dialog from the page right after.
+     *
+     * @param callback the callback, or {@code null} for none
+     */
+    @JsOverlay
+    public final void setOnHidden(final SimpleCallback callback) {
+        setCallback("onHidden", callback);
     }
 
     /**
@@ -243,6 +279,15 @@ public class DialogOptions {
             button.set("className", className);
         }
         buttons.set(name, button);
+    }
+
+    @JsOverlay
+    private void setCallback(final String key, final SimpleCallback callback) {
+        if (callback != null) {
+            set(key, (JsSimpleCallback) callback::callback);
+        } else {
+            remove(key);
+        }
     }
 
     @JsOverlay
