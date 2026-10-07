@@ -37,9 +37,9 @@ public class TempusDominusURLEntryPoint implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
-        ScriptInjector.fromUrl("https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/js/tempus-dominus.min.js")
+        ScriptInjector.fromUrl("https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.10.4/dist/js/tempus-dominus.min.js")
                 .setWindow(ScriptInjector.TOP_WINDOW).inject();
 
-        StyleInjector.injectCSS("https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/css/tempus-dominus.min.css");
+        StyleInjector.injectCSS("https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.10.4/dist/css/tempus-dominus.min.css");
     }
 }

@@ -38,7 +38,7 @@ public class FontAwesomeURLEntryPoint implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
-        StyleInjector.injectCSS("https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.0.1/css/all.min.css");
+        StyleInjector.injectCSS("https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css");
     }
 
 }

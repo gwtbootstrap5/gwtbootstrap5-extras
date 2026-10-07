@@ -42,7 +42,7 @@ public class JQueryUIURLEntryPoint implements EntryPoint {
     @Override
     public void onModuleLoad() {
         JQueryLoader.ensureLoadedFromUrl(() -> ScriptInjector
-                .fromUrl("https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.1/jquery-ui.min.js").setWindow(ScriptInjector.TOP_WINDOW).inject());
-        StyleInjector.injectCSS("https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.1/themes/base/jquery-ui.min.css");
+                .fromUrl("https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.2/jquery-ui.min.js").setWindow(ScriptInjector.TOP_WINDOW).inject());
+        StyleInjector.injectCSS("https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.2/themes/base/jquery-ui.min.css");
     }
 }

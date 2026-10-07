@@ -35,7 +35,7 @@ public interface JQueryUIClientBundle extends ClientBundle {
     JQueryUIClientBundle INSTANCE = GWT.create(JQueryUIClientBundle.class);
 
     /** The version of the library. */
-    String VERSION = "1.14.1";
+    String VERSION = "1.14.2";
 
     /**
      * The script of jQuery UI.

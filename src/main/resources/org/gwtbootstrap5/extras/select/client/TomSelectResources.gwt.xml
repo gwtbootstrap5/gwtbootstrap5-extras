@@ -28,5 +28,5 @@
 
     <entry-point class="org.gwtbootstrap5.extras.select.client.ui.engines.tomselect.TomSelectEntryPoint"/>
 
-    <stylesheet src="tom-select-2.5.2/css/tom-select.bootstrap5.min.cache.css"/>
+    <stylesheet src="tom-select-2.6.2/css/tom-select.bootstrap5.min.cache.css"/>
 </module>

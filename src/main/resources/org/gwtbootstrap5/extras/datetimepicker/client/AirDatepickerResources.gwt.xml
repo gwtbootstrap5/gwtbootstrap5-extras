@@ -23,10 +23,10 @@
     <inherits name="com.google.gwt.resources.Resources"/>
 
     <public path="resource">
-        <include name="air-datepicker-3.5.3/css/air-datepicker.min.cache.css"/>
+        <include name="air-datepicker-3.6.0/css/air-datepicker.min.cache.css"/>
     </public>
 
-    <stylesheet src="air-datepicker-3.5.3/css/air-datepicker.min.cache.css"/>
+    <stylesheet src="air-datepicker-3.6.0/css/air-datepicker.min.cache.css"/>
 
     <entry-point class="org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.airdatepicker.AirDatepickerEntryPoint"/>
 </module>

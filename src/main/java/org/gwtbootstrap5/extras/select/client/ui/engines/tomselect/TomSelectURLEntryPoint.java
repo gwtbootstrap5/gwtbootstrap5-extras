@@ -39,10 +39,10 @@ public class TomSelectURLEntryPoint implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
-        ScriptInjector.fromUrl("https://cdn.jsdelivr.net/npm/tom-select@2.5.2/dist/js/tom-select.complete.min.js")
+        ScriptInjector.fromUrl("https://cdn.jsdelivr.net/npm/tom-select@2.6.2/dist/js/tom-select.complete.min.js")
                 .setWindow(ScriptInjector.TOP_WINDOW).inject();
 
-        StyleInjector.injectCSS("https://cdn.jsdelivr.net/npm/tom-select@2.5.2/dist/css/tom-select.bootstrap5.min.css");
+        StyleInjector.injectCSS("https://cdn.jsdelivr.net/npm/tom-select@2.6.2/dist/css/tom-select.bootstrap5.min.css");
     }
 
 }

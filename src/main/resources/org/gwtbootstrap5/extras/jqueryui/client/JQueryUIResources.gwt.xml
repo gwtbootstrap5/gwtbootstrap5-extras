@@ -21,8 +21,9 @@
 
 <module>
     <public path="resource">
-        <include name="css/jquery-ui-1.14.1.min.cache.css"/>
+        <include name="css/jquery-ui-1.14.2.min.cache.css"/>
+        <include name="css/images/*.png"/>
     </public>
 
-    <stylesheet src="css/jquery-ui-1.14.1.min.cache.css"/>
+    <stylesheet src="css/jquery-ui-1.14.2.min.cache.css"/>
 </module>

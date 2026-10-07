@@ -35,7 +35,7 @@ public interface TomSelectClientBundle extends ClientBundle {
     TomSelectClientBundle INSTANCE = GWT.create(TomSelectClientBundle.class);
 
     /** The version of the library. */
-    String VERSION = "2.5.2";
+    String VERSION = "2.6.2";
 
     /**
      * The script of Tom Select.

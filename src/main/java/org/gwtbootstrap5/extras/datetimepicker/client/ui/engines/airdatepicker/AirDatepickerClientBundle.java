@@ -35,7 +35,7 @@ public interface AirDatepickerClientBundle extends ClientBundle {
     AirDatepickerClientBundle INSTANCE = GWT.create(AirDatepickerClientBundle.class);
 
     /** The folder of the library's files, with its version. */
-    String AIR_DATEPICKER = "air-datepicker-3.5.3";
+    String AIR_DATEPICKER = "air-datepicker-3.6.0";
 
     /**
      * The script of Air Datepicker.
