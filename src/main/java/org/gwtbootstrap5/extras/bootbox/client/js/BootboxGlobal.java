@@ -93,17 +93,6 @@ public class BootboxGlobal {
     public static native void dialog(Object options);
 
     /**
-     * Calls {@code bootbox.init(argument)}. In Bootbox 6 it creates a new Bootbox bound to the
-     * jQuery given as argument and returns it, so a callback passed here is never called.
-     *
-     * @param callback ignored by Bootbox as a callback
-     * @deprecated it never calls the callback. Use {@code Bootbox.init(SimpleCallback)}, which runs
-     *             it every time a dialog is shown, or {@code DialogOptions.setOnShown(SimpleCallback)}.
-     */
-    @Deprecated
-    public static native void init(JsSimpleCallback callback);
-
-    /**
      * Calls {@code bootbox.setDefaults(options)}: the options apply to the dialogs created after.
      *
      * @param options the default options
