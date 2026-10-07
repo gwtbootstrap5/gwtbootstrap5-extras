@@ -31,23 +31,28 @@ import jsinterop.base.Js;
 import jsinterop.base.JsPropertyMap;
 
 /**
- * Loads jQuery for the extras whose library still requires it (Bootbox, Summernote,
+ * Loads jQuery 4 for the extras whose library still requires it (Bootbox, Summernote,
  * bootstrap-colorpicker, jQuery UI). Core gwtbootstrap5 no longer loads jQuery.
+ * <p>
+ * Summernote and bootstrap-colorpicker also need jQuery Migrate with jQuery 4: they call
+ * {@code jQuery.now()} and {@code jQuery.isFunction()}, which jQuery 4 removed. Their modules
+ * load it with {@link #ensureMigrateLoaded()}; the other extras don't. An application that loads
+ * its own jQuery 4 before them must load jQuery Migrate 4 too, or let these methods load it.
  */
 public final class JQueryLoader {
 
     interface Resources extends ClientBundle {
         Resources INSTANCE = GWT.create(Resources.class);
 
-        @Source("jquery-3.7.1.min.cache.js")
+        @Source("jquery-4.0.0.min.cache.js")
         TextResource jQuery();
 
-        @Source("jquery-migrate-3.5.0.min.cache.js")
+        @Source("jquery-migrate-4.0.2.min.cache.js")
         TextResource jQueryMigrate();
     }
 
-    private static final String JQUERY_URL = "https://code.jquery.com/jquery-3.7.1.min.js";
-    private static final String JQUERY_MIGRATE_URL = "https://code.jquery.com/jquery-migrate-3.5.0.min.js";
+    private static final String JQUERY_URL = "https://code.jquery.com/jquery-4.0.0.min.js";
+    private static final String JQUERY_MIGRATE_URL = "https://code.jquery.com/jquery-migrate-4.0.2.min.js";
 
     private static final String[] BOOTSTRAP_PLUGINS = {
         "Alert", "Button", "Carousel", "Collapse", "Dropdown", "Modal",
@@ -67,24 +72,31 @@ public final class JQueryLoader {
     }
 
     /**
-     * Injects the bundled jQuery and jQuery Migrate unless jQuery is already loaded.
+     * Injects the bundled jQuery unless jQuery is already loaded.
      * Injection is synchronous, so scripts injected afterwards can use jQuery.
      */
     public static void ensureLoaded() {
         if (!isLoaded()) {
-            ScriptInjector.fromString(Resources.INSTANCE.jQuery().getText())
-                    .setWindow(ScriptInjector.TOP_WINDOW)
-                    .inject();
-            ScriptInjector.fromString(Resources.INSTANCE.jQueryMigrate().getText())
-                    .setWindow(ScriptInjector.TOP_WINDOW)
-                    .inject();
+            inject(Resources.INSTANCE.jQuery());
         }
         registerBootstrapPlugins();
     }
 
     /**
-     * Loads jQuery and jQuery Migrate from the CDN unless jQuery is already loaded, then runs
-     * the given callback. Inject scripts that depend on jQuery from the callback.
+     * Injects the bundled jQuery unless jQuery is already loaded, then the bundled jQuery
+     * Migrate if the page's jQuery is version 4 or later and Migrate isn't loaded yet. With
+     * jQuery 3, Migrate isn't needed and isn't loaded.
+     */
+    public static void ensureMigrateLoaded() {
+        ensureLoaded();
+        if (needsMigrate()) {
+            inject(Resources.INSTANCE.jQueryMigrate());
+        }
+    }
+
+    /**
+     * Loads jQuery from the CDN unless jQuery is already loaded, then runs the given callback.
+     * Inject scripts that depend on jQuery from the callback.
      *
      * @param onLoaded runs once jQuery is available
      */
@@ -97,7 +109,45 @@ public final class JQueryLoader {
             ready.run();
             return;
         }
-        injectUrl(JQUERY_URL, () -> injectUrl(JQUERY_MIGRATE_URL, ready));
+        injectUrl(JQUERY_URL, ready);
+    }
+
+    /**
+     * Loads jQuery from the CDN unless jQuery is already loaded, then jQuery Migrate from the
+     * CDN if the page's jQuery is version 4 or later and Migrate isn't loaded yet, then runs the
+     * given callback.
+     *
+     * @param onLoaded runs once jQuery, and Migrate if needed, are available
+     */
+    public static void ensureMigrateLoadedFromUrl(final Runnable onLoaded) {
+        ensureLoadedFromUrl(() -> {
+            if (needsMigrate()) {
+                injectUrl(JQUERY_MIGRATE_URL, onLoaded);
+            } else {
+                onLoaded.run();
+            }
+        });
+    }
+
+    // jQuery Migrate 4 is for jQuery 4: with jQuery 3 the libraries work without it
+    private static boolean needsMigrate() {
+        JsPropertyMap<Object> jQuery = Js.asPropertyMap(Js.global().get("jQuery"));
+        if (jQuery.has("migrateVersion")) {
+            return false;
+        }
+        String version = String.valueOf(Js.asPropertyMap(jQuery.get("fn")).get("jquery"));
+        int dot = version.indexOf('.');
+        try {
+            return Integer.parseInt(dot > 0 ? version.substring(0, dot) : version) >= 4;
+        } catch (NumberFormatException e) {
+            return true;
+        }
+    }
+
+    private static void inject(final TextResource script) {
+        ScriptInjector.fromString(script.getText())
+                .setWindow(ScriptInjector.TOP_WINDOW)
+                .inject();
     }
 
     /**

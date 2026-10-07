@@ -41,7 +41,7 @@ public class ColorPickerURLEntryPoint implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
-        JQueryLoader.ensureLoadedFromUrl(() -> ScriptInjector
+        JQueryLoader.ensureMigrateLoadedFromUrl(() -> ScriptInjector
                 .fromUrl("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/3.4.0/js/bootstrap-colorpicker.min.js")
                 .setWindow(ScriptInjector.TOP_WINDOW).inject());
 

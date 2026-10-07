@@ -40,7 +40,7 @@ public class ColorPickerEntryPoint implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
-        JQueryLoader.ensureLoaded();
+        JQueryLoader.ensureMigrateLoaded();
         ScriptInjector.fromString(ColorPickerClientBundle.INSTANCE.colorpicker().getText()).setWindow(ScriptInjector.TOP_WINDOW).inject();
     }
 
