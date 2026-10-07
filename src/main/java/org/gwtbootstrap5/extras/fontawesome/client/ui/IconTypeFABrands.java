@@ -23,10 +23,18 @@ package org.gwtbootstrap5.extras.fontawesome.client.ui;
 import org.gwtbootstrap5.client.ui.constants.IconType;
 
 /**
- * You can use the fontawesome-enum-helper.js to grab and enum names (located in the client/resource/css folder
+ * The Font Awesome 7 Free brand icons ({@code fa-brands}): the logos of companies and products.
+ * The constant names are the icon names in upper case, with underscores for hyphens:
+ * {@code fa-github-alt} is {@code GITHUB_ALT}. Inherit
+ * {@code org.gwtbootstrap5.extras.fontawesome.FontAwesome} to use them, also by name in the
+ * {@code icon} attribute in UiBinder.
+ *
+ * The constants are generated with {@code fontawesome-enum-helper.js}, in the module's
+ * {@code client/resource/js} folder.
  *
  * @author Sven Jacobs
  * @author Joshua Godi
+ * @see <a href="https://fontawesome.com/search?ic=free&amp;f=brands">Font Awesome Free brand icons</a>
  */
 public enum IconTypeFABrands implements IconType {
     ACCESSIBLE_ICON("accessible-icon"),

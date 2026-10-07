@@ -23,10 +23,22 @@ package org.gwtbootstrap5.extras.fontawesome.client.ui;
 import org.gwtbootstrap5.client.ui.constants.IconType;
 
 /**
- * You can use the fontawesome-enum-helper.js to grab and enum names (located in the client/resource/css folder
+ * The Font Awesome 7 Free icons in the solid style ({@code fa-solid}), the style of most free
+ * icons. The constant names are the icon names in upper case, with underscores for hyphens:
+ * {@code fa-arrow-up} is {@code ARROW_UP}, and {@code fa-0} is {@code NUMBER_0}. Inherit
+ * {@code org.gwtbootstrap5.extras.fontawesome.FontAwesome} to use them, also by name in the
+ * {@code icon} attribute in UiBinder, where the solid style is looked up first.
+ *
+ * <pre>{@code
+ * <b:Icon icon="ARROW_UP"/>
+ * }</pre>
+ *
+ * The constants are generated with {@code fontawesome-enum-helper.js}, in the module's
+ * {@code client/resource/js} folder.
  *
  * @author Sven Jacobs
  * @author Joshua Godi
+ * @see <a href="https://fontawesome.com/search?ic=free">Font Awesome Free icons</a>
  */
 public enum IconTypeFASolid implements IconType {
     A("a"),

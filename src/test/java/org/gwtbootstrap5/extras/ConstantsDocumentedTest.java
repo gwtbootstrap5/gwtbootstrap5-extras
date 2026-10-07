@@ -47,6 +47,7 @@ public class ConstantsDocumentedTest {
     private static final String[] PACKAGES = {
         "animate/client/ui/constants",
         "range/client/ui/base/constants",
+        "fontawesome/client/ui",
     };
     private static final Pattern TYPE = Pattern.compile("^public (?:final |abstract )*(?:class|enum|interface) (\\w+)");
     private static final Pattern MEMBER = Pattern.compile("^\\s+(?:public |protected )(?!static final|final static)[^=;]*\\(.*");

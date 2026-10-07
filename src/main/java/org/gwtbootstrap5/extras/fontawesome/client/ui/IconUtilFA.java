@@ -31,8 +31,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The {@link IIconUtil} of the {@code FontAwesome} modules, which replace core's with it: icon names
+ * are looked up in {@link IconTypeFASolid}, then {@link IconTypeFARegular}, {@link IconTypeFABrands}
+ * and core's {@link IconTypeBI}, so the Bootstrap Icons keep working.
+ */
 public class IconUtilFA implements IIconUtil {
 
+    /** Creates the icon util; GWT creates it through deferred binding. */
+    public IconUtilFA() {
+    }
+
+    @Override
     public List<IconType> getValues() {
         List<IconType> iconTypeList = new ArrayList<>();
         iconTypeList.addAll(Arrays.asList(IconTypeFASolid.values()));
@@ -42,6 +52,7 @@ public class IconUtilFA implements IIconUtil {
         return iconTypeList;
     }
 
+    @Override
     public IconType fromIconType(final String enumName) {
         if (enumName == null) return null;
 
@@ -53,6 +64,7 @@ public class IconUtilFA implements IIconUtil {
         return type;
     }
 
+    @Override
     public IconType fromStyleName(final String styleName) {
         if (styleName == null) return null;
 
@@ -64,6 +76,7 @@ public class IconUtilFA implements IIconUtil {
         return type;
     }
 
+    @Override
     public void setType(final UIObject uiObject, final IconType type) {
         if (type instanceof IconTypeFABrands) {
             StyleHelper.addUniqueEnumStyleName(uiObject, IconTypeFABrands.class, type);

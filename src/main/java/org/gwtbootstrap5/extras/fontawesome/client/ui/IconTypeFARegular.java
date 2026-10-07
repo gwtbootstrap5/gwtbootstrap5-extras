@@ -23,10 +23,19 @@ package org.gwtbootstrap5.extras.fontawesome.client.ui;
 import org.gwtbootstrap5.client.ui.constants.IconType;
 
 /**
- * You can use the fontawesome-enum-helper.js to grab and enum names (located in the client/resource/css folder
+ * The Font Awesome 7 Free icons in the regular style ({@code fa-regular}). Font Awesome Free draws
+ * only <a href="https://fontawesome.com/search?ic=free&amp;s=regular">some icons</a> in this style;
+ * the other constants show nothing. The constant names are the icon names in upper case, with
+ * underscores for hyphens: {@code fa-star} is {@code STAR}. In UiBinder, a name is looked up in
+ * {@link IconTypeFASolid} first, so pick the regular style from Java:
+ * {@code icon.setType(IconTypeFARegular.STAR)}.
+ *
+ * The constants are generated with {@code fontawesome-enum-helper.js}, in the module's
+ * {@code client/resource/js} folder.
  *
  * @author Sven Jacobs
  * @author Joshua Godi
+ * @see <a href="https://fontawesome.com/search?ic=free&amp;s=regular">Font Awesome Free regular icons</a>
  */
 public enum IconTypeFARegular implements IconType {
     A("a"),
