@@ -27,5 +27,10 @@ import jsinterop.annotations.JsFunction;
  */
 @JsFunction
 public interface JsPromptCallback {
+    /**
+     * Called by Bootbox with the text the user entered.
+     *
+     * @param result the text, or {@code null} if the user cancelled
+     */
     void call(String result);
 }

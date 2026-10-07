@@ -24,10 +24,18 @@ import com.google.gwt.editor.client.EditorDelegate;
 import com.google.gwt.editor.client.HasEditorDelegate;
 import com.google.gwt.editor.client.adapters.TakesValueEditor;
 
+/**
+ * The editor of a {@link SelectBase} for the GWT Editor framework, which reads and writes the
+ * widget's value.
+ *
+ *
+ * @param <T> the type of the options
+ */
 public class SelectEditor<T> extends TakesValueEditor<T> implements HasEditorDelegate<T> {
     /**
      * Returns a new TakesValueEditor that adapts a {@link SelectBase} instance.
      *
+     * @param <T> the type of the options
      * @param valueBox a {@link SelectBase} instance to adapt
      * @return a SelectEditor instance of the same type as the adapted {@link SelectBase}
      * instance

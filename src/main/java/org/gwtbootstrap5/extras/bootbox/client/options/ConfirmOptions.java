@@ -35,16 +35,14 @@ import jsinterop.annotations.JsType;
 @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
 public class ConfirmOptions extends DialogOptions {
 
-    /**
-     * 
-     */
+    /** Use {@link #newOptions} instead; the constructor exists for JsInterop. */
     protected ConfirmOptions() {}
     
     /**
      * Creates a new {@link ConfirmOptions}.
      *
-     * @param message e
-     * @return e
+     * @param message the message of the dialog
+     * @return the options, to set the rest of them
      */
     @JsOverlay
     public static ConfirmOptions newOptions(final String message) {
@@ -54,6 +52,11 @@ public class ConfirmOptions extends DialogOptions {
         return options;
     }
 
+    /**
+     * Sets the function Bootbox calls with the user's answer ({@code callback}).
+     *
+     * @param callback the callback
+     */
     @JsOverlay
     public final void setCallback(ConfirmCallback callback) {
         set("callback", (JsConfirmCallback) callback::callback);

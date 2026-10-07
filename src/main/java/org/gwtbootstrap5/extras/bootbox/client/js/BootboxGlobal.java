@@ -29,27 +29,90 @@ import jsinterop.annotations.JsType;
 @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "bootbox")
 public class BootboxGlobal {
 
+    /** Don't call it: the methods are static and map to the global {@code bootbox} object. */
+    public BootboxGlobal() {
+    }
+
+    /**
+     * Calls {@code bootbox.alert(message)}.
+     *
+     * @param msg the message
+     */
     public static native void alert(String msg);
 
+    /**
+     * Calls {@code bootbox.alert(message, callback)}.
+     *
+     * @param msg the message
+     * @param callback called when the dialog is dismissed
+     */
     public static native void alert(String msg, JsSimpleCallback callback);
 
+    /**
+     * Calls {@code bootbox.alert(options)}.
+     *
+     * @param options the dialog options, such as {@code AlertOptions}
+     */
     public static native void alert(Object options);
 
+    /**
+     * Calls {@code bootbox.confirm(message, callback)}.
+     *
+     * @param msg the message
+     * @param callback called with the user's answer
+     */
     public static native void confirm(String msg, JsConfirmCallback callback);
 
+    /**
+     * Calls {@code bootbox.confirm(options)}.
+     *
+     * @param options the dialog options, such as {@code ConfirmOptions}
+     */
     public static native void confirm(Object options);
 
+    /**
+     * Calls {@code bootbox.prompt(title, callback)}.
+     *
+     * @param msg the title of the dialog
+     * @param callback called with the text the user entered, or {@code null} if they cancelled
+     */
     public static native void prompt(String msg, JsPromptCallback callback);
 
+    /**
+     * Calls {@code bootbox.prompt(options)}.
+     *
+     * @param options the dialog options, such as {@code PromptOptions}
+     */
     public static native void prompt(Object options);
 
+    /**
+     * Calls {@code bootbox.dialog(options)}, a dialog with custom buttons.
+     *
+     * @param options the dialog options, such as {@code DialogOptions}
+     */
     public static native void dialog(Object options);
 
+    /**
+     * Calls {@code bootbox.init(callback)}, which runs the callback when a dialog is shown.
+     *
+     * @param callback the callback
+     */
     public static native void init(JsSimpleCallback callback);
 
+    /**
+     * Calls {@code bootbox.setDefaults(options)}: the options apply to the dialogs created after.
+     *
+     * @param options the default options
+     */
     public static native void setDefaults(Object options);
 
+    /**
+     * Calls {@code bootbox.setLocale(name)}: the language of the buttons of the dialogs.
+     *
+     * @param locale the locale name, such as {@code "es"}
+     */
     public static native void setLocale(String locale);
 
+    /** Calls {@code bootbox.hideAll()}, which closes every open dialog. */
     public static native void hideAll();
 }

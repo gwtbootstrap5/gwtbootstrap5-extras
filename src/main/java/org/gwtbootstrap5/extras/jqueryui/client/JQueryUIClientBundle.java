@@ -25,14 +25,23 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
 
 /**
+ * The script of jQuery UI, bundled with the module.
+ *
  * @author Sven Jacobs
  */
 public interface JQueryUIClientBundle extends ClientBundle {
 
+    /** The bundle. */
     JQueryUIClientBundle INSTANCE = GWT.create(JQueryUIClientBundle.class);
 
+    /** The version of the library. */
     String VERSION = "1.14.1";
 
+    /**
+     * The script of jQuery UI.
+     *
+     * @return the script
+     */
     @Source("resource/js/jquery-ui-" + VERSION + ".min.cache.js")
     TextResource jQueryUI();
 

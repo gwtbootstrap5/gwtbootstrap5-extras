@@ -30,6 +30,7 @@ public interface HasAllSummernoteHandlers extends HasSummernoteInitHandlers,
         HasSummernoteKeyUpHandlers, HasSummernoteKeyDownHandlers, HasSummernotePasteHandlers,
         HasSummernoteImageUploadHandlers, HasSummernoteChangeHandlers {
 
+    /** The prefix of the names of Summernote's jQuery events. */
     String SUMMERNOTE_PREFIX = "summernote.";
 
     /**

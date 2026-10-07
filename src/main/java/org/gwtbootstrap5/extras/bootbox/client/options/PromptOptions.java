@@ -35,16 +35,14 @@ import jsinterop.annotations.JsType;
 @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
 public class PromptOptions extends DialogOptions {
 
-    /**
-     * 
-     */
+    /** Use {@link #newOptions} instead; the constructor exists for JsInterop. */
     protected PromptOptions() {}
     
     /**
      * Creates a new {@link PromptOptions}.
      *
-     * @param message e
-     * @return e
+     * @param message the message of the dialog
+     * @return the options, to set the rest of them
      */
     @JsOverlay
     public static PromptOptions newOptions(final String message) {
@@ -54,6 +52,11 @@ public class PromptOptions extends DialogOptions {
         return options;
     }
 
+    /**
+     * Sets the function Bootbox calls with the text the user entered ({@code callback}).
+     *
+     * @param callback the callback
+     */
     @JsOverlay
     public final void setCallback(PromptCallback callback) {
         set("callback", (JsPromptCallback) callback::callback);

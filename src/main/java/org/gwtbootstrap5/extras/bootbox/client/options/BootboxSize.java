@@ -21,13 +21,17 @@ package org.gwtbootstrap5.extras.bootbox.client.options;
  */
 
 /**
- * Bootbox window size.
- *  
+ * The size of a Bootbox dialog, its {@code size} option; the default size is Bootstrap's medium
+ * modal.
+ *
  * @author Tercio Gaudencio Filho (terciofilho [at] gmail.com)
  */
 public enum BootboxSize {
     
-    LARGE("large"), SMALL("small");
+    /** A large dialog, {@code modal-lg}. */
+    LARGE("large"),
+    /** A small dialog, {@code modal-sm}. */
+    SMALL("small");
     
     private final String size;
 
@@ -35,6 +39,11 @@ public enum BootboxSize {
         this.size=size;
     }
     
+    /**
+     * Returns the value of Bootbox's {@code size} option.
+     *
+     * @return {@code "large"} or {@code "small"}
+     */
     public String getSize() {
         return size;
     }

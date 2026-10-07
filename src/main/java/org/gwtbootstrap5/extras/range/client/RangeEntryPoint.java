@@ -26,9 +26,17 @@ import com.google.gwt.core.client.ScriptInjector;
 import jsinterop.base.Js;
 
 /**
+ * Loads the bootstrap-slider files bundled in the jar, unless the page already has it.
+ * It is the entry point of the {@code Range} GWT module: inherit the module
+ * rather than calling it.
+ *
  * @author Xiaodong SUN
  */
 public class RangeEntryPoint implements EntryPoint {
+
+    /** Creates the entry point; GWT calls it when the module loads. */
+    public RangeEntryPoint() {
+    }
 
     @Override
     public void onModuleLoad() {

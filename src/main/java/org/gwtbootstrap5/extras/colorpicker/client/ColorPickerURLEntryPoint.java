@@ -27,9 +27,17 @@ import com.google.gwt.core.client.ScriptInjector;
 import org.gwtbootstrap5.client.ui.util.StyleInjector;
 
 /**
+ * Loads bootstrap-colorpicker from a CDN instead of the bundled files, after jQuery.
+ * It is the entry point of the {@code ColorPickerURL} GWT module: inherit the module
+ * rather than calling it.
+ *
  * @author Sven Jacobs
  */
 public class ColorPickerURLEntryPoint implements EntryPoint {
+
+    /** Creates the entry point; GWT calls it when the module loads. */
+    public ColorPickerURLEntryPoint() {
+    }
 
     @Override
     public void onModuleLoad() {

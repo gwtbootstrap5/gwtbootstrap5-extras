@@ -21,25 +21,38 @@ package org.gwtbootstrap5.extras.range.client.ui.base;
  */
 
 /**
- * Boostrap slider commands.
+ * The names of the bootstrap-slider methods.
  *
  * @author Xiaodong SUN
  * @see <a href="https://github.com/seiyria/bootstrap-slider#functions">...</a>
  */
 public interface RangeCommand {
 
+    /** Listens to an event. */
     String ON = "on";
+    /** Returns the value. */
     String GET_VALUE = "getValue";
+    /** Sets the value. */
     String SET_VALUE = "setValue";
+    /** Returns the slider element. */
     String GET_ELEMENT = "getElement";
+    /** Removes the slider and restores the input. */
     String DESTROY = "destroy";
+    /** Disables the slider. */
     String DISABLE = "disable";
+    /** Enables the slider. */
     String ENABLE = "enable";
+    /** Enables the slider if it is disabled, disables it otherwise. */
     String TOGGLE = "toggle";
+    /** Returns whether the slider is enabled. */
     String IS_ENABLED = "isEnabled";
+    /** Sets an option. */
     String SET_ATTRIBUTE = "setAttribute";
+    /** Returns an option. */
     String GET_ATTRIBUTE = "getAttribute";
+    /** Rebuilds the slider with its current options. */
     String REFRESH = "refresh";
+    /** Redraws the slider, after it was hidden. */
     String RELAYOUT = "relayout";
 
 }

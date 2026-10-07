@@ -27,9 +27,17 @@ import com.google.gwt.core.client.ScriptInjector;
 import org.gwtbootstrap5.client.ui.util.StyleInjector;
 
 /**
+ * Loads jQuery UI from a CDN instead of the bundled files, after jQuery.
+ * It is the entry point of the {@code JQueryUIURL} GWT module: inherit the module
+ * rather than calling it.
+ *
  * @author Sven Jacobs
  */
 public class JQueryUIURLEntryPoint implements EntryPoint {
+
+    /** Creates the entry point; GWT calls it when the module loads. */
+    public JQueryUIURLEntryPoint() {
+    }
 
     @Override
     public void onModuleLoad() {

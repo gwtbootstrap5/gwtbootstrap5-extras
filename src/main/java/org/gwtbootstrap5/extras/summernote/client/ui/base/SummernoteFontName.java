@@ -21,23 +21,34 @@ package org.gwtbootstrap5.extras.summernote.client.ui.base;
  */
 
 /**
- * Summernote font name
+ * A font of the Summernote font menu. The constants are the fonts Summernote offers by default;
+ * create others for fonts the page loads.
  *
  * @author Xiaodong Sun
  */
 public class SummernoteFontName {
 
-    // Built-in font names
+    /** Arial. */
     public static final SummernoteFontName ARIAL = new SummernoteFontName("Arial");
+    /** Arial Black. */
     public static final SummernoteFontName ARIAL_BLACK = new SummernoteFontName("Arial Black");
+    /** Comic Sans MS. */
     public static final SummernoteFontName COMIC_SANS_MS = new SummernoteFontName("Comic Sans MS");
+    /** Courier New. */
     public static final SummernoteFontName COURIER_NEW = new SummernoteFontName("Courier New");
+    /** Helvetica Neue. */
     public static final SummernoteFontName HELVETICA_NEUE = new SummernoteFontName("Helvetica Neue");
+    /** Helvetica. */
     public static final SummernoteFontName HELVETICA = new SummernoteFontName("Helvetica");
+    /** Impact. */
     public static final SummernoteFontName IMPACT = new SummernoteFontName("Impact");
+    /** Lucida Grande. */
     public static final SummernoteFontName LUCIDA_GRANDE = new SummernoteFontName("Lucida Grande");
+    /** Tahoma. */
     public static final SummernoteFontName TAHOMA = new SummernoteFontName("Tahoma");
+    /** Times New Roman. */
     public static final SummernoteFontName TIMES_NEW_ROMAN = new SummernoteFontName("Times New Roman");
+    /** Verdana. */
     public static final SummernoteFontName VERDANA = new SummernoteFontName("Verdana");
 
     private final String name;
@@ -45,7 +56,7 @@ public class SummernoteFontName {
     /**
      * Creates a new font name.
      *
-     * @param name
+     * @param name the font family, as in CSS
      */
     public SummernoteFontName(String name) {
         this.name = name;

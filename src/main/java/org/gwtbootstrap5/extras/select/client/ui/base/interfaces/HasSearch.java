@@ -20,8 +20,29 @@ package org.gwtbootstrap5.extras.select.client.ui.base.interfaces;
  * ==========================LICENSE_END=================================
  */
 
+/**
+ * A widget with a search box that filters its options.
+ */
 public interface HasSearch {
+
+    /**
+     * Shows or hides the search box.
+     *
+     * @param enabled {@code true} to show it
+     */
     void setSearchEnabled(boolean enabled);
+
+    /**
+     * Sets the placeholder of the search box.
+     *
+     * @param placeholder the placeholder
+     */
     void setSearchPlaceholder(String placeholder);
+
+    /**
+     * Loads the options for a search, as if the user had typed it.
+     *
+     * @param search the search text
+     */
     void triggerSearch(String search);
 }

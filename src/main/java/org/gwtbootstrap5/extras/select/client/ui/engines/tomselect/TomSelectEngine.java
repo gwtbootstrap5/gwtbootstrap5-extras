@@ -34,7 +34,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * The {@link org.gwtbootstrap5.extras.select.client.ui.base.engine.ISelectEngine} of
+ * {@code SelectEngine.TOMSELECT}, backed by {@link TomSelect}.
+ */
 public class TomSelectEngine implements ISelectEngine {
+
+    /** Creates an engine; {@code SelectEngine.getEngine} creates them for the selects. */
+    public TomSelectEngine() {
+    }
 
     private HTMLSelectElement element;
     private TomSelect instance;

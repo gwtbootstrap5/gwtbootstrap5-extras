@@ -122,6 +122,12 @@ public enum Animation implements Style.HasCssName {
         return cssClass;
     }
 
+    /**
+     * Returns the animation whose CSS class is in a style name.
+     *
+     * @param styleName the style name, for example the widget's {@code class} attribute
+     * @return the animation, or {@link #NO_ANIMATION} if there is none
+     */
     public static Animation fromStyleName(final String styleName) {
         return EnumHelper.fromStyleName(styleName, Animation.class, NO_ANIMATION);
     }

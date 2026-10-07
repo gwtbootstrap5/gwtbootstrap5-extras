@@ -27,5 +27,10 @@ import jsinterop.annotations.JsFunction;
  */
 @JsFunction
 public interface JsConfirmCallback {
+    /**
+     * Called by Bootbox with the user's answer.
+     *
+     * @param result {@code true} if the user confirmed, {@code false} otherwise
+     */
     void call(boolean result);
 }

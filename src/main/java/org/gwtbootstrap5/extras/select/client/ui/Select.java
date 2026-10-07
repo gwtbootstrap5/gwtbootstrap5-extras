@@ -26,10 +26,31 @@ import org.gwtbootstrap5.extras.select.client.ui.engines.SelectEngine;
 
 import java.util.List;
 
+/**
+ * A searchable single select: a Bootstrap {@code form-select} turned into a dropdown by
+ * <a href="https://tom-select.js.org/">Tom Select</a>. Inherit
+ * {@code org.gwtbootstrap5.extras.select.client.TomSelectResources} (or {@code TomSelectURL}) to
+ * load the library. The JavaScript select is created when the widget is attached and destroyed when
+ * it is detached; the value is kept in between.
+ *
+ * <pre>{@code
+ * <s:Select ui:field="size" engine="TOMSELECT" placeholder="Pick a size"/>
+ * }</pre>
+ *
+ *
+ * @param <T> the type of the options
+ * @see <a href="https://getbootstrap.com/docs/5.3/forms/select/">Bootstrap 5 documentation</a>
+ */
 public class Select<T> extends SelectBase<T> {
 
+    /** The value set before the widget was attached, or kept while it is detached. */
     protected T valueSelectedBeforeInit;
 
+    /**
+     * Creates a select.
+     *
+     * @param engine the JavaScript library, the {@code engine} attribute in UiBinder
+     */
     @UiConstructor
     public Select(SelectEngine engine) {
         super(SelectEngine.getEngine(engine));

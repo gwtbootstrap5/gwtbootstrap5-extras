@@ -27,5 +27,6 @@ import jsinterop.annotations.JsFunction;
  */
 @JsFunction
 public interface JsSimpleCallback {
+    /** Called by Bootbox when the dialog is dismissed. */
     void call();
 }

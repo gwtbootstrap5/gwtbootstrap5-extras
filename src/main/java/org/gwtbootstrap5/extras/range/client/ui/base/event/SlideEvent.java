@@ -37,6 +37,7 @@ public class SlideEvent<T> extends GwtEvent<SlideHandler<T>> {
      * Fires a slide event on all registered handlers in the handler manager. If
      * no such handlers exist, this method will do nothing.
      *
+     * @param <T> slider value type
      * @param source the source of the handlers
      * @param newValue the new slider value
      */
@@ -80,6 +81,8 @@ public class SlideEvent<T> extends GwtEvent<SlideHandler<T>> {
     }
 
     /**
+     * Returns the value of the slider while it is dragged.
+     *
      * @return the new slider value
      */
     public T getValue() {

@@ -39,6 +39,10 @@ import org.gwtbootstrap5.extras.bootbox.client.options.PromptOptions;
  */
 public class Bootbox {
 
+    /** Creates an instance. It only has static methods, so there is no need to. */
+    public Bootbox() {
+    }
+
     /**
      * Displays a message in a modal dialog box.
      *
@@ -62,7 +66,7 @@ public class Bootbox {
     /**
      * Displays a customized alert with the given {@link AlertOptions}.
      *
-     * @param options e
+     * @param options the options of the alert
      */
     public static void alert(AlertOptions options) {
         BootboxGlobal.alert(options);
@@ -82,7 +86,7 @@ public class Bootbox {
     /**
      * Displays a customized confirm with the given {@link ConfirmOptions}.
      *
-     * @param options e
+     * @param options the options of the confirm
      */
     public static void confirm(ConfirmOptions options) {
         BootboxGlobal.confirm(options);
@@ -102,7 +106,7 @@ public class Bootbox {
     /**
      * Displays a customized prompt with the given {@link PromptOptions}.
      *
-     * @param options e
+     * @param options the options of the prompt
      */
     public static void prompt(PromptOptions options) {
         BootboxGlobal.prompt(options);
@@ -120,7 +124,7 @@ public class Bootbox {
     /**
      * Sets a callback when dialog gets initialized.
      *
-     * @param callback e
+     * @param callback called once Bootbox is initialized, or {@code null}
      */
     public static void init(SimpleCallback callback) {
         BootboxGlobal.init(() -> {
@@ -137,7 +141,7 @@ public class Bootbox {
      * and can be overridden whenever the wrapper methods are invoked
      * with a single options argument.
      *
-     * @param options e
+     * @param options the default options
      */
     public static void setDefaults(DialogOptions options) {
         BootboxGlobal.setDefaults(options);

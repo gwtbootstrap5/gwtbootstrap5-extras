@@ -26,9 +26,13 @@ import java.util.List;
 import elemental2.core.JsArray;
 
 /**
- * Wrapper for the Summernote WYSIWYG Editor
- * <p>
- * See: <a href="http://summernote.org/">...</a>
+ * The buttons of a Summernote toolbar, in groups, for {@code SummernoteBase.setToolbar}.
+ *
+ * <pre>{@code
+ * editor.setToolbar(new Toolbar()
+ *         .addGroup(ToolbarButton.BOLD, ToolbarButton.ITALIC, ToolbarButton.UNDERLINE)
+ *         .addGroup(ToolbarButton.UL, ToolbarButton.OL));
+ * }</pre>
  *
  * @author Xiaodong Sun
  */
@@ -37,6 +41,10 @@ public class Toolbar {
     private static final String GROUP_PREFIX = "group_";
     private int groupIndex = 0;
     private final List<JsArray<Object>> groups = new ArrayList<>(0);
+
+    /** Creates an empty toolbar. */
+    public Toolbar() {
+    }
 
     /**
      * Add a new toolbar group with the specified buttons.

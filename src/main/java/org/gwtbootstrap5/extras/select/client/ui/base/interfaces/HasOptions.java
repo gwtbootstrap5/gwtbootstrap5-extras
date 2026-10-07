@@ -22,11 +22,44 @@ package org.gwtbootstrap5.extras.select.client.ui.base.interfaces;
 
 import java.util.List;
 
+/**
+ * A widget whose options can be changed.
+ *
+ * @param <T> the type of the options
+ */
 public interface HasOptions<T> {
+
+    /** Deselects everything and removes every option. */
     void clearAll();
+
+    /** Removes every option. */
     void clearOptions();
+
+    /**
+     * Replaces the options.
+     *
+     * @param options the new options
+     */
     void setOptions(List<T> options);
+
+    /**
+     * Adds an option.
+     *
+     * @param option the option
+     */
     void addOption(T option);
+
+    /**
+     * Adds options.
+     *
+     * @param option the options
+     */
     void addOptions(List<T> option);
+
+    /**
+     * Returns the options.
+     *
+     * @return the options
+     */
     List<T> getOptions();
 }

@@ -26,9 +26,17 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.ScriptInjector;
 
 /**
+ * Loads the jQuery UI files bundled in the jar, after jQuery.
+ * It is the entry point of the {@code JQueryUI} GWT module: inherit the module
+ * rather than calling it.
+ *
  * @author Sven Jacobs
  */
 public class JQueryUIEntryPoint implements EntryPoint {
+
+    /** Creates the entry point; GWT calls it when the module loads. */
+    public JQueryUIEntryPoint() {
+    }
 
     @Override
     public void onModuleLoad() {

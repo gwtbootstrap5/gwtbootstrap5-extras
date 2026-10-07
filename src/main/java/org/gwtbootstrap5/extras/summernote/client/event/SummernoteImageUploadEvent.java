@@ -42,6 +42,7 @@ public class SummernoteImageUploadEvent extends GwtEvent<SummernoteImageUploadHa
      * handler manager. If no such handlers exist, this method will do nothing.
      *
      * @param source the source of the handlers
+     * @param images the files the user picked
      */
     public static void fire(final HasSummernoteImageUploadHandlers source, JsArray<File> images) {
         if (TYPE != null) {
@@ -74,6 +75,8 @@ public class SummernoteImageUploadEvent extends GwtEvent<SummernoteImageUploadHa
 
     /**
      * Creates a summernote image upload event.
+     *
+     * @param images the files the user picked
      */
     protected SummernoteImageUploadEvent(JsArray<File> images) {
         this.images = images;

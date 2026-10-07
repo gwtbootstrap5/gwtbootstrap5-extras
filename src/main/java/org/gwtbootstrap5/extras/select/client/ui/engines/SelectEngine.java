@@ -23,9 +23,21 @@ package org.gwtbootstrap5.extras.select.client.ui.engines;
 import org.gwtbootstrap5.extras.select.client.ui.base.engine.ISelectEngine;
 import org.gwtbootstrap5.extras.select.client.ui.engines.tomselect.TomSelectEngine;
 
+/**
+ * The JavaScript libraries a {@code Select} can use; the {@code engine} attribute in UiBinder.
+ * {@code TOMSELECT} is <a href="https://tom-select.js.org/">Tom Select</a> 2, which needs the
+ * {@code TomSelectResources} or {@code TomSelectURL} module.
+ */
 public enum SelectEngine {
+    /** <a href="https://tom-select.js.org/">Tom Select</a> 2. */
     TOMSELECT;
 
+    /**
+     * Creates the engine of a library.
+     *
+     * @param engine the library
+     * @return a new engine
+     */
     public static ISelectEngine getEngine(SelectEngine engine) {
         ISelectEngine selectEngine = new TomSelectEngine();
         switch (engine) {

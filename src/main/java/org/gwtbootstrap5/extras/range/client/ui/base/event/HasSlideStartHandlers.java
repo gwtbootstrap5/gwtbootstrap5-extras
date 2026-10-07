@@ -26,6 +26,8 @@ import com.google.gwt.event.shared.HasHandlers;
 /**
  * A widget that implements this interface is a public source of
  * {@link SlideStartEvent} events.
+ *
+ * @param <T> slider value type
  */
 public interface HasSlideStartHandlers<T> extends HasHandlers {
 

@@ -30,6 +30,8 @@ import jsinterop.annotations.JsFunction;
 public interface JQueryEventHandler {
 
     /**
+     * Called by jQuery when the event fires.
+     *
      * @param event the jQuery event
      * @param args extra arguments passed by the triggering plugin
      */

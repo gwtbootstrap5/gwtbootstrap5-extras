@@ -26,9 +26,17 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.ScriptInjector;
 
 /**
+ * Loads Bootbox from a CDN instead of the bundled files, after jQuery.
+ * It is the entry point of the {@code BootboxURL} GWT module: inherit the module
+ * rather than calling it.
+ *
  * @author Sven Jacobs
  */
 public class BootboxURLEntryPoint implements EntryPoint {
+
+    /** Creates the entry point; GWT calls it when the module loads. */
+    public BootboxURLEntryPoint() {
+    }
 
     @Override
     public void onModuleLoad() {

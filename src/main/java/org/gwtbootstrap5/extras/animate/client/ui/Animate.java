@@ -38,6 +38,10 @@ import java.util.ArrayList;
  */
 public class Animate {
 
+    /** Creates an instance. It only has static methods, so there is no need to. */
+    public Animate() {
+    }
+
     // store used styles, so they are not injected to the DOM everytime.
     private static final String ANIMATION_END = "animationend";
 
@@ -50,9 +54,9 @@ public class Animate {
      * to already displayed element. Animation runs on hidden elements too and is not paused/stopped
      * when element is set as hidden.
      *
+     * @param <T> Any object extending UIObject class (typically Widget).
      * @param widget Widget to apply animation to.
      * @param animation Type of animation to apply.
-     * @param <T> Any object extending UIObject class (typically Widget).
      * @return Animation's CSS class name, which can be removed to stop animation.
      */
     public static <T extends UIObject> String animate(final T widget, final Animation animation) {
@@ -66,10 +70,10 @@ public class Animate {
      * to already displayed element. Animation runs on hidden elements too and is not paused/stopped
      * when element is set as hidden.
      *
+     * @param <T> Any object extending UIObject class (typically Widget).
      * @param widget Widget to apply animation to.
      * @param animation Type of animation to apply.
      * @param count Number of animation repeats. 0 disables animation, any negative value set repeats to infinite.
-     * @param <T> Any object extending UIObject class (typically Widget).
      * @return Animation's CSS class name, which can be removed to stop animation.
      */
     public static <T extends UIObject> String animate(final T widget, final Animation animation, final int count) {
@@ -83,11 +87,11 @@ public class Animate {
      * to already displayed element. Animation runs on hidden elements too and is not paused/stopped
      * when element is set as hidden.
      *
+     * @param <T> Any object extending UIObject class (typically Widget).
      * @param widget Widget to apply animation to.
      * @param animation Type of animation to apply.
      * @param count Number of animation repeats. 0 disables animation, any negative value set repeats to infinite.
      * @param duration Animation duration in ms. 0 disables animation, any negative value keeps default of original animation.
-     * @param <T> Any object extending UIObject class (typically Widget).
      * @return Animation's CSS class name, which can be removed to stop animation.
      */
     public static <T extends UIObject> String animate(final T widget, final Animation animation, final int count, final int duration) {
@@ -101,12 +105,12 @@ public class Animate {
      * to already displayed element. Animation runs on hidden elements too and is not paused/stopped
      * when element is set as hidden.
      *
+     * @param <T> Any object extending UIObject class (typically Widget).
      * @param widget Widget to apply animation to.
      * @param animation Type of animation to apply.
      * @param count Number of animation repeats. 0 disables animation, any negative value set repeats to infinite.
      * @param duration Animation duration in ms. 0 disables animation, any negative value keeps default of original animation.
      * @param delay Delay before starting the animation loop in ms. Value {@code <= 0} means no delay.
-     * @param <T> Any object extending UIObject class (typically Widget).
      * @return Animation's CSS class name, which can be removed to stop animation.
      */
     public static <T extends UIObject> String animate(final T widget, final Animation animation, final int count, final int duration, final int delay) {
@@ -136,9 +140,9 @@ public class Animate {
      * to already displayed element. Animation runs on hidden elements too and is not paused/stopped
      * when element is set as hidden.
      *
+     * @param <T> Any object extending UIObject class (typically Widget).
      * @param widget Widget to apply animation to.
      * @param animation Custom CSS class name used as animation.
-     * @param <T> Any object extending UIObject class (typically Widget).
      * @return Animation's CSS class name, which can be removed to stop animation.
      */
     public static <T extends UIObject> String animate(final T widget, final String animation) {
@@ -152,10 +156,10 @@ public class Animate {
      * to already displayed element. Animation runs on hidden elements too and is not paused/stopped
      * when element is set as hidden.
      *
+     * @param <T> Any object extending UIObject class (typically Widget).
      * @param widget Widget to apply animation to.
      * @param animation Custom CSS class name used as animation.
      * @param count Number of animation repeats. 0 disables animation, any negative value set repeats to infinite.
-     * @param <T> Any object extending UIObject class (typically Widget).
      * @return Animation's CSS class name, which can be removed to stop animation.
      */
     public static <T extends UIObject> String animate(final T widget, final String animation, final int count) {
@@ -169,11 +173,11 @@ public class Animate {
      * to already displayed element. Animation runs on hidden elements too and is not paused/stopped
      * when element is set as hidden.
      *
+     * @param <T> Any object extending UIObject class (typically Widget).
      * @param widget Widget to apply animation to.
      * @param animation Custom CSS class name used as animation.
      * @param count Number of animation repeats. 0 disables animation, any negative value set repeats to infinite.
      * @param duration Animation duration in ms. 0 disables animation, any negative value keeps default of original animation.
-     * @param <T> Any object extending UIObject class (typically Widget).
      * @return Animation's CSS class name, which can be removed to stop animation.
      */
     public static <T extends UIObject> String animate(final T widget, final String animation, final int count, final int duration) {
@@ -187,12 +191,12 @@ public class Animate {
      * to already displayed element. Animation runs on hidden elements too and is not paused/stopped
      * when element is set as hidden.
      *
+     * @param <T> Any object extending UIObject class (typically Widget).
      * @param widget Widget to apply animation to.
      * @param animation Custom CSS class name used as animation.
      * @param count Number of animation repeats. 0 disables animation, any negative value set repeats to infinite.
      * @param duration Animation duration in ms. 0 disables animation, any negative value keeps default of original animation.
      * @param delay Delay before starting the animation loop in ms. Value {@code <= 0} means no delay.
-     * @param <T> Any object extending UIObject class (typically Widget).
      * @return Animation's CSS class name, which can be removed to stop animation.
      */
     public static <T extends UIObject> String animate(final T widget, final String animation, final int count, final int duration, final int delay) {
@@ -219,12 +223,12 @@ public class Animate {
      * Styles element with animation class. New class name is generated to customize count, duration and delay.
      * Style is removed on animation end (if not set to infinite).
      *
+     * @param <T> Any object extending UIObject class (typically Widget).
      * @param element Element to apply animation to.
      * @param animation Type of animation to apply.
      * @param count Number of animation repeats. 0 disables animation, any negative value set repeats to infinite.
      * @param duration Animation duration in ms. 0 disables animation, any negative value keeps default of original animation.
      * @param delay Delay before starting the animation loop in ms. Value <= 0 means no delay.
-     * @param <T> Any object extending UIObject class (typically Widget).
      * @return Animation's CSS class name, which can be removed to stop animation.
      */
     private static <T extends UIObject> String styleElement(Element element, String animation, int count, int duration, int delay) {
@@ -282,6 +286,7 @@ public class Animate {
     /**
      * Removes custom animation class on animation end.
      *
+     * @param <T> the type of the widget
      * @param widget Element to remove style from.
      * @param animation Animation CSS class to remove.
      */
@@ -310,6 +315,7 @@ public class Animate {
     /**
      * Removes custom animation class and stops animation.
      *
+     * @param <T> the type of the widget
      * @param widget Element to remove style from.
      * @param animation Animation CSS class to remove.
      */

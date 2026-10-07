@@ -32,8 +32,8 @@ public class Range {
     private double minValue;
     private double maxValue;
 
+    /** Creates a range from 0 to 0, for subclasses. */
     protected Range() {
-        // Nada
     }
 
     /**

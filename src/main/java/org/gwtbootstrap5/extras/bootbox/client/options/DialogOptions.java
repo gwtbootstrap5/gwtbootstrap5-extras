@@ -40,14 +40,15 @@ public class DialogOptions {
     @JsOverlay
     private static final String BUTTON_PREFIX = "bootbox_btn_";
 
+    /** Use {@link #newOptions} instead; the constructor exists for JsInterop. */
     protected DialogOptions() {
     }
 
     /**
      * Creates a new {@link DialogOptions}.
      *
-     * @param message e
-     * @return e
+     * @param message the message of the dialog
+     * @return the options, to set the rest of them
      */
     @JsOverlay
     public static DialogOptions newOptions(final String message) {
@@ -64,7 +65,7 @@ public class DialogOptions {
     /**
      * Adds a header to the dialog and places this text in an H4.
      *
-     * @param title e
+     * @param title the title
      */
     @JsOverlay
     public final void setTitle(final String title) {
@@ -75,7 +76,7 @@ public class DialogOptions {
      * The locale settings used to translate the three standard button
      * labels: <b>OK</b>, <b>CONFIRM</b>, <b>CANCEL</b>.
      *
-     * @param locale e
+     * @param locale the locale, or {@code null} for the default one
      */
     @JsOverlay
     public final void setLocale(final BootboxLocale locale) {
@@ -89,7 +90,7 @@ public class DialogOptions {
      * <br>
      * Defaults to <code>null</code> for custom dialogs.
      *
-     * @param callback e
+     * @param callback called when Escape is pressed, or {@code null} for none
      */
     @JsOverlay
     public final void setOnEscape(final SimpleCallback callback) {
@@ -105,7 +106,7 @@ public class DialogOptions {
      * <br>
      * Defaults to <code>true</code>.
      *
-     * @param show e
+     * @param show {@code true} to show it at once
      */
     @JsOverlay
     public final void setShow(final boolean show) {
@@ -122,7 +123,7 @@ public class DialogOptions {
      * </ul>
      * Defaults to <code>null</code>.
      *
-     * @param backdrop e
+     * @param backdrop {@code null}, {@code true} or {@code false}, as above
      */
     @JsOverlay
     public final void setBackdrop(final Boolean backdrop) {
@@ -138,7 +139,7 @@ public class DialogOptions {
      * <br>
      * Defaults to <code>true</code>.
      *
-     * @param closeButton e
+     * @param closeButton {@code true} for a close button
      */
     @JsOverlay
     public final void setCloseButton(final boolean closeButton) {
@@ -150,7 +151,7 @@ public class DialogOptions {
      * <br>
      * Defaults to <code>true</code>.
      *
-     * @param animate e
+     * @param animate {@code true} to animate
      */
     @JsOverlay
     public final void setAnimate(final boolean animate) {
@@ -158,11 +159,9 @@ public class DialogOptions {
     }
 
     /**
-     * An additional class to apply to the dialog wrapper.<br>
-     * <br>
-     * Defaults to <code>true</code>.
+     * An additional class to apply to the dialog wrapper.
      *
-     * @param className e
+     * @param className the class
      */
     @JsOverlay
     public final void setClassName(final String className) {
@@ -174,7 +173,7 @@ public class DialogOptions {
      * <br>
      * Defaults to <code>null</code>.
      *
-     * @param size e
+     * @param size the size, or {@code null} for the default one
      */
     @JsOverlay
     public final void setSize(final BootboxSize size) {
@@ -188,7 +187,7 @@ public class DialogOptions {
     /**
      * Adds a custom button.
      *
-     * @param label e
+     * @param label the text of the button
      */
     @JsOverlay
     public final void addButton(String label) {
@@ -198,8 +197,8 @@ public class DialogOptions {
     /**
      * Adds a custom button with a class name.
      *
-     * @param label e
-     * @param className e
+     * @param label the text of the button
+     * @param className the classes of the button, such as {@code "btn-primary"}
      */
     @JsOverlay
     public final void addButton(String label, String className) {
@@ -209,8 +208,8 @@ public class DialogOptions {
     /**
      * Adds a custom button with a callback.
      *
-     * @param label e
-     * @param callback e
+     * @param label the text of the button
+     * @param callback called when the button is clicked, which closes the dialog
      */
     @JsOverlay
     public final void addButton(String label, SimpleCallback callback) {
@@ -220,9 +219,9 @@ public class DialogOptions {
     /**
      * Adds a custom button with a class name and a callback.
      *
-     * @param label e
-     * @param className e
-     * @param callback e
+     * @param label the text of the button
+     * @param className the classes of the button, such as {@code "btn-primary"}
+     * @param callback called when the button is clicked, which closes the dialog
      */
     @JsOverlay
     public final void addButton(String label, String className, SimpleCallback callback) {

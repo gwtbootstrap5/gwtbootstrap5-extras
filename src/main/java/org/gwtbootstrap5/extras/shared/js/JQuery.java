@@ -32,6 +32,10 @@ import jsinterop.annotations.JsType;
 @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "jQuery")
 public class JQuery {
 
+    /** Don't call it: wrap elements with {@link #jQuery}. */
+    public JQuery() {
+    }
+
     /**
      * Wraps a GWT DOM element in a jQuery object.
      *
@@ -87,9 +91,9 @@ public class JQuery {
     /**
      * Runs a Summernote command, e.g. {@code summernoteCommand("code")} or {@code summernoteCommand("destroy")}.
      *
+     * @param <T> the command's return type
      * @param command the command name
      * @param args the command arguments
-     * @param <T> the command's return type
      * @return the command's result
      */
     @JsMethod(name = "summernote")
@@ -106,9 +110,9 @@ public class JQuery {
     /**
      * Runs a bootstrap-colorpicker command, e.g. {@code colorpickerCommand("setValue", "#fff")}.
      *
+     * @param <T> the command's return type
      * @param command the command name
      * @param args the command arguments
-     * @param <T> the command's return type
      * @return the command's result
      */
     @JsMethod(name = "colorpicker")

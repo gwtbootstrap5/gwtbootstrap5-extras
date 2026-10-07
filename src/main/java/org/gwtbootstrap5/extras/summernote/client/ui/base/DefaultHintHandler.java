@@ -20,7 +20,6 @@ package org.gwtbootstrap5.extras.summernote.client.ui.base;
  * ==========================LICENSE_END=================================
  */
 
-import org.gwtbootstrap5.client.ui.html.Text;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Node;
@@ -33,13 +32,17 @@ import com.google.gwt.dom.client.Node;
  */
 public abstract class DefaultHintHandler implements HintHandler {
 
+    /** Creates the handler. */
+    public DefaultHintHandler() {
+    }
+
     @Override
     public String getTemplate(String item) {
         return item;
     }
 
     @Override
-    public Node getContent(String item) {new Text(item);
+    public Node getContent(String item) {
         return Document.get().createTextNode(item);
     }
 

@@ -40,6 +40,11 @@ public enum TooltipType implements Type {
         this.type = type;
     }
 
+    /**
+     * Returns the value of the slider option.
+     *
+     * @return the option value, the constant's name in lower case
+     */
     public String getType() {
         return type;
     }

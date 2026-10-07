@@ -65,10 +65,12 @@ import jsinterop.base.Js;
 import jsinterop.base.JsPropertyMap;
 
 /**
- *
+ * Base class of the sliders, a text input turned into a
+ * <a href="https://github.com/seiyria/bootstrap-slider">bootstrap-slider</a>. The options are
+ * stored as {@code data-slider-*} attributes, so they can be set before the widget is attached;
+ * setting one on an attached slider rebuilds it.
  *
  * @param <T> slider value type
- *
  * @see <a href="https://github.com/seiyria/bootstrap-slider">...</a>
  * @author Xiaodong Sun
  */
@@ -82,6 +84,7 @@ public abstract class RangeBase<T> extends Widget implements
 
     private final AttributeMixin<RangeBase<T>> attributeMixin = new AttributeMixin<>(this);
 
+    /** Creates the slider on a new text input. */
     protected RangeBase() {
         setElement(Document.get().createTextInputElement());
     }
@@ -117,6 +120,11 @@ public abstract class RangeBase<T> extends Widget implements
         return getStringAttribute(RangeOption.ID);
     }
 
+    /**
+     * Returns the minimum possible value ({@code data-slider-min}).
+     *
+     * @return the minimum, 0 by default
+     */
     public double getMin() {
         return getDoubleAttribute(RangeOption.MIN, 0);
     }
@@ -124,12 +132,17 @@ public abstract class RangeBase<T> extends Widget implements
     /**
      * Sets the minimum possible value.
      *
-     * @param min e
+     * @param min the minimum, 0 by default
      */
     public void setMin(final double min) {
         updateSlider(RangeOption.MIN, min);
     }
 
+    /**
+     * Returns the maximum possible value ({@code data-slider-max}).
+     *
+     * @return the maximum, 10 by default
+     */
     public double getMax() {
         return getDoubleAttribute(RangeOption.MAX, 10);
     }
@@ -137,12 +150,17 @@ public abstract class RangeBase<T> extends Widget implements
     /**
      * Sets the maximum possible value.
      *
-     * @param max e
+     * @param max the maximum, 10 by default
      */
     public void setMax(final double max) {
         updateSlider(RangeOption.MAX, max);
     }
 
+    /**
+     * Returns the increment step ({@code data-slider-step}).
+     *
+     * @return the step, 1 by default
+     */
     public double getStep() {
         return getDoubleAttribute(RangeOption.STEP, 1);
     }
@@ -150,12 +168,18 @@ public abstract class RangeBase<T> extends Widget implements
     /**
      * Sets the increment step.
      *
-     * @param step e
+     * @param step the step, 1 by default
      */
     public void setStep(final double step) {
         updateSlider(RangeOption.STEP, step);
     }
 
+    /**
+     * Returns the number of digits shown after the decimal ({@code data-slider-precision}).
+     *
+     * @return the number of digits, or 0 if it is not set (the slider then uses the digits of the
+     *   step)
+     */
     public double getPrecision() {
         return getDoubleAttribute(RangeOption.PRECISION, 0);
     }
@@ -165,12 +189,17 @@ public abstract class RangeBase<T> extends Widget implements
      * <br>
      * Defaults to the number of digits after the decimal of step value.
      *
-     * @param precision e
+     * @param precision the number of digits
      */
     public void setPrecision(final double precision) {
         updateSlider(RangeOption.PRECISION, precision);
     }
 
+    /**
+     * Returns the orientation ({@code data-slider-orientation}).
+     *
+     * @return the orientation, horizontal by default
+     */
     public OrientationType getOrientation() {
         return getEnumAttribute(RangeOption.ORIENTATION, OrientationType.class, OrientationType.HORIZONTAL);
     }
@@ -178,13 +207,18 @@ public abstract class RangeBase<T> extends Widget implements
     /**
      * Sets the orientation.
      *
-     * @param orientation e
+     * @param orientation horizontal (the default) or vertical
      * @see OrientationType
      */
     public void setOrientation(final OrientationType orientation) {
         updateSlider(RangeOption.ORIENTATION, orientation.getType());
     }
 
+    /**
+     * Returns whether this is a range slider, with two handles ({@code data-slider-range}).
+     *
+     * @return {@code true} for a range slider
+     */
     protected boolean isRange() {
         return getBooleanAttribute(RangeOption.RANGE, false);
     }
@@ -193,12 +227,17 @@ public abstract class RangeBase<T> extends Widget implements
      * Make range slider if set to <code>true</code>. If initial value is scalar,
      * max will be used for second value.
      *
-     * @param range e
+     * @param range {@code true} for a range slider
      */
     protected void setRange(final boolean range) {
         updateSlider(RangeOption.RANGE, range);
     }
 
+    /**
+     * Returns where the selection is drawn ({@code data-slider-selection}).
+     *
+     * @return the selection type, before the handle by default
+     */
     public SelectionType getSelection() {
         return getEnumAttribute(RangeOption.SELECTION, SelectionType.class, SelectionType.BEFORE);
     }
@@ -206,13 +245,18 @@ public abstract class RangeBase<T> extends Widget implements
     /**
      * Sets the selection type.
      *
-     * @param selection e
+     * @param selection where the selection is drawn, before the handle by default
      * @see SelectionType
      */
     public void setSelection(final SelectionType selection) {
         updateSlider(RangeOption.SELECTION, selection.getType());
     }
 
+    /**
+     * Returns when the tool-tip shows ({@code data-slider-tooltip}).
+     *
+     * @return the tool-tip type, {@code SHOW} by default
+     */
     public TooltipType getTooltip() {
         return getEnumAttribute(RangeOption.TOOLTIP, TooltipType.class, TooltipType.SHOW);
     }
@@ -220,13 +264,20 @@ public abstract class RangeBase<T> extends Widget implements
     /**
      * Sets the tool-tip type.
      *
-     * @param tooltip e
+     * @param tooltip when the tool-tip shows, on hover by default ({@code SHOW})
      * @see TooltipType
      */
     public void setTooltip(final TooltipType tooltip) {
         updateSlider(RangeOption.TOOLTIP, tooltip.getType());
     }
 
+    /**
+     * Returns whether each handle of a range slider has its own tool-tip
+     * ({@code data-slider-tooltip-split}).
+     *
+     * @return {@code true} for one tool-tip per handle, {@code false} (the default) for one
+     *   tool-tip
+     */
     public boolean isTooltipSplit() {
         return getBooleanAttribute(RangeOption.TOOLTIP_SPLIT, false);
     }
@@ -235,12 +286,17 @@ public abstract class RangeBase<T> extends Widget implements
      * Show one too-tip if set to <code>false</code>, otherwise
      * show two tool-tips one for each handler.
      *
-     * @param tooltipSplit e
+     * @param tooltipSplit {@code true} for one tool-tip per handle
      */
     public void setTooltipSplit(final boolean tooltipSplit) {
         updateSlider(RangeOption.TOOLTIP_SPLIT, tooltipSplit);
     }
 
+    /**
+     * Returns the tool-tip position ({@code data-slider-tooltip-position}).
+     *
+     * @return the position; by default top for horizontal sliders and right for vertical ones
+     */
     public TooltipPosition getTooltipPosition() {
         TooltipPosition defaultPosition = getOrientation() == OrientationType.HORIZONTAL ?
                 TooltipPosition.TOP : TooltipPosition.RIGHT;
@@ -250,13 +306,18 @@ public abstract class RangeBase<T> extends Widget implements
     /**
      * Sets the tool-tip position.
      *
-     * @param position e
+     * @param position the position, top or right by default
      * @see TooltipPosition
      */
     public void setTooltipPosition(final TooltipPosition position) {
         updateSlider(RangeOption.TOOLTIP_POSITION, position.getPosition());
     }
 
+    /**
+     * Returns the handle shape ({@code data-slider-handle}).
+     *
+     * @return the shape, round by default
+     */
     public HandleType getHandle() {
         return getEnumAttribute(RangeOption.HANDLE, HandleType.class, HandleType.ROUND);
     }
@@ -264,13 +325,18 @@ public abstract class RangeBase<T> extends Widget implements
     /**
      * Sets the handle shape.
      *
-     * @param handle e
+     * @param handle the shape, round by default
      * @see HandleType
      */
     public void setHandle(final HandleType handle) {
         updateSlider(RangeOption.HANDLE, handle.getType());
     }
 
+    /**
+     * Returns whether the slider is reversed ({@code data-slider-reversed}).
+     *
+     * @return {@code true} if it is reversed, {@code false} by default
+     */
     public boolean isReversed() {
         return getBooleanAttribute(RangeOption.REVERSED, false);
     }
@@ -278,7 +344,7 @@ public abstract class RangeBase<T> extends Widget implements
     /**
      * Sets whether or not the slider should be reversed.
      *
-     * @param reversed e
+     * @param reversed {@code true} to reverse the slider
      */
     public void setReversed(final boolean reversed) {
         updateSlider(RangeOption.REVERSED, reversed);
@@ -308,7 +374,7 @@ public abstract class RangeBase<T> extends Widget implements
     /**
      * Sets the formatter callback.
      *
-     * @param formatterCallback e
+     * @param formatterCallback the formatter of the tool-tip
      */
     public void setFormatter(final FormatterCallback<T> formatterCallback) {
         this.formatterCallback = formatterCallback;
@@ -335,6 +401,13 @@ public abstract class RangeBase<T> extends Widget implements
         return value -> formatTooltip(toValue(value));
     }
 
+    /**
+     * Returns the text of the tool-tip for a value: the {@link FormatterCallback}'s if one is set,
+     * {@link #format(Object)}'s otherwise.
+     *
+     * @param value the value
+     * @return the text of the tool-tip
+     */
     protected String formatTooltip(final T value) {
         if (formatterCallback != null)
             return formatterCallback.formatTooltip(value);
@@ -345,11 +418,17 @@ public abstract class RangeBase<T> extends Widget implements
      * Formats the slider value to string value to be displayed
      * as tool-tip text.
      *
-     * @param value e
-     * @return e
+     * @param value the value
+     * @return the text of the tool-tip
      */
     protected abstract String format(final T value);
 
+    /**
+     * Returns whether the arrow keys follow the natural order
+     * ({@code data-slider-natural-arrow-keys}).
+     *
+     * @return {@code true} for the natural order, {@code false} by default
+     */
     public boolean isNaturalArrowKeys() {
         return getBooleanAttribute(RangeOption.NATURAL_ARROW_KEYS, false);
     }
@@ -363,12 +442,17 @@ public abstract class RangeBase<T> extends Widget implements
      * By default the arrow keys are oriented by arrow up/right to the
      * higher slider value, arrow down/left to the lower slider value.
      *
-     * @param naturalArrowKeys e
+     * @param naturalArrowKeys {@code true} for the natural order
      */
     public void setNaturalArrowKeys(final boolean naturalArrowKeys) {
         updateSlider(RangeOption.NATURAL_ARROW_KEYS, naturalArrowKeys);
     }
 
+    /**
+     * Returns the values of the tick marks ({@code data-slider-ticks}).
+     *
+     * @return the values, empty by default
+     */
     public List<Double> getTicks() {
         return getNumberArrayAttribute(RangeOption.TICKS, Collections.<Double>emptyList());
     }
@@ -379,12 +463,18 @@ public abstract class RangeBase<T> extends Widget implements
      * <br>
      * This option overwrites min and max options.
      *
-     * @param ticks e
+     * @param ticks the values of the ticks
      */
     public void setTicks(final List<Double> ticks) {
         updateSliderForNumberArray(RangeOption.TICKS, ticks);
     }
 
+    /**
+     * Returns the positions of the tick marks, in percentages
+     * ({@code data-slider-ticks-positions}).
+     *
+     * @return the positions, empty by default
+     */
     public List<Double> getTicksPositions() {
         return getNumberArrayAttribute(RangeOption.TICKS_POSITIONS, Collections.<Double>emptyList());
     }
@@ -393,12 +483,17 @@ public abstract class RangeBase<T> extends Widget implements
      * Defines the positions of the tick values in percentages.<br>
      * The first value should always be 0, the last value should always be 100 percent.
      *
-     * @param ticksPositions e
+     * @param ticksPositions the positions, in percent
      */
     public void setTicksPositions(final List<Double> ticksPositions) {
         updateSliderForNumberArray(RangeOption.TICKS_POSITIONS, ticksPositions);
     }
 
+    /**
+     * Returns the labels below the tick marks ({@code data-slider-ticks-labels}).
+     *
+     * @return the labels, empty by default
+     */
     public List<String> getTicksLabels() {
         return getStringArrayAttribute(RangeOption.TICKS_LABELS, Collections.<String>emptyList());
     }
@@ -408,12 +503,18 @@ public abstract class RangeBase<T> extends Widget implements
      * <br>
      * Accepts HTML input.
      *
-     * @param ticksLabels e
+     * @param ticksLabels the labels, as HTML
      */
     public void setTicksLabels(final List<String> ticksLabels) {
         updateSliderForStringArray(RangeOption.TICKS_LABELS, ticksLabels);
     }
 
+    /**
+     * Returns the distance within which the handle snaps to a tick
+     * ({@code data-slider-ticks-snap-bounds}).
+     *
+     * @return the distance, 0 by default
+     */
     public double getTicksSnapBounds() {
         return getDoubleAttribute(RangeOption.TICKS_SNAP_BOUNDS, 0);
     }
@@ -422,12 +523,17 @@ public abstract class RangeBase<T> extends Widget implements
      * Sets the snap bounds of a tick. Snaps to the tick if value
      * is within these bounds.
      *
-     * @param ticksSnapBounds e
+     * @param ticksSnapBounds the distance from a tick within which the handle snaps to it
      */
     public void setTicksSnapBounds(final double ticksSnapBounds) {
         updateSlider(RangeOption.TICKS_SNAP_BOUNDS, ticksSnapBounds);
     }
 
+    /**
+     * Returns the scale ({@code data-slider-scale}).
+     *
+     * @return the scale, linear by default
+     */
     public ScaleType getScale() {
         return getEnumAttribute(RangeOption.SCALE, ScaleType.class, ScaleType.LINEAR);
     }
@@ -436,12 +542,17 @@ public abstract class RangeBase<T> extends Widget implements
      * Focus the appropriate slider handle after a value change.
      * Defaults to false.
      *
-     * @param focus e
+     * @param focus {@code true} to focus the handle
      */
     public void setFocusHandle(final boolean focus) {
         updateSlider(RangeOption.FOCUS, focus);
     }
 
+    /**
+     * Returns whether the handle gets the focus after a value change ({@code data-slider-focus}).
+     *
+     * @return {@code true} if it does, {@code false} by default
+     */
     public boolean getFocusHandle() {
         return getBooleanAttribute(RangeOption.FOCUS, false);
     }
@@ -449,7 +560,7 @@ public abstract class RangeBase<T> extends Widget implements
     /**
      * Sets the slider scale type.
      *
-     * @param scale e
+     * @param scale linear (the default) or logarithmic
      * @see ScaleType
      */
     public void setScale(final ScaleType scale) {
@@ -537,8 +648,8 @@ public abstract class RangeBase<T> extends Widget implements
      * Converts the value of the {@link RangeOption#VALUE} attribute to the
      * slider value.
      *
-     * @param value e
-     * @return e
+     * @param value the value of the attribute
+     * @return the slider value
      */
     protected abstract T convertValue(String value);
 

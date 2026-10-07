@@ -58,6 +58,8 @@ public final class JQueryLoader {
     }
 
     /**
+     * Returns whether jQuery is already loaded in the top window.
+     *
      * @return true if jQuery is already loaded in the top window
      */
     public static boolean isLoaded() {

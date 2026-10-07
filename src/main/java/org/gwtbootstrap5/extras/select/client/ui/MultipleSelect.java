@@ -32,15 +32,40 @@ import org.gwtbootstrap5.extras.select.client.ui.engines.SelectEngine;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A searchable select where several options can be selected, shown as removable tags. Inherit
+ * {@code org.gwtbootstrap5.extras.select.client.TomSelectResources} (or {@code TomSelectURL}) to
+ * load the library. Read the selection with {@link #getValues()} and listen to it with
+ * {@link #addValuesChangeHandler}.
+ *
+ * <pre>{@code
+ * <s:MultipleSelect ui:field="toppings" engine="TOMSELECT" placeholder="Pick toppings"/>
+ * }</pre>
+ *
+ *
+ * @param <T> the type of the options
+ * @see <a href="https://getbootstrap.com/docs/5.3/forms/select/">Bootstrap 5 documentation</a>
+ */
 public class MultipleSelect<T> extends SelectBase<T> implements HasValues<T> {
 
+    /** The values set before the widget was attached, or kept while it is detached. */
     protected List<T> valuesSelectedBeforeInit = new ArrayList<>();
 
+    /**
+     * Creates a multiple select.
+     *
+     * @param engine the JavaScript library, the {@code engine} attribute in UiBinder
+     */
     @UiConstructor
     public MultipleSelect(SelectEngine engine) {
         super(SelectEngine.getEngine(engine));
     }
 
+    /**
+     * Sets the maximum number of options that can be selected (Tom Select's {@code maxItems}).
+     *
+     * @param limit the maximum, or 0 (the default) for no limit
+     */
     public void setMultipleLimit(int limit) {
         this.properties.setMultipleLimit(limit);
 

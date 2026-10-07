@@ -61,17 +61,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Bootstrap select widget base
+ * Base class of {@code Select} and {@code MultipleSelect}: a Bootstrap {@code form-select} turned
+ * into a searchable dropdown by a JavaScript library, the {@link ISelectEngine}. The options are
+ * objects of type {@code T}; an {@link ItemProvider} gives their value and text.
  *
  * @param <T> select value type
  *
- * @see <a href="https://silviomoreto.github.io/bootstrap-select/">...</a>
+ * @see <a href="https://getbootstrap.com/docs/5.3/forms/select/">Bootstrap 5 documentation</a>
  * @author Xiaodong Sun
  */
 public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled, Focusable, HasValue<T>, HasValidators<T>, IsEditor<SelectEditor<T>>,
         HasEditorErrors<T>, HasBlankValidator<T>, HasAllSelectHandlers<T>, HasErrorHandler, HasPlaceholder, HasOptions<T>, HasSearch {
 
+    /** The editor, created by {@link #asEditor()}. */
     protected SelectEditor<T> editor;
+    /** Gives the value and the text of the options. */
     protected ItemProvider<T> itemProvider;
 
     private final FocusImpl focusImpl = FocusImpl.getFocusImplForWidget();
@@ -79,12 +83,20 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
     private final ErrorHandlerMixin<T> errorHandlerMixin = new ErrorHandlerMixin<>(this);
     private final BlankValidatorMixin<SelectBase<T>, T> validatorMixin = new BlankValidatorMixin<>(this, errorHandlerMixin.getErrorHandler());
 
+    /** The JavaScript library. */
     protected ISelectEngine engine;
+    /** The settings, passed to the engine when it starts and when they change. */
     protected SelectProperties properties;
 
     // Object List
+    /** The options, by value. */
     protected BiMap<String, T> optionList = HashBiMap.create();
 
+    /**
+     * Creates the select on a new {@code <select class="form-select">}.
+     *
+     * @param engine the JavaScript library
+     */
     protected SelectBase(ISelectEngine engine) {
         setElement(Document.get().createSelectElement());
 
@@ -110,13 +122,19 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
     }
 
     /**
+     * Returns whether several options can be selected.
+     *
      * @return <code>true</code> if multiple selection is allowed
      */
     public abstract boolean isMultiple();
 
     /**
-     * AsyncDataLoad
-     * @param query search query
+     * Loads the options for a search: the engine calls it when the user types in the search box,
+     * and on the first focus with {@code loadOnOpen}. {@code Select} and {@code MultipleSelect}
+     * find nothing; override it to search a server.
+     *
+     * @param query the search text
+     * @param callback to call with the options found
      */
     protected abstract void asyncDataLoad(String query, AsyncDataLoadCallback<T> callback);
 
@@ -151,24 +169,32 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
         super.onUnload();
     }
 
+    /** Opens the dropdown. */
     public void show() {
         if (isEngineStarted()) {
             engine.show();
         }
     }
 
+    /** Closes the dropdown. */
     public void hide() {
         if (isEngineStarted()) {
             engine.hide();
         }
     }
 
+    /** Updates the JavaScript select from the options of the {@code <select>} element. */
     public void refresh() {
         if (isEngineStarted()) {
             engine.refresh();
         }
     }
 
+    /**
+     * Sets whether the select has a button that clears the selection. Shown by default.
+     *
+     * @param allowClear {@code true} to show it
+     */
     public void setAllowClear(boolean allowClear) {
         this.properties.setAllowClear(allowClear);
 
@@ -185,7 +211,7 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
     /**
      * Get error handler
      *
-     * @return e
+     * @return the error handler
      */
     @Override
     public ErrorHandler getErrorHandler() {
@@ -206,7 +232,7 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
     /**
      * Get error handler type
      *
-     * @return e
+     * @return the type of the error handler
      */
     @Override
     public ErrorHandlerType getErrorHandlerType() {
@@ -224,9 +250,9 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
     }
 
     /**
-     * Set the search bar
+     * Shows or hides the search box. Shown by default.
      *
-     * @param enabled boolean
+     * @param enabled {@code true} to show it
      */
     @Override
     public void setSearchEnabled(boolean enabled) {
@@ -238,9 +264,10 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
     }
 
     /**
-     * Set the search placeholder
+     * Sets the placeholder of the search box. The Tom Select engine doesn't use it: Tom Select
+     * searches in the select itself.
      *
-     * @param placeholder is placeholder
+     * @param placeholder the placeholder
      */
     @Override
     public void setSearchPlaceholder(String placeholder) {
@@ -254,7 +281,7 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
     /**
      * Get allow blank
      *
-     * @return e
+     * @return {@code true} if the select may be left blank
      */
     @Override
     public boolean getAllowBlank() {
@@ -284,7 +311,7 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
     /**
      * Get validate on blur
      *
-     * @return e
+     * @return {@code true} if it validates on blur
      */
     @Override
     public boolean getValidateOnBlur() {
@@ -305,7 +332,7 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
      * Remove validator
      *
      * @param validator the validator
-     * @return e
+     * @return {@code true} if the validator was there
      */
     @Override
     public boolean removeValidator(Validator<T> validator) {
@@ -543,11 +570,18 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
     /**
      * Sets how an option becomes the value and the text of its {@code <option>}. By default both
      * are {@code String.valueOf(option)}.
+     *
+     * @param itemProvider gives the value and the text of an option
      */
     public void setItemProvider(ItemProvider<T> itemProvider) {
         this.itemProvider = itemProvider;
     }
 
+    /**
+     * Returns whether the JavaScript select exists: the widget is attached.
+     *
+     * @return {@code true} if the engine has started
+     */
     protected boolean isEngineStarted() {
         return engine != null && engine.isStarted();
     }
@@ -652,6 +686,8 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
     }
 
     /**
+     * Returns the selected options.
+     *
      * @return the options currently selected, resolved against the option list in force
      */
     protected List<T> getSelectedOptions() {
@@ -672,14 +708,39 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
 
     /**
      * Gives the value (unique per option) and the text shown for an option.
+     *
+     * @param <T> the type of the options
      */
     public interface ItemProvider<T> {
+        /**
+         * Returns the value of an option, unique among the options; it is the {@code value} of its
+         * {@code <option>}.
+         *
+         * @param item the option
+         * @return the value
+         */
         String getValue(T item);
 
+        /**
+         * Returns the text shown for an option.
+         *
+         * @param item the option
+         * @return the text
+         */
         String getText(T item);
     }
 
+    /**
+     * Receives the options found by {@link #asyncDataLoad}.
+     *
+     * @param <T> the type of the options
+     */
     protected interface AsyncDataLoadCallback<T> {
+        /**
+         * Gives the options found.
+         *
+         * @param result the options, empty if none was found
+         */
         void onResult(@NonNull List<T> result);
     }
 

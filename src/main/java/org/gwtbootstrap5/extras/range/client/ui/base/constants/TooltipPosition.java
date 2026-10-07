@@ -45,6 +45,11 @@ public enum TooltipPosition implements Type {
         this.position = position;
     }
 
+    /**
+     * Returns the value of the slider option.
+     *
+     * @return the option value, the constant's name in lower case
+     */
     public String getPosition() {
         return position;
     }

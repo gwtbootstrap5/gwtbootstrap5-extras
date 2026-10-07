@@ -25,9 +25,17 @@ import com.google.gwt.core.client.ScriptInjector;
 import org.gwtbootstrap5.client.ui.util.StyleInjector;
 
 /**
+ * Loads Tom Select from a CDN instead of the bundled files.
+ * It is the entry point of the {@code TomSelectURL} GWT module: inherit the module
+ * rather than calling it.
+ *
  * @author godi
  */
 public class TomSelectURLEntryPoint implements EntryPoint {
+
+    /** Creates the entry point; GWT calls it when the module loads. */
+    public TomSelectURLEntryPoint() {
+    }
 
     @Override
     public void onModuleLoad() {

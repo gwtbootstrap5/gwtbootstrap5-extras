@@ -27,9 +27,18 @@ import com.google.gwt.core.client.ScriptInjector;
 import org.gwtbootstrap5.client.ui.util.StyleInjector;
 
 /**
+ * Loads Summernote from a CDN instead of the bundled files, after jQuery.
+ * It is the entry point of the {@code SummernoteURL} GWT module: inherit the module
+ * rather than calling it.
+ *
  * @author godi
  */
 public class SummernoteURLEntryPoint implements EntryPoint {
+
+    /** Creates the entry point; GWT calls it when the module loads. */
+    public SummernoteURLEntryPoint() {
+    }
+
     @Override
     public void onModuleLoad() {
         JQueryLoader.ensureLoadedFromUrl(() -> {

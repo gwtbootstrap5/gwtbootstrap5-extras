@@ -27,9 +27,17 @@ import org.gwtbootstrap5.client.ui.util.StyleInjector;
 import jsinterop.base.Js;
 
 /**
+ * Loads bootstrap-slider from a CDN instead of the bundled files, unless the page already has it.
+ * It is the entry point of the {@code RangeURL} GWT module: inherit the module
+ * rather than calling it.
+ *
  * @author Xiaodong SUN
  */
 public class RangeURLEntryPoint implements EntryPoint {
+
+    /** Creates the entry point; GWT calls it when the module loads. */
+    public RangeURLEntryPoint() {
+    }
 
     @Override
     public void onModuleLoad() {

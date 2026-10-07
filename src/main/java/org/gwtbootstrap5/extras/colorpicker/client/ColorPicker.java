@@ -37,12 +37,23 @@ import jsinterop.annotations.JsType;
 import jsinterop.base.Js;
 import jsinterop.base.JsPropertyMap;
 
+/**
+ * An inline color picker, by
+ * <a href="https://itsjavi.com/bootstrap-colorpicker/">bootstrap-colorpicker</a> 3. Its value is the color in hex, such as {@code #ff0000}. Inherit
+ * {@code org.gwtbootstrap5.extras.colorpicker.ColorPicker} (or {@code ColorPickerURL}) to load
+ * the library.
+ *
+ * <pre>{@code
+ * <c:ColorPicker ui:field="picker"/>
+ * }</pre>
+ */
 public class ColorPicker extends Widget implements HasValue<String>, HasChangeHandlers {
 
     private final Div colorPickerDiv;
 
     private boolean valueChangeHandlerInitialized = false;
 
+    /** Creates an inline color picker, with no color selected. */
     public ColorPicker() {
         colorPickerDiv = new Div();
 

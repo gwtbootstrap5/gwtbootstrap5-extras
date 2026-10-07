@@ -34,6 +34,10 @@ import elemental2.dom.EventTarget;
 @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
 public class JQueryEvent {
 
+    /** Don't call it: jQuery creates the events. */
+    public JQueryEvent() {
+    }
+
     /** The event type, e.g. {@code "click"} or {@code "summernote.change"}. */
     @JsProperty public String type;
 

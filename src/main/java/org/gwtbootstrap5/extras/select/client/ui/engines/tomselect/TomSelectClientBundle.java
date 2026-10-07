@@ -25,14 +25,23 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
 
 /**
+ * The script of Tom Select 2, bundled with the module.
+ *
  * @author godi
  */
 public interface TomSelectClientBundle extends ClientBundle {
 
+    /** The bundle. */
     TomSelectClientBundle INSTANCE = GWT.create(TomSelectClientBundle.class);
 
+    /** The version of the library. */
     String VERSION = "2.5.2";
 
+    /**
+     * The script of Tom Select.
+     *
+     * @return the script
+     */
     @Source("../../../resource/tom-select-" + VERSION + "/js/tom-select.min.cache.js")
     TextResource tomSelect();
 

@@ -35,16 +35,14 @@ import jsinterop.annotations.JsType;
 @JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "Object")
 public class AlertOptions extends DialogOptions {
 
-    /**
-     * 
-     */
+    /** Use {@link #newOptions} instead; the constructor exists for JsInterop. */
     protected AlertOptions() {}
     
     /**
      * Creates a new {@link AlertOptions}.
      *
-     * @param message e
-     * @return e
+     * @param message the message of the dialog
+     * @return the options, to set the rest of them
      */
     @JsOverlay
     public static AlertOptions newOptions(final String message) {
@@ -53,6 +51,11 @@ public class AlertOptions extends DialogOptions {
         return options;
     }
 
+    /**
+     * Sets the function Bootbox calls when the dialog is dismissed ({@code callback}).
+     *
+     * @param callback the callback
+     */
     @JsOverlay
     public final void setCallback(SimpleCallback callback) {
         set("callback", (JsSimpleCallback) callback::callback);

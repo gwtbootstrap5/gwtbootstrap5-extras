@@ -26,9 +26,18 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.ScriptInjector;
 
 /**
+ * Loads the Summernote files bundled in the jar, after jQuery.
+ * It is the entry point of the {@code Summernote} GWT module: inherit the module
+ * rather than calling it.
+ *
  * @author godi
  */
 public class SummernoteEntryPoint implements EntryPoint {
+
+    /** Creates the entry point; GWT calls it when the module loads. */
+    public SummernoteEntryPoint() {
+    }
+
     @Override
     public void onModuleLoad() {
         JQueryLoader.ensureLoaded();
