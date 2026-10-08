@@ -20,23 +20,27 @@ package org.gwtbootstrap5.extras.select.client.ui;
  * ==========================LICENSE_END=================================
  */
 
-import com.google.gwt.uibinder.client.UiConstructor;
 import org.gwtbootstrap5.extras.select.client.ui.base.SelectBase;
 import org.gwtbootstrap5.extras.select.client.ui.engines.SelectEngine;
 
 import java.util.List;
 
 /**
- * A searchable single select: a Bootstrap {@code form-select} turned into a dropdown by
- * <a href="https://tom-select.js.org/">Tom Select</a>. Inherit
- * {@code org.gwtbootstrap5.extras.select.client.TomSelectResources} (or {@code TomSelectURL}) to
- * load the library. The JavaScript select is created when the widget is attached and destroyed when
- * it is detached; the value is kept in between.
+ * A searchable single select: a Bootstrap {@code form-select} turned into a dropdown by a
+ * JavaScript library, <a href="https://tom-select.js.org/">Tom Select</a>,
+ * <a href="https://choices-js.github.io/Choices/">Choices.js</a> or
+ * <a href="https://slimselectjs.com/">Slim Select</a>. Inherit the module of the library (see
+ * {@link SelectEngine}), for example {@code org.gwtbootstrap5.extras.select.client.TomSelectResources}.
+ * The JavaScript select is created when the widget is attached and destroyed when it is detached;
+ * the value is kept in between.
  *
  * <pre>{@code
- * <s:Select ui:field="size" engine="TOMSELECT" placeholder="Pick a size"/>
+ * <s:Select ui:field="size" placeholder="Pick a size"/>
+ * <s:Select ui:field="country" engine="CHOICESJS" placeholder="Pick a country"/>
  * }</pre>
- *
+ * <p>
+ * {@code engine} can be left out when the application inherits a single engine.
+ * </p>
  *
  * @param <T> the type of the options
  * @see <a href="https://getbootstrap.com/docs/5.3/forms/select/">Bootstrap 5 documentation</a>
@@ -47,11 +51,18 @@ public class Select<T> extends SelectBase<T> {
     protected T valueSelectedBeforeInit;
 
     /**
+     * Creates a select drawn by the only engine whose module is inherited. If there are several,
+     * choose one with {@link #setEngine(SelectEngine)} ({@code engine="…"} in UiBinder).
+     */
+    public Select() {
+        super();
+    }
+
+    /**
      * Creates a select.
      *
-     * @param engine the JavaScript library, the {@code engine} attribute in UiBinder
+     * @param engine the JavaScript library, whose module must be inherited
      */
-    @UiConstructor
     public Select(SelectEngine engine) {
         super(SelectEngine.getEngine(engine));
     }
@@ -85,7 +96,7 @@ public class Select<T> extends SelectBase<T> {
 
     @Override
     public void clear() {
-        if (engine != null) {
+        if (isEngineStarted()) {
             engine.clear(true);
         }
     }
@@ -113,7 +124,7 @@ public class Select<T> extends SelectBase<T> {
             return;
         }
 
-        if (!engine.haveOption(itemProvider.getValue(value))) {
+        if (!optionList.containsKey(itemProvider.getValue(value))) {
             addOption(value);
         }
 

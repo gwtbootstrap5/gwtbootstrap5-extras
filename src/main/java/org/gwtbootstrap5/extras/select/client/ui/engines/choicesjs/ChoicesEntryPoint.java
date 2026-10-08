@@ -1,10 +1,11 @@
-package org.gwtbootstrap5.extras.select.client.ui.engines.tomselect;
+package org.gwtbootstrap5.extras.select.client.ui.engines.choicesjs;
+
 
 /*-
  * ==========================LICENSE_START===============================
  * GwtBootstrap5
  * ======================================================================
- * Copyright (C) 2023 - 2026 GwtBootstrap5
+ * Copyright (C) 2026 GwtBootstrap5
  * ======================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,23 +27,21 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.ScriptInjector;
 
 /**
- * Loads the Tom Select files bundled in the jar and registers {@code SelectEngine.TOMSELECT}.
- * It is the entry point of the {@code TomSelectResources} GWT module: inherit the module
+ * Loads the Choices.js files bundled in the jar and registers {@code SelectEngine.CHOICESJS}.
+ * It is the entry point of the {@code ChoicesResources} GWT module: inherit the module
  * rather than calling it.
- *
- * @author godi
  */
-public class TomSelectEntryPoint implements EntryPoint {
+public class ChoicesEntryPoint implements EntryPoint {
 
     /** Creates the entry point; GWT calls it when the module loads. */
-    public TomSelectEntryPoint() {
+    public ChoicesEntryPoint() {
     }
 
     @Override
     public void onModuleLoad() {
-        SelectEngine.register(SelectEngine.TOMSELECT, TomSelectEngine::new);
+        SelectEngine.register(SelectEngine.CHOICESJS, ChoicesEngine::new);
 
-        ScriptInjector.fromString(TomSelectClientBundle.INSTANCE.tomSelect().getText())
-            .setWindow(ScriptInjector.TOP_WINDOW).inject();
+        ScriptInjector.fromString(ChoicesClientBundle.INSTANCE.choices().getText())
+                .setWindow(ScriptInjector.TOP_WINDOW).inject();
     }
 }

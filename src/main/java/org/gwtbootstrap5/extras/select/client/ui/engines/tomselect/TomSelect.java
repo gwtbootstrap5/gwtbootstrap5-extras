@@ -22,6 +22,7 @@ package org.gwtbootstrap5.extras.select.client.ui.engines.tomselect;
 
 import elemental2.core.JsArray;
 import elemental2.dom.Element;
+import elemental2.dom.HTMLInputElement;
 import jsinterop.annotations.*;
 import jsinterop.base.JsPropertyMap;
 
@@ -283,5 +284,21 @@ public class TomSelect {
      */
     @JsProperty(name = "options")
     public native JsPropertyMap<Object> getOptionsMap();
+
+    /**
+     * Returns the input the user types the search in ({@code control_input}).
+     *
+     * @return the input, or {@code null} without a search box
+     */
+    @JsProperty(name = "control_input")
+    public native HTMLInputElement getControlInput();
+
+    /**
+     * Returns the element that wraps the control and the dropdown ({@code wrapper}).
+     *
+     * @return the wrapper
+     */
+    @JsProperty(name = "wrapper")
+    public native Element getWrapper();
 
 }

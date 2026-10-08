@@ -20,13 +20,16 @@
   -->
 
 <module>
+    <inherits name="org.gwtbootstrap5.extras.select.Select"/>
     <inherits name="com.google.gwt.resources.Resources"/>
 
     <public path="resource">
-        <include name="**/*"/>
+        <include name="tom-select-2.6.2/css/*"/>
     </public>
 
-    <entry-point class="org.gwtbootstrap5.extras.select.client.ui.engines.tomselect.TomSelectEntryPoint"/>
-
     <stylesheet src="tom-select-2.6.2/css/tom-select.bootstrap5.min.cache.css"/>
+
+    <source path="ui/engines/tomselect"/>
+
+    <entry-point class="org.gwtbootstrap5.extras.select.client.ui.engines.tomselect.TomSelectEntryPoint"/>
 </module>

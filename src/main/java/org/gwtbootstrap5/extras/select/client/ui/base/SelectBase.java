@@ -55,6 +55,7 @@ import org.gwtbootstrap5.extras.select.client.ui.base.events.*;
 import org.gwtbootstrap5.extras.select.client.ui.base.interfaces.HasAllSelectHandlers;
 import org.gwtbootstrap5.extras.select.client.ui.base.interfaces.HasOptions;
 import org.gwtbootstrap5.extras.select.client.ui.base.interfaces.HasSearch;
+import org.gwtbootstrap5.extras.select.client.ui.engines.SelectEngine;
 import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
@@ -64,6 +65,11 @@ import java.util.List;
  * Base class of {@code Select} and {@code MultipleSelect}: a Bootstrap {@code form-select} turned
  * into a searchable dropdown by a JavaScript library, the {@link ISelectEngine}. The options are
  * objects of type {@code T}; an {@link ItemProvider} gives their value and text.
+ * <p>
+ * The engine is given to the constructor or chosen with {@link #setEngine(SelectEngine)} before
+ * the select is attached. Without one, the select uses the only engine whose module is inherited
+ * (see {@link SelectEngine}).
+ * </p>
  *
  * @param <T> select value type
  *
@@ -83,10 +89,16 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
     private final ErrorHandlerMixin<T> errorHandlerMixin = new ErrorHandlerMixin<>(this);
     private final BlankValidatorMixin<SelectBase<T>, T> validatorMixin = new BlankValidatorMixin<>(this, errorHandlerMixin.getErrorHandler());
 
-    /** The JavaScript library. */
+    /**
+     * The JavaScript library; {@code null} until it is chosen, at the latest when the select is
+     * attached.
+     */
     protected ISelectEngine engine;
     /** The settings, passed to the engine when it starts and when they change. */
     protected SelectProperties properties;
+
+    // Shown or hidden by setVisible: the library's control, once it is drawn, or the <select>
+    private boolean visible = true;
 
     // Object List
     /** The options, by value. */
@@ -95,7 +107,7 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
     /**
      * Creates the select on a new {@code <select class="form-select">}.
      *
-     * @param engine the JavaScript library
+     * @param engine the JavaScript library, or {@code null} to choose it later
      */
     protected SelectBase(ISelectEngine engine) {
         setElement(Document.get().createSelectElement());
@@ -122,6 +134,29 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
     }
 
     /**
+     * Creates the select drawn by the only engine whose module is inherited. If there are several,
+     * {@link #setEngine(SelectEngine)} chooses one before the select is attached.
+     */
+    protected SelectBase() {
+        this(SelectEngine.getRegisteredEngines().size() == 1 ? SelectEngine.getDefaultEngine() : null);
+    }
+
+    /**
+     * Chooses the JavaScript library that draws the select. In UiBinder, {@code engine="CHOICESJS"}.
+     *
+     * @param engine the library, whose module must be inherited
+     * @throws IllegalStateException if the select is attached already, or the module of the engine
+     *     isn't inherited
+     */
+    public void setEngine(SelectEngine engine) {
+        if (isEngineStarted()) {
+            throw new IllegalStateException("The engine of a select can't change once it is attached");
+        }
+
+        this.engine = SelectEngine.getEngine(engine);
+    }
+
+    /**
      * Returns whether several options can be selected.
      *
      * @return <code>true</code> if multiple selection is allowed
@@ -129,9 +164,10 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
     public abstract boolean isMultiple();
 
     /**
-     * Loads the options for a search: the engine calls it when the user types in the search box,
-     * and on the first focus with {@code loadOnOpen}. {@code Select} and {@code MultipleSelect}
-     * find nothing; override it to search a server.
+     * Loads the options for a search: with {@link #setAsyncLoad(boolean)}, the engine calls it
+     * when the user types in the search box, and on the first focus with
+     * {@link #setLoadOnOpen(boolean)}. {@code Select} and {@code MultipleSelect} find nothing;
+     * override it to search a server.
      *
      * @param query the search text
      * @param callback to call with the options found
@@ -142,8 +178,16 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
     protected void onLoad() {
         super.onLoad();
 
-        if (engine != null && !engine.isStarted()) {
+        if (engine == null) {
+            engine = SelectEngine.getDefaultEngine();
+        }
+
+        if (!engine.isStarted()) {
             engine.init(SelectElement.as(getElement()), this.properties, createHandlers());
+
+            if (!visible && engine.getControlElement() != null) {
+                setVisible(engine.getControlElement(), false);
+            }
 
             if (!optionList.isEmpty()) {
                 setOptions(new ArrayList<>(optionList.values()));
@@ -197,6 +241,34 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
      */
     public void setAllowClear(boolean allowClear) {
         this.properties.setAllowClear(allowClear);
+
+        if (isEngineStarted()) {
+            engine.updateProperties(this.properties);
+        }
+    }
+
+    /**
+     * Makes a search load the options with {@link #asyncDataLoad}, for example from a server,
+     * instead of filtering the options of the select. Off by default.
+     *
+     * @param asyncLoad {@code true} to load the options of each search
+     */
+    public void setAsyncLoad(boolean asyncLoad) {
+        this.properties.setAsyncLoad(asyncLoad);
+
+        if (isEngineStarted()) {
+            engine.updateProperties(this.properties);
+        }
+    }
+
+    /**
+     * Loads the options with {@link #asyncDataLoad}, with an empty search, the first time the
+     * select gets the focus. Only with {@link #setAsyncLoad(boolean)}. Off by default.
+     *
+     * @param loadOnOpen {@code true} to load the options on the first focus
+     */
+    public void setLoadOnOpen(boolean loadOnOpen) {
+        this.properties.setLoadOnOpen(loadOnOpen);
 
         if (isEngineStarted()) {
             engine.updateProperties(this.properties);
@@ -264,14 +336,26 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
     }
 
     /**
-     * Sets the placeholder of the search box. The Tom Select engine doesn't use it: Tom Select
-     * searches in the select itself.
+     * Sets the placeholder of the search box.
      *
      * @param placeholder the placeholder
      */
     @Override
     public void setSearchPlaceholder(String placeholder) {
         this.properties.setSearchPlaceholder(placeholder);
+
+        if (isEngineStarted()) {
+            engine.updateProperties(this.properties);
+        }
+    }
+
+    /**
+     * Sets the text shown when a search finds no option. Without it, each library shows its own.
+     *
+     * @param noResultsText the text
+     */
+    public void setNoResultsText(String noResultsText) {
+        this.properties.setNoResultsText(noResultsText);
 
         if (isEngineStarted()) {
             engine.updateProperties(this.properties);
@@ -486,21 +570,19 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
 
     @Override
     public void setVisible(boolean visible) {
-        if (isAttached()) {
-            setVisible(getElement().getParentElement(), visible);
+        this.visible = visible;
 
-            return;
+        // The library hides the <select> and shows its own control instead
+        if (isEngineStarted() && engine.getControlElement() != null) {
+            setVisible(engine.getControlElement(), visible);
+        } else {
+            super.setVisible(visible);
         }
-
-        super.setVisible(visible);
     }
 
     @Override
     public boolean isVisible() {
-        if (isAttached()) {
-            return isVisible(getElement().getParentElement());
-        }
-        return super.isVisible();
+        return visible;
     }
 
     @Override
@@ -594,10 +676,10 @@ public abstract class SelectBase<T> extends ComplexWidget implements HasEnabled,
     }
 
     private Element getFocusElement() {
-        if (!isAttached()) {
-            return getElement();
+        if (isEngineStarted() && engine.getControlElement() != null) {
+            return engine.getControlElement();
         }
-        return getElement().getParentElement().getFirstChildElement();
+        return getElement();
     }
 
     private @NonNull ISelectHandlers createHandlers() {

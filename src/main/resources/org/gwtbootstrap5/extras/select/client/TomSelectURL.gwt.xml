@@ -20,5 +20,9 @@
   -->
 
 <module>
+    <inherits name="org.gwtbootstrap5.extras.select.Select"/>
+
+    <source path="ui/engines/tomselect"/>
+
     <entry-point class="org.gwtbootstrap5.extras.select.client.ui.engines.tomselect.TomSelectURLEntryPoint"/>
 </module>

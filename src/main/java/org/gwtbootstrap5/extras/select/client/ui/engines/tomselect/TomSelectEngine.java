@@ -20,6 +20,8 @@ package org.gwtbootstrap5.extras.select.client.ui.engines.tomselect;
  * ==========================LICENSE_END=================================
  */
 
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+
 import elemental2.core.JsArray;
 import elemental2.core.JsObject;
 import elemental2.dom.HTMLSelectElement;
@@ -48,6 +50,7 @@ public class TomSelectEngine implements ISelectEngine {
     private TomSelect instance;
     private TomSelectOptions properties;
     private ISelectHandlers handlers;
+    private String searchPlaceholder;
 
     @Override
     public void init(com.google.gwt.dom.client.SelectElement element, SelectProperties properties, ISelectHandlers handlers) {
@@ -62,7 +65,7 @@ public class TomSelectEngine implements ISelectEngine {
         addHandlers(this.properties, this.handlers);
 
         // 4. Initialize Tom Select on a DOM element
-        this.instance = new TomSelect(this.element, this.properties);
+        createInstance();
     }
 
     @Override
@@ -74,7 +77,7 @@ public class TomSelectEngine implements ISelectEngine {
             instance.destroy();
             this.properties = translateProperties(properties);
             addHandlers(this.properties, this.handlers);
-            instance = new TomSelect(this.element, this.properties);
+            createInstance();
 
             setOptions(options);
             setValues(values, false);
@@ -275,23 +278,43 @@ public class TomSelectEngine implements ISelectEngine {
     }
 
     @Override
+    public com.google.gwt.dom.client.Element getControlElement() {
+        return instance == null ? null : Js.cast(instance.getWrapper());
+    }
+
+    @Override
     public boolean isStarted() {
         return instance != null;
     }
 
+    private void createInstance() {
+        instance = new TomSelect(element, properties);
+
+        // The dropdown_input plugin puts the search box in the dropdown, with its own placeholder
+        if (searchPlaceholder != null && instance.getControlInput() != null) {
+            instance.getControlInput().placeholder = searchPlaceholder;
+        }
+    }
+
     private TomSelectOptions translateProperties(SelectProperties properties) {
         TomSelectOptions opt = new TomSelectOptions();
+        List<String> plugins = new ArrayList<>();
 
         if (!properties.isSearchEnabled()) {
             opt.controlInput = null;
         }
 
         if (properties.isAllowClear()) {
-            if (properties.isMultiple()) {
-                opt.plugins = new String[]{"remove_button"};
-            } else {
-                opt.plugins = new String[]{"clear_button"};
-            }
+            plugins.add(properties.isMultiple() ? "remove_button" : "clear_button");
+        }
+
+        searchPlaceholder = properties.isSearchEnabled() ? properties.getSearchPlaceholder() : null;
+        if (searchPlaceholder != null) {
+            plugins.add("dropdown_input");
+        }
+
+        if (!plugins.isEmpty()) {
+            opt.plugins = plugins.toArray(new String[0]);
         }
 
         if (!properties.isMultiple()) {
@@ -310,7 +333,8 @@ public class TomSelectEngine implements ISelectEngine {
             JsPropertyMap<Object> renderTemplates = JsPropertyMap.of();
 
             // 2. Define the 'no_results' template
-            renderTemplates.set("no_results", (TomSelectOptions.RenderFunction) (data, escape) -> "<div class=\"no-results\" style=\"padding: 10px; color: gray;\">" + properties.getNoResultsText() + "</div>");
+            renderTemplates.set("no_results", (TomSelectOptions.RenderFunction) (data, escape) -> "<div class=\"no-results\" style=\"padding: 10px; color: gray;\">"
+                    + SafeHtmlUtils.htmlEscape(properties.getNoResultsText()) + "</div>");
 
             // 3. Assign the templates to your options
             opt.render = renderTemplates;
@@ -318,10 +342,13 @@ public class TomSelectEngine implements ISelectEngine {
 
         opt.placeholder = properties.getPlaceholder();
 
-        opt.load = (query, callback) -> handlers.onAsyncLoad(query, cb -> callback.onResult(getObjectJsArrayFromSelectOptions(cb)));
+        // Without the async load, Tom Select filters the options it has
+        if (properties.isAsyncLoad()) {
+            opt.load = (query, callback) -> handlers.onAsyncLoad(query, cb -> callback.onResult(getObjectJsArrayFromSelectOptions(cb)));
 
-        if (properties.isLoadOnOpen()) {
-            opt.preload = "focus";
+            if (properties.isLoadOnOpen()) {
+                opt.preload = "focus";
+            }
         }
 
         return opt;

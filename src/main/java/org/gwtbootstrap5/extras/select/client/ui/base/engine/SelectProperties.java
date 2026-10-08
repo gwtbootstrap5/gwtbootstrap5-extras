@@ -25,6 +25,7 @@ package org.gwtbootstrap5.extras.select.client.ui.base.engine;
  * library's options.
  */
 public class SelectProperties {
+    private boolean asyncLoad = false;
     private boolean loadOnOpen = false;
     private boolean allowClear = true;
     private boolean searchEnabled = true;
@@ -36,6 +37,26 @@ public class SelectProperties {
 
     /** Creates the default settings. */
     public SelectProperties() {
+    }
+
+    /**
+     * Returns whether a search loads the options through the async load, instead of filtering
+     * the options the select has.
+     *
+     * @return {@code true} to load them
+     */
+    public boolean isAsyncLoad() {
+        return asyncLoad;
+    }
+
+    /**
+     * Sets whether a search loads the options through the async load, instead of filtering the
+     * options the select has. Defaults to false.
+     *
+     * @param asyncLoad {@code true} to load them
+     */
+    public void setAsyncLoad(boolean asyncLoad) {
+        this.asyncLoad = asyncLoad;
     }
 
     /**
@@ -105,7 +126,6 @@ public class SelectProperties {
 
     /**
      * Sets the placeholder of the search box. Defaults to {@code null}.
-     * The Tom Select engine doesn't use it: Tom Select searches in the select itself.
      *
      * @param searchPlaceholder the placeholder
      */

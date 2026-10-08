@@ -20,12 +20,15 @@ package org.gwtbootstrap5.extras.select.client.ui.engines.tomselect;
  * ==========================LICENSE_END=================================
  */
 
+import org.gwtbootstrap5.extras.select.client.ui.engines.SelectEngine;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.ScriptInjector;
 import org.gwtbootstrap5.client.ui.util.StyleInjector;
 
 /**
- * Loads Tom Select from a CDN instead of the bundled files.
+ * Loads Tom Select from a CDN instead of the bundled files and registers
+ * {@code SelectEngine.TOMSELECT}.
  * It is the entry point of the {@code TomSelectURL} GWT module: inherit the module
  * rather than calling it.
  *
@@ -39,6 +42,8 @@ public class TomSelectURLEntryPoint implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
+        SelectEngine.register(SelectEngine.TOMSELECT, TomSelectEngine::new);
+
         ScriptInjector.fromUrl("https://cdn.jsdelivr.net/npm/tom-select@2.6.2/dist/js/tom-select.complete.min.js")
                 .setWindow(ScriptInjector.TOP_WINDOW).inject();
 

@@ -19,22 +19,19 @@
   ==========================LICENSE_END=================================
   -->
 
-<module rename-to='select'>
-    <inherits name="com.google.gwt.user.User"/>
-    <inherits name="com.google.gwt.user.UserAgent"/>
-    <inherits name="com.google.gwt.i18n.I18N"/>
-    <inherits name="com.google.common.io.Io"/>
-    <inherits name="com.google.common.collect.Collect"/>
-    <inherits name="elemental2.dom.Dom"/>
-    <inherits name="elemental2.core.Core"/>
-    <inherits name="elemental2.promise.Promise"/>
+<module>
+    <inherits name="org.gwtbootstrap5.extras.select.Select"/>
+    <inherits name="com.google.gwt.resources.Resources"/>
 
-    <inherits name="org.gwtbootstrap5.GwtBootstrap5Base"/>
+    <public path="resource">
+        <include name="slim-select-4.5.0/css/*"/>
+        <include name="slimselect-bootstrap5.cache.css"/>
+    </public>
 
-    <!-- The engines come with the module that loads their library: TomSelectResources... -->
-    <source path='client'>
-        <exclude name="ui/engines/tomselect/**"/>
-        <exclude name="ui/engines/choicesjs/**"/>
-        <exclude name="ui/engines/slimselect/**"/>
-    </source>
+    <stylesheet src="slim-select-4.5.0/css/slimselect.cache.css"/>
+    <stylesheet src="slimselect-bootstrap5.cache.css"/>
+
+    <source path="ui/engines/slimselect"/>
+
+    <entry-point class="org.gwtbootstrap5.extras.select.client.ui.engines.slimselect.SlimSelectEntryPoint"/>
 </module>

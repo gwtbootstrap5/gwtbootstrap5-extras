@@ -157,6 +157,14 @@ public interface ISelectEngine {
     void setEnabled(boolean enabled);
 
     /**
+     * Returns the element the library shows in place of the {@code <select>}, which the widget
+     * shows, hides and focuses.
+     *
+     * @return the element, or {@code null} if the engine hasn't started
+     */
+    com.google.gwt.dom.client.Element getControlElement();
+
+    /**
      * Returns whether {@link #init} has run and the select hasn't been destroyed since.
      *
      * @return {@code true} if the JavaScript select exists
