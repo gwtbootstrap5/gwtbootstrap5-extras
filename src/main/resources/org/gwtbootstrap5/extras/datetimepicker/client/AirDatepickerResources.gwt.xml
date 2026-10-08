@@ -19,7 +19,9 @@
   ==========================LICENSE_END=================================
   -->
 
+<!-- The Air Datepicker engine of the date pickers, with its bundled script and style sheet. Its entry point registers the engine. -->
 <module>
+    <inherits name="org.gwtbootstrap5.extras.datetimepicker.DateTimePicker"/>
     <inherits name="com.google.gwt.resources.Resources"/>
 
     <public path="resource">
@@ -27,6 +29,8 @@
     </public>
 
     <stylesheet src="air-datepicker-3.6.0/css/air-datepicker.min.cache.css"/>
+
+    <source path="ui/engines/airdatepicker"/>
 
     <entry-point class="org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.airdatepicker.AirDatepickerEntryPoint"/>
 </module>

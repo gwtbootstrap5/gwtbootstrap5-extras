@@ -49,6 +49,7 @@ import org.gwtbootstrap5.extras.datetimepicker.client.ui.base.engine.IDateTimePi
 import org.gwtbootstrap5.extras.datetimepicker.client.ui.base.engine.IDateTimePickerHandlers;
 import org.gwtbootstrap5.extras.datetimepicker.client.ui.base.interfaces.*;
 import org.gwtbootstrap5.extras.datetimepicker.client.ui.base.validators.DatePickerBlankValidatorMixin;
+import org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.DateTimePickerEngines;
 
 import java.util.Date;
 import java.util.List;
@@ -59,6 +60,11 @@ import java.util.List;
  * it
  * is detached, keeping its value. Its value is a {@code java.util.Date}; it validates like the
  * other form controls.
+ * <p>
+ * The engine is given to the constructor or chosen with {@link #setEngine(DateTimePickerEngines)}
+ * before the picker is attached. Without one, the picker uses the only engine whose module is
+ * inherited (see {@link DateTimePickerEngines}).
+ * </p>
  *
  * @author Joshua Godi
  * @author Steven Jardine
@@ -75,8 +81,11 @@ public abstract class DateTimePickerBase extends Widget implements HasEnabled, H
     private final ErrorHandlerMixin<Date> errorHandlerMixin = new ErrorHandlerMixin<>(this);
     private final DatePickerBlankValidatorMixin validatorMixin = new DatePickerBlankValidatorMixin(this, errorHandlerMixin.getErrorHandler());
 
-    /** The engine that draws the picker. */
-    protected final IDateTimePickerEngine dateTimePickerEngine;
+    /**
+     * The engine that draws the picker; {@code null} until it is chosen, at the latest when the
+     * picker is attached.
+     */
+    protected IDateTimePickerEngine dateTimePickerEngine;
     /** The options of the picker, passed to the engine. */
     protected final DateTimePickerOptions options;
 
@@ -85,7 +94,7 @@ public abstract class DateTimePickerBase extends Widget implements HasEnabled, H
     /**
      * Creates a picker drawn by the given engine.
      *
-     * @param dateTimePickerEngine the engine
+     * @param dateTimePickerEngine the engine, or {@code null} to choose it later
      */
     protected DateTimePickerBase(IDateTimePickerEngine dateTimePickerEngine) {
         textBox = new TextBox();
@@ -95,12 +104,40 @@ public abstract class DateTimePickerBase extends Widget implements HasEnabled, H
         this.dateTimePickerEngine = dateTimePickerEngine;
     }
 
+    /**
+     * Creates a picker drawn by the only engine whose module is inherited. If there are several,
+     * {@link #setEngine(DateTimePickerEngines)} chooses one before the picker is attached.
+     */
+    protected DateTimePickerBase() {
+        this(DateTimePickerEngines.getRegisteredEngines().size() == 1
+                ? DateTimePickerEngines.getDefaultEngine() : null);
+    }
+
+    /**
+     * Chooses the JavaScript library that draws the picker. In UiBinder, {@code engine="AIRDATEPICKER"}.
+     *
+     * @param engine the library, whose module must be inherited
+     * @throws IllegalStateException if the picker is attached already, or the module of the engine
+     *                               isn't inherited
+     */
+    public void setEngine(DateTimePickerEngines engine) {
+        if (dateTimePickerEngine != null && dateTimePickerEngine.isStarted()) {
+            throw new IllegalStateException("The engine of a date picker can't change once it is attached");
+        }
+
+        dateTimePickerEngine = DateTimePickerEngines.getEngine(engine);
+    }
+
     /** {@inheritDoc} */
     @Override
     protected void onLoad() {
         super.onLoad();
 
-        if (dateTimePickerEngine != null && !dateTimePickerEngine.isStarted()) {
+        if (dateTimePickerEngine == null) {
+            dateTimePickerEngine = DateTimePickerEngines.getDefaultEngine();
+        }
+
+        if (!dateTimePickerEngine.isStarted()) {
             dateTimePickerEngine.init(getElement(), options, getHandlers());
 
             if (valueSetBeforeInit != null) setValue(valueSetBeforeInit, false);
@@ -137,17 +174,23 @@ public abstract class DateTimePickerBase extends Widget implements HasEnabled, H
      * @param options the options to apply
      */
     public void reload(DateTimePickerOptions options) {
-        dateTimePickerEngine.updateProperties(options);
+        if (dateTimePickerEngine != null) {
+            dateTimePickerEngine.updateProperties(options);
+        }
     }
 
     /** Opens the picker. */
     public void show() {
-        dateTimePickerEngine.show();
+        if (dateTimePickerEngine != null) {
+            dateTimePickerEngine.show();
+        }
     }
 
     /** Closes the picker. */
     public void hide() {
-        dateTimePickerEngine.hide();
+        if (dateTimePickerEngine != null) {
+            dateTimePickerEngine.hide();
+        }
     }
 
     /**

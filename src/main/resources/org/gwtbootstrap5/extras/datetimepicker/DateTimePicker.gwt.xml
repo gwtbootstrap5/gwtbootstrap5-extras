@@ -19,7 +19,9 @@
   ==========================LICENSE_END=================================
   -->
 
-<!-- IMPORTANT: In addition to this you must import AirDatepicker or TempusDominus in your project in order to have a functional datetimepicker -->
+<!-- The base of the date pickers, without any engine. Inherit the module of the engine you use too,
+     which brings its code and its script: client.TempusDominusResources or client.AirDatepickerResources
+     (or their URL variants). The engines you don't inherit don't reach the compiled JavaScript. -->
 
 <module rename-to='datetimepicker'>
     <inherits name="com.google.common.io.Io"/>
@@ -29,5 +31,8 @@
     <inherits name="elemental2.promise.Promise"/>
     <inherits name="org.gwtbootstrap5.GwtBootstrap5Base"/>
 
-    <source path='client'/>
+    <source path='client'>
+        <exclude name="ui/engines/tempusdominus/**"/>
+        <exclude name="ui/engines/airdatepicker/**"/>
+    </source>
 </module>

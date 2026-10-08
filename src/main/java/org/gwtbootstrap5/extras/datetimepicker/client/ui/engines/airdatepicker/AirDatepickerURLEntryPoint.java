@@ -23,9 +23,11 @@ package org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.airdatepicker;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.ScriptInjector;
 import org.gwtbootstrap5.client.ui.util.StyleInjector;
+import org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.DateTimePickerEngines;
 
 /**
- * Loads Air Datepicker from a CDN instead of the bundled files.
+ * Registers the Air Datepicker engine of the date pickers and loads its script
+ * from a CDN instead of the bundled files.
  *
  * @author Sven Jacobs
  */
@@ -37,6 +39,8 @@ public class AirDatepickerURLEntryPoint implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
+        DateTimePickerEngines.register(DateTimePickerEngines.AIRDATEPICKER, AirDatepickerEngine::new);
+
         ScriptInjector.fromUrl("https://cdn.jsdelivr.net/npm/air-datepicker@3.6.0/air-datepicker.min.js")
                 .setWindow(ScriptInjector.TOP_WINDOW).inject();
 

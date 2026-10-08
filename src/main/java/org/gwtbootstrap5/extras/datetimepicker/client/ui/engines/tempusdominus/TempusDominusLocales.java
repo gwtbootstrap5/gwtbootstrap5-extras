@@ -22,7 +22,6 @@ package org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.tempusdominus;
 
 import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.resources.client.TextResource;
-import org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.airdatepicker.AirDatepickerClientBundle;
 
 import jsinterop.base.Js;
 

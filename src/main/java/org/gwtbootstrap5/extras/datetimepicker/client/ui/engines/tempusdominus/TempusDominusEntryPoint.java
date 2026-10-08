@@ -22,9 +22,11 @@ package org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.tempusdominus;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.ScriptInjector;
+import org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.DateTimePickerEngines;
 
 /**
- * Loads the bundled Tempus Dominus script and style sheet, unless the page loads them already.
+ * Registers the Tempus Dominus engine of the date pickers and loads the
+ * bundled Tempus Dominus script and style sheet, unless the page loads them already.
  *
  * @author Sven Jacobs
  */
@@ -36,6 +38,8 @@ public class TempusDominusEntryPoint implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
+        DateTimePickerEngines.register(DateTimePickerEngines.TEMPUSDOMINUS, TempusDominusEngine::new);
+
         ScriptInjector.fromString(TempusDominusClientBundle.INSTANCE.tempusDominus().getText())
                 .setWindow(ScriptInjector.TOP_WINDOW).inject();
     }

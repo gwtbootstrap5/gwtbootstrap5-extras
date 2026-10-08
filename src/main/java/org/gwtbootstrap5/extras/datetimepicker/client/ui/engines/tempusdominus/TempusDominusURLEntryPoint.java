@@ -23,9 +23,11 @@ package org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.tempusdominus;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.ScriptInjector;
 import org.gwtbootstrap5.client.ui.util.StyleInjector;
+import org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.DateTimePickerEngines;
 
 /**
- * Loads Tempus Dominus from a CDN instead of the bundled files.
+ * Registers the Tempus Dominus engine of the date pickers and loads its script
+ * from a CDN instead of the bundled files.
  *
  * @author Sven Jacobs
  */
@@ -37,6 +39,8 @@ public class TempusDominusURLEntryPoint implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
+        DateTimePickerEngines.register(DateTimePickerEngines.TEMPUSDOMINUS, TempusDominusEngine::new);
+
         ScriptInjector.fromUrl("https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.10.4/dist/js/tempus-dominus.min.js")
                 .setWindow(ScriptInjector.TOP_WINDOW).inject();
 

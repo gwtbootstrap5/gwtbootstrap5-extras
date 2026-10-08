@@ -20,13 +20,13 @@ package org.gwtbootstrap5.extras.datepicker.client.ui;
  * ==========================LICENSE_END=================================
  */
 
-import com.google.gwt.uibinder.client.UiConstructor;
 import org.gwtbootstrap5.extras.datetimepicker.client.ui.base.DateTimePickerBase;
 import org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.DateTimePickerEngines;
 
 /**
  * Date picker: a text box that opens a calendar, without the time. The engine is
- * {@code TEMPUSDOMINUS} (Tempus Dominus 6) or {@code AIRDATEPICKER} (Air Datepicker 3).
+ * {@code TEMPUSDOMINUS} (Tempus Dominus 6) or {@code AIRDATEPICKER} (Air Datepicker 3), and its
+ * module must be inherited; without {@code engine}, the picker uses the only one inherited.
  * <h2>UiBinder example</h2>
  * <pre>{@code
  *     <dp:DatePicker engine="TEMPUSDOMINUS" placeholder="Pick a date"/>
@@ -38,11 +38,20 @@ import org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.DateTimePickerE
 public class DatePicker extends DateTimePickerBase {
 
     /**
+     * Creates a date picker drawn by the only engine whose module is inherited. If there are several,
+     * {@link #setEngine} chooses one.
+     */
+    public DatePicker() {
+        super();
+
+        options.setOnlyCalendar(true);
+    }
+
+    /**
      * Creates a date picker.
      *
-     * @param engine the JavaScript library that draws the calendar
+     * @param engine the JavaScript library that draws the calendar, whose module must be inherited
      */
-    @UiConstructor
     public DatePicker(DateTimePickerEngines engine) {
         super(DateTimePickerEngines.getEngine(engine));
 

@@ -19,6 +19,10 @@
   ==========================LICENSE_END=================================
   -->
 
+<!-- The Air Datepicker engine of the date pickers, loading its script and style sheet from a CDN. Its entry point registers the engine. -->
 <module>
+    <inherits name="org.gwtbootstrap5.extras.datetimepicker.DateTimePicker"/>
+    <source path="ui/engines/airdatepicker"/>
+
     <entry-point class="org.gwtbootstrap5.extras.datetimepicker.client.ui.engines.airdatepicker.AirDatepickerURLEntryPoint"/>
 </module>
